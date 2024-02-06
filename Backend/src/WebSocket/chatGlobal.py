@@ -9,7 +9,7 @@ socketio = SocketIO(app,cors_allowed_origins="http://localhost:5173" )
 
 @app.route('/')
 def index():
-    return 'server'
+    return 'server python'
 
 @socketio.on('connect')
 def handle_connect():
