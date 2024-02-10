@@ -21,10 +21,13 @@ class SocketServer:
         @self.socketio.on('connect')
         def handle_connect():
             print("SERVIDOR CONECTADO")
+            # socketio.emit('connect', True)
+            self.socketio.emit('server_status', True)
             
         @self.socketio.on('message')
         def handle_message(data):
             print('received message: ' + data)
             send(data, broadcast = True)
+
 
 
