@@ -1,5 +1,6 @@
 import './App.css'
 import Chat from './Components/Chat'
+import TemporalLogin from './Components/TemporalLogin'
 
 function App() {
   
@@ -7,8 +8,7 @@ function App() {
   return (
     <>
      
-     <Chat/>
-      
+     <TemporalLogin/>      
     </>
   )
 }
