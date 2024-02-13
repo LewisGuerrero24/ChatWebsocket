@@ -3,6 +3,7 @@ from database.Models import message, users, contacto
 
 
 def main():
+   '''
    database.conexion.con()
 
    usuario1 = users.Usuario(apodo='User1', password='123456789')
@@ -22,10 +23,12 @@ def main():
    messagee.save()
 
 
-   '''
+
    with open('ruta_de_la_foto.jpg', 'rb') as photo_file:
         usuario.foto.put(photo_file, content_type='image/jpeg')
    '''
+
+   
 
    
 if __name__ == '__main__':

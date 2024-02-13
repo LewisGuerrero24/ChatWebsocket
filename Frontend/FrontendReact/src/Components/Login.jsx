@@ -1,55 +1,72 @@
-import React, { useState } from 'react'
-
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 
 
 const Login = () => {
  // Estados para manejar los valores del formulario
- const [username, setUsername] = useState('');
+ const [apodo, setUsername] = useState('');
  const [password, setPassword] = useState('');
+ const [loggedIn, setLoggedIn] = useState(false);
 
- // Función para manejar el envío del formulario
- const handleSubmit = (event) => {
-   event.preventDefault();
-   
-   console.log('Nombre de Usuario:', username);
-   console.log('Contraseña:', password);
+ /*useEffect (() =>{
+  const checkLoginStatus = async () => {
+    try {
+      // Realiza una solicitud al backend para verificar la sesión del usuario
+      const response = await axios.get('http://localhost:5000/check_login', { withCredentials: true });
+
+    if (response.data.logged_in) {
+      setLoggedIn(true);
+    }
+    } catch (error) {
+      console.log('Error checking login status: ', error)
+    }
+
+  }
+  checkLoginStatus();
+ }, [])*/
+
+ // Función para manejar el envío del formulario de login
+ const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try{
+      const response = await axios.post('http://localhost:5000/login', {
+        apodo,
+        password,
+      }, { withCredentials: true });
+
+      console.log(response.data);
+
+      setLoggedIn(true);
+    }catch(error){
+      console.log('Error during login:', error);
+    }
  };
 
-  return (
-    <>
-    <div  className='form-login'>
-    <h4>Formulario de Inicio de Sesión</h4>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Nombre de Usuario:
-          </label>
-          <div>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          </div>
-        
-        <label>
-          Contraseña:
-          </label>
 
-        <div>
-        <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-         
-        <button type="submit">Iniciar Sesión</button>
-      </form>  
-    </div>
-    
-    </>
-  )
-}
+  /*if (loggedIn) {
+    return <Redirect to="/dashboard" />;
+  }*/
+
+
+return (
+  <div>
+    <h2>Login</h2>
+    <form onSubmit={handleSubmit}>
+      <label>Username:
+        <input type="text" value={apodo} onChange={(e) => setUsername(e.target.value)} />
+      </label>
+      <label>Password:
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+      </label>
+      <button type="submit">Login</button>
+    </form>
+    <Link to="/">Ir al Inicio</Link>
+    <Link to="/Register">Register</Link>
+  </div>
+);
+};
 
 export default Login
