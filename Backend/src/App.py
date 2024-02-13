@@ -1,3 +1,4 @@
+
 # import database.conexion
 # from database.Models import message, users
 from imports import *
@@ -19,9 +20,12 @@ def main():
 
 
 
+
+
+
    if __name__ == '__main__':
       socket_server = SocketServer()
       socket_server.start()
       socketio.run(app, debug=True)
-      
+         
 main()

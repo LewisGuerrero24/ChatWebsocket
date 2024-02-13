@@ -7,6 +7,11 @@ app.config['SECRET_KEY'] = 'secret!'
 CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 socketio = SocketIO(app,cors_allowed_origins="http://localhost:5173" )
 
+
+@app.route('/')
+def index():
+    return 'server'
+
 class SocketServer:
 
     def __init__(self, socketio = socketio, app = app):
@@ -15,7 +20,7 @@ class SocketServer:
      
     def start(self):           
         @self.app.route('/')
-        def index():
+        def lading():
             return 'Server'
 
         @self.socketio.on('connect')
@@ -28,6 +33,7 @@ class SocketServer:
             # print('received message: ' +data)
             res = {'name':data['name'],'message': data['message']}
             send(res, broadcast = True)
+
 
 
 
