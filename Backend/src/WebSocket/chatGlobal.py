@@ -20,7 +20,7 @@ class SocketServer:
      
     def start(self):           
         @self.app.route('/')
-        def index():
+        def lading():
             return 'Server'
 
         @self.socketio.on('connect')

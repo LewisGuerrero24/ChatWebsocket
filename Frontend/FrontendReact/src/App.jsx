@@ -1,11 +1,10 @@
-<<<<<<< HEAD
-=======
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import './Components/css/login.css';
 import Login from './Components/Login'; 
 import Register from './Components/Register';
-import ResoursLink from './Components/resoursLink';
+import ResoursLink from './Components/ResoursLink';
 import './index.css';
 
 function App() {

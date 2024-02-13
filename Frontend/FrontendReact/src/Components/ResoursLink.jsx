@@ -12,6 +12,9 @@ const resoursLink = () => {
         <li>
             <Link to={'Register'}>Register</Link>
         </li>
+        <li>
+            <Link to={'temporallogin'}>Temporal Chat</Link>
+        </li>
       </ul>
       <hr />
     </div>
