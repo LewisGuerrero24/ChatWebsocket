@@ -14,7 +14,6 @@ const Chat = () => {
 
   return (
     <>
-
       {connected ? (
         <form className='chat-general' onSubmit={handleSubmit}>
         <label>{name}</label>
