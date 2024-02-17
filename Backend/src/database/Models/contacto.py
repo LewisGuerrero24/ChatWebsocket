@@ -1,5 +1,5 @@
 from .users import Usuario
-from mongoengine import Document, ListField, ReferenceField
+from Libraries import *
 
 class Contactos(Document):
     usuario = ReferenceField(Usuario, required=True)
