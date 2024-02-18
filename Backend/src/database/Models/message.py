@@ -1,4 +1,4 @@
-from mongoengine import Document, StringField, IntField
+from Libraries import *
 
 class Mensaje(Document):
     mensaje = StringField(required=True)
