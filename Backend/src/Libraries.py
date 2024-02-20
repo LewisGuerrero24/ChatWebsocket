@@ -7,4 +7,4 @@ from flask_login import LoginManager, logout_user, login_required, current_user
 from flask_socketio import SocketIO, send
 from flask_cors import CORS
 
-from mongoengine import connect,Document, ListField, ReferenceField
+from mongoengine import connect,Document, ListField, ReferenceField, StringField

@@ -1,8 +1,9 @@
 from Libraries import *
 
 
-class Usuario(Document):
-    apodo = StringField(required=True)
+class TemporalUsuario(Document):
+    nombre = StringField(required=True)
+    mensajes = ListField(StringField())
     
     def is_active():
         return True

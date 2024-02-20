@@ -12,14 +12,16 @@ const MessageSocketIo = ({socket}, name) => {
         setMessage(''); 
       };
     
+      const handleMessage = (m) => {
+        console.log(m);
+          setShowMessage((prevMessages) => [...prevMessages, { id: id++,name: m.name ,message: m.message }]);
+          console.log(showMessage)
+      };
 
     useEffect(() => {
-        socket.on('message', (m) => {
-          console.log(m);
-          setShowMessage((prevMessages) => [...prevMessages, { id: id++,name: m.name ,message: m.message }]);
-        });
+        socket.on('message', handleMessage);
         return () => {
-          socket.off('message');
+          socket.off('message',handleMessage);
         };
       }, []);
     
