@@ -6,7 +6,7 @@ import io from 'socket.io-client';
 const ConnectSocketIo = () => {
 
     const [socket, setSocket] = useState(io('http://localhost:5000'))
-        const [connected, setConnected] = useState(socket.connected);
+    const [connected, setConnected] = useState(socket.connected);
 
     const connect = () => {
         socket.on('server_status', (m) => {

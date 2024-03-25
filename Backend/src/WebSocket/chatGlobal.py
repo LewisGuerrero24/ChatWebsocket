@@ -23,9 +23,3 @@ class SocketServer:
             send(res, broadcast = True)
 
 
-# Crear instancia y correr el servidor
-if __name__ == '__main__':
-    socket_server = SocketServer()
-    socket_server.start()
-    socketio.run(app, debug=True)
-
