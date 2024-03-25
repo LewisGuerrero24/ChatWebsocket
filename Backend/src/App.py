@@ -22,9 +22,9 @@ def main():
    CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
    socketio = SocketIO(app,cors_allowed_origins="http://localhost:5173" )
    
-   
-   instances = [SocketServer(socketio, app), AuthManager(app, Usuario, Rol)]
 
+   instances = [SocketServer(socketio, app, TemporalUsuario), AuthManager(app, Usuario, Rol)]
+   
    if __name__ == '__main__':
       for instance in instances:
         instance.start()
