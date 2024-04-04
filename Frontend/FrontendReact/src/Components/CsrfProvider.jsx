@@ -2,11 +2,15 @@
 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import TokenJwtUpdate from './TokenJwtUpdate';
 
 const CsrfProvider = ({ children }) => {
   const [csrfToken, setCsrfToken] = useState('');
 
   useEffect(() => {
+    // Inicializar el interceptor de respuesta para actualizar el token JWT
+    TokenJwtUpdate.initTokenRefresh();
+
     // Recupera el token CSRF del almacenamiento local al cargar la aplicación
     const storedCsrfToken = localStorage.getItem('csrfToken');
     

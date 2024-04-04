@@ -8,12 +8,12 @@ LOCKOUT_DURATION = 5
 
 class AuthManager:
     def __init__(self, app, Usuario, Rol):
-        self.app = app
+        self.app = app  
         self.bcrypt = Bcrypt(app)
         self.Usuario = Usuario
         self.Rol = Rol
         self.login_manager = LoginManager(app)
-        self.login_manager.login_view = 'login'
+        self.login_manager.login_view = 'login' # Cuando un usuario no autenticado trate de iniciar a una ruta protegida sera redirigido a login
         self.db = con()
         self.principal = Principal(app)
         self.user_datastore = MongoEngineUserDatastore(self.db, Usuario, None)
@@ -35,6 +35,7 @@ class AuthManager:
 
 
 
+            
             @self.app.after_request
             def refresh_expiring_jwts(response):
                 try:
@@ -51,6 +52,11 @@ class AuthManager:
                 except (RuntimeError, KeyError):
                     # Case where there is not a valid JWT. Just return the original respone
                     return response
+
+
+
+
+
 
 
 
@@ -151,6 +157,7 @@ class AuthManager:
             # Ruta protegida con JWT De Ejemplo
             @self.app.route('/profile', methods=["GET"])
             @jwt_required()
+            @roles_required('user','admin') 
             def my_profile():
                 current_user = get_jwt_identity()
                 # Lógica para obtener detalles del perfil (modifica según tus necesidades)

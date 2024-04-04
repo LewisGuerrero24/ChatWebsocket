@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie'; // Importa la librería js-cookie
 import { toast } from "react-hot-toast";  
-import tokenUtils from "./utils";
+import tokenUtils from "../Hooks/utils";
 
 
 
@@ -14,22 +14,6 @@ const Login = () => {
  const [loggedIn, setLoggedIn] = useState(false);
  const navigate = useNavigate();
 
- /*useEffect (() =>{
-  const checkLoginStatus = async () => {
-    try {
-      // Realiza una solicitud al backend para verificar la sesión del usuario
-      const response = await axios.get('http://localhost:5000/check_login', { withCredentials: true });
-
-    if (response.data.logged_in) {
-      setLoggedIn(true);
-    }
-    } catch (error) {
-      console.log('Error checking login status: ', error)
-    }
-
-  }
-  checkLoginStatus();
- }, [])*/
 
  // Función para manejar el envío del formulario de login
  const handleSubmit = async (e) => {
@@ -38,7 +22,6 @@ const Login = () => {
 
     
     try{
-
       const response = await axios.post('http://localhost:5000/Login', {
         apodo,
         password,
@@ -92,11 +75,6 @@ const Login = () => {
       }
     }
  };
-
-
-  /*if (loggedIn) {
-    return <Redirect to="/dashboard" />;
-  }*/
 
 
 return (

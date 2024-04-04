@@ -20,7 +20,7 @@ const DashboardUser = () => {
             // Redirige al usuario a la página de inicio
             navigate('/');
 
-                    // Reemplaza la entrada actual del historial con la página de inicio
+        // Reemplaza la entrada actual del historial con la página de inicio
         window.history.pushState({}, '', '/');
         
         // Recarga la página para asegurarse de que se aplique el cambio en el historial
@@ -29,6 +29,8 @@ const DashboardUser = () => {
             console.error('Error during logout:', error);
         }
     }
+
+
 
     useEffect(() => {
         const interval = setInterval(() => {
