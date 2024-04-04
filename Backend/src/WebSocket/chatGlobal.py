@@ -1,5 +1,5 @@
 from Libraries import *
-import time
+
 
 class SocketServer:
     def __init__(self, socketio , app, TemporalUsuario):
@@ -16,6 +16,19 @@ class SocketServer:
         def handle_connect():
             print("SERVIDOR CONECTADO")
             self.socketio.emit('server_status', True)
+        
+        @self.socketio.on('join')
+        def on_join(data):
+            room = data
+            join_room(room)
+            self.socketio.emit('join_room',True, room=room)
+
+        @self.socketio.on('leave')
+        def on_leave(data):
+            username = data['username']
+            room = data['room']
+            leave_room(room)
+            self.socketio.emit('message', {'msg': username + ' ha salido de la sala ' + room}, room=room)
             
         @self.socketio.on('message')
         def handle_message(data):
@@ -23,13 +36,9 @@ class SocketServer:
             if usuario_existente:
                 usuario_existente.mensajes.append(data['message'])
                 usuario_existente.save()
-            else:
-                nuevo_usuario = self.temporalUsuario(nombre=data['name'], mensajes=[data['message']])
-                nuevo_usuario.save()
                 
             usuario = self.temporalUsuario.objects(nombre=data['name']).first()
             res = {'name':usuario['nombre'],'message': usuario['mensajes']}
-            time.sleep(2)
             send(res, broadcast = True)
 
 

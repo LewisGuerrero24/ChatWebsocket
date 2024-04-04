@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import './Components/css/login.css'
 import App from './App.jsx'
 import './index.css'
-import Chat from './Components/Chat.jsx'
+import PublicChat from './Components/PublicChat.jsx'
 import Login from './Components/Login'; 
 import Register from './Components/Register';
 import {createBrowserRouter, Router, RouterProvider} from 'react-router-dom';
@@ -19,8 +19,8 @@ const router = createBrowserRouter([
     element: <TemporalLogin/>,
   },
   {
-    path: "/Chat/:name",
-    element: <Chat/>,
+    path: "/Chat/Public/:name",
+    element: <PublicChat/>,
   }
   ,
   {

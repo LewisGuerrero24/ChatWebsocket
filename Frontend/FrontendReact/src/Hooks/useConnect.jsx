@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import io from 'socket.io-client';
 
 const socket = io('http://localhost:5000')
 
-const ConnectSocketIo = () => {
+const useConnect = () => {
 
     
         const [connected, setConnected] = useState(socket.connected);
@@ -32,4 +32,4 @@ const ConnectSocketIo = () => {
   }
 }
 
-export default ConnectSocketIo
+export default useConnect
