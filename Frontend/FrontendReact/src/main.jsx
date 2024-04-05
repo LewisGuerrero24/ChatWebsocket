@@ -8,9 +8,14 @@ import Login from './Components/Login';
 import Register from './Components/Register';
 import {createBrowserRouter, Router, RouterProvider} from 'react-router-dom';
 import TemporalLogin from './Components/TemporalLogin.jsx'
+import { Toaster } from 'react-hot-toast';
+import DashboardAdmin from './Components/DashboardAdmin.jsx';
+import DashboardUser from './Components/DashboardUser.jsx';
+import CsrfProvider from './Components/CsrfProvider.jsx';
 
 const router = createBrowserRouter([
   {
+
     path: "/",
     element: <App />,
   },
@@ -31,12 +36,24 @@ const router = createBrowserRouter([
     path: "/login",
     element: <Login/>
 
+  },
+  {
+    path: "/DashboardAdmin",
+    element: <DashboardAdmin/>
+  },
+  {
+    path: "/DashboardUser",
+    element: <DashboardUser/>
   }
+  
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <CsrfProvider>
+      <RouterProvider router={router} />
+    </CsrfProvider>
+    <Toaster />
   </React.StrictMode>
-   
+
 )

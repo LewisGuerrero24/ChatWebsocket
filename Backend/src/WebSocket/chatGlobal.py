@@ -42,5 +42,3 @@ class SocketServer:
             send(res, broadcast = True)
 
 
-
-
