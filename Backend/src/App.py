@@ -19,6 +19,7 @@ def main():
    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
    jwt = JWTManager(app)
 
+
    CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
    socketio = SocketIO(app,cors_allowed_origins="http://localhost:5173" )
    

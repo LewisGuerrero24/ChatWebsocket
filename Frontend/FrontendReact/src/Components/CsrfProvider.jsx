@@ -9,7 +9,7 @@ const CsrfProvider = ({ children }) => {
 
   useEffect(() => {
     // Inicializar el interceptor de respuesta para actualizar el token JWT
-    // TokenJwtUpdate.initTokenRefresh();
+     TokenJwtUpdate.initTokenRefresh();
 
     // Recupera el token CSRF del almacenamiento local al cargar la aplicación
     const storedCsrfToken = localStorage.getItem('csrfToken');
@@ -51,6 +51,7 @@ const CsrfProvider = ({ children }) => {
       console.error('Error fetching CSRF token:', error);
     }
   };
+  
 
   return <>{children}</>;
 };

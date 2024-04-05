@@ -52,8 +52,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <CsrfProvider>
       <RouterProvider router={router} />
+      <Toaster />
     </CsrfProvider>
-    <Toaster />
   </React.StrictMode>
 
 )

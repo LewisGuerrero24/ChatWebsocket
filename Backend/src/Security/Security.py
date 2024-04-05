@@ -133,14 +133,6 @@ class AuthManager:
 
 
 
-
-
-
-
-
-
-
-
             
             @self.app.route('/csrf_token', methods=['GET'])
             def get_csrf_token():

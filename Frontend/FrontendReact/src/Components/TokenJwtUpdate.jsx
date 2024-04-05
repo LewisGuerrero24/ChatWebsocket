@@ -16,19 +16,24 @@ const TokenJwtUpdate = {
       return Promise.reject(error);
     };
 
-    axios.interceptors.response.use(
-      (response) => {
-        // Verificar si la respuesta contiene un nuevo token JWT
-        
-        const newToken = response.data.token;
-        if (newToken) {
-          // Actualizar el token en el localStorage
-          tokenUtils.setToken(newToken);
-        }
-        return response;
-      },
-      (error) => refreshTokenErrorHandler(error)
-    );
+    if(tokenUtils.checkIfIsLoggedIn()){
+      axios.interceptors.response.use(
+        (response) => {
+          // Verificar si la respuesta contiene un nuevo token JWT
+          
+          const newToken = response.data.token;
+          if (newToken) {
+            // Actualizar el token en el localStorage
+            tokenUtils.setToken(newToken);
+          }
+          return response;
+        },
+        (error) => refreshTokenErrorHandler(error)
+      );
+    }
+
+
+
   },
 };
 

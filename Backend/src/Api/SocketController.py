@@ -4,8 +4,10 @@ class SocketController:
     def __init__(self ,app, TemporalUsuario):
         self.app = app
         self.temporalUsuario = TemporalUsuario
+  
         
-    def start(self):      
+    def start(self):   
+            
          @self.app.route('/chat/resource/<string:name>', methods=['POST'])
          def create_resource(name):
              nuevo_usuario = self.temporalUsuario(nombre=name)
@@ -19,5 +21,6 @@ class SocketController:
                 usuario_existente.delete()
                 return jsonify({'message': f"Recurso con nombre {usuario_existente.nombre} eliminado exitosamente"})
             return abort(404, description="Error al eliminar Usuario")
+
         
          

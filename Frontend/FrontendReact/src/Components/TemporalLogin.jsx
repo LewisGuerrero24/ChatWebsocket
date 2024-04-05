@@ -10,14 +10,16 @@ const TemporalLogin = () => {
   const [name, setName] = useState('')
   const {socket} = useConnect();
   const {joinRoom,statusRoom} = useRoom({socket},"Public")
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSubmit = async(e) => { 
     e.preventDefault();
     console.log(name)
+
     try {
       const response = await axios.post(`http://127.0.0.1:5000/chat/resource/${name}`);
       joinRoom();
+
       if (response.status === 201 && statusRoom==true) {   
 
           navigate(`/chat/Public/${name}`,{replace: true})  
