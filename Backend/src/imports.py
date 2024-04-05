@@ -1,5 +1,6 @@
 from WebSocket.chatGlobal import *
-from routes.Security import *
+from Api.SocketController import *
+from Security.Security import *
 from database.Models.users import Usuario
 from database.Models.TemporalUsers import TemporalUsuario
 from database.conexion import con

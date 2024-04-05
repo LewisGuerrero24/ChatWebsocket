@@ -1,21 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import ConnectSocketIo from '../Hooks/ConnectSocketIo';
-import './css/chat.css';
+import React from 'react'
 import MessageSocketIo from '../Hooks/MessageSocketIo';
-import {useParams} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import image from '../Static/img/Carga.gif'
+import handleGoOut from '../Helpers/handleGoOut';
+import useConnect from '../Hooks/useConnect';
 
+const Chat = ({name}) => {
+  const {connected,socket} = useConnect();
+  const{message, setMessage,showMessage, sendMessage} = MessageSocketIo({socket}, name);
+  const navigate = useNavigate()
 
-
-const Chat = () => {
-
-  let {name} = useParams()
-  const {connected,socket} = ConnectSocketIo();
-  const{message, setMessage,showMessage, handleSubmit} = MessageSocketIo({socket}, name);
+  const handleGoOutCallback = () => {
+    handleGoOut(name, navigate);
+  };
 
   return (
     <>
       {connected ? (
-        <form className='chat-general' onSubmit={handleSubmit}>
+        <>
+        <form className='chat-general' onSubmit={sendMessage}>
         <label>{name}</label>
           <div className='chat-general-global-messages'>
           {showMessage.map((msg) => (
@@ -29,14 +32,21 @@ const Chat = () => {
           </div>
           <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} />
           <button>send</button>
-          <button>Salir</button>
         </form>
+         <button onClick={handleGoOutCallback}>Salir</button>
+         </>
         
       ) : (
-        <h1>Cargando...</h1>
+        <>
+        <div >
+          
+          <p><img src={image} alt="Imagen de Carga" /></p>
+        </div>
+        
+        </>
       )}
     </>
-  );
-};
+  )
+}
 
-export default Chat;
+export default Chat

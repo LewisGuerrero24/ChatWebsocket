@@ -1,5 +1,5 @@
-from imports import *
 from Libraries import *
+from imports import *
 import os
 
 def main():
@@ -23,7 +23,7 @@ def main():
    socketio = SocketIO(app,cors_allowed_origins="http://localhost:5173" )
    
 
-   instances = [SocketServer(socketio, app, TemporalUsuario), AuthManager(app, Usuario, Rol)]
+   instances = [SocketServer(socketio, app, TemporalUsuario), AuthManager(app, Usuario, Rol),SocketController(app,TemporalUsuario)]
    
    if __name__ == '__main__':
       for instance in instances:
