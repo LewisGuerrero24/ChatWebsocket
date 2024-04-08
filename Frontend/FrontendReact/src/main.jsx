@@ -12,7 +12,7 @@ import { Toaster } from 'react-hot-toast';
 import DashboardAdmin from './Components/DashboardAdmin.jsx';
 import DashboardUser from './Components/DashboardUser.jsx';
 import CsrfProvider from './Components/CsrfProvider.jsx';
-import TemporalLoginTwo from './Components/TemporalLoginTwo.jsx'
+
 
 const router = createBrowserRouter([
   {
@@ -23,10 +23,6 @@ const router = createBrowserRouter([
   {
     path: "/temporallogin",
     element: <TemporalLogin/>,
-  },
-  {
-    path: "/temporallogintwo",
-    element: <TemporalLoginTwo/>,
   }
   ,
   {
