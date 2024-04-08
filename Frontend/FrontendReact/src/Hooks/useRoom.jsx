@@ -21,10 +21,10 @@ const useRoom = ({socket},nameRoom) => {
         };
       },[])
 
-  return {
-    joinRoom,
-    statusRoom,
-  }
+      return {
+        joinRoom,
+        statusRoom,
+      }
 }
 
 export default useRoom

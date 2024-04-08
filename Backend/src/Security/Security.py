@@ -8,6 +8,7 @@ LOCKOUT_DURATION = 5
 
 class AuthManager:
     def __init__(self, app, Usuario, Rol):
+
         self.app = app  
         self.bcrypt = Bcrypt(app)
         self.Usuario = Usuario
@@ -55,11 +56,6 @@ class AuthManager:
 
 
 
-
-
-
-
-
             @self.app.route("/Login", methods=['POST'])
             def login():
 
@@ -72,19 +68,16 @@ class AuthManager:
                 if user is None:
                     return jsonify({"error": "Unauthorized"}), 401
                 
-
-
                 # Verifica si el usuario está bloqueado actualmente
                 if user.locked_until and user.locked_until > datetime.utcnow():
                     remaining_time = user.locked_until - datetime.utcnow()
                     return jsonify({"error": f"Account is temporarily locked. Please try again after {remaining_time.total_seconds() // 60} minutes.", "remaining_time": int(remaining_time.total_seconds())}), 403
 
-
                 if user and self.bcrypt.check_password_hash(user.password, password):
 
                     if "user" in user.roles.tipo or "admin" in user.roles.tipo:
 
-                        access_token = create_access_token(identity=apodo)
+                        access_token = create_access_token(identity=apodo, additional_claims={"rol": user.roles.tipo})
                     
                         login_user(user, remember=True)
 
@@ -100,9 +93,7 @@ class AuthManager:
                             'token': access_token
                             })
 
-                        
                         return response
-                        
                     else:
                         flash('Login failed. You do not have the required role to log in.', 'danger')
                         return jsonify({'error': 'Invalid role'}), 401
@@ -119,18 +110,9 @@ class AuthManager:
 
                         return jsonify({"error": f"Too many failed login attempts. Your account is temporarily locked. Please try again after {LOCKOUT_DURATION} minutes."}), 403
 
-
                     flash('Login failed. Check your username and password.', 'danger')
                 return jsonify({'error': 'Invalid username or password'}), 401
             
-
-
-
-
-
-
-
-
 
 
             
@@ -138,12 +120,6 @@ class AuthManager:
             def get_csrf_token():
                 csrf_token = generate_csrf()
                 return jsonify({'csrf_token': csrf_token})
-
-
-
-
-
-
 
 
             # Ruta protegida con JWT De Ejemplo
@@ -156,16 +132,11 @@ class AuthManager:
                 return jsonify({"user_id": current_user, "profile_details": "example"}), 200
 
 
-
-
-
-
             
             @self.app.route("/logout", methods=['POST'])
             @login_required
             def logout():
                 logout_user()
-
                 # Elimina la información del usuario de la sesión al hacer logout
                 session.pop('user_id', None)
                 session.pop('apodo', None)
@@ -176,20 +147,11 @@ class AuthManager:
 
 
 
-
-
-
-
-
-
-
-
             @self.app.route("/register", methods=['POST'])
             def register():
                 
                 apodo = request.json["apodo"]
                 password = request.json["password"]
-
                 user_exists = self.Usuario.objects(apodo=apodo).first() is not None
                 type_rol = self.Rol.objects(tipo="user").first()
 

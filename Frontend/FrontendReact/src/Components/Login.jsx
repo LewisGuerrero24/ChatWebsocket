@@ -49,9 +49,6 @@ const Login = () => {
         
       }
 
-
-
-      
     }catch(error){
       if (error.response && error.response.status === 403 && error.response.data.remaining_time){
         const remainingTime = error.response.data.remaining_time;

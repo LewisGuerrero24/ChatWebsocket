@@ -44,14 +44,22 @@ const tokenUtils = {
 
     getLoggedInUserId: () => {
         const token = tokenUtils.getToken();
-
         if (!token){
             return "";
         }
 
         return jwtDecode(token).sub;
-    }
+    },
 
+
+    getLoggedInUseRol: () => {
+        const token = tokenUtils.getToken();
+        if (!token){
+            return "";
+        }
+
+        return jwtDecode(token).rol;
+    }
 };
 
 export default tokenUtils;

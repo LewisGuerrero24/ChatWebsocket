@@ -7,9 +7,9 @@ import useConnect from '../Hooks/useConnect';
 
 const TemporalLogin = () => {
 
-  const [name, setName] = useState('')
+  const [name, setName] = useState('');
   const {socket} = useConnect();
-  const {joinRoom,statusRoom} = useRoom({socket},"Public")
+  const {joinRoom,statusRoom} = useRoom({socket},"Public");
   const navigate = useNavigate();
 
   const handleSubmit = async(e) => { 
@@ -17,12 +17,15 @@ const TemporalLogin = () => {
     console.log(name)
 
     try {
-      const response = await axios.post(`http://127.0.0.1:5000/chat/resource/${name}`);
+      const response = await axios.post('http://localhost:5000/chat/resource', {
+        name
+      }, { withCredentials: true});
+      
       joinRoom();
 
       if (response.status === 201 && statusRoom==true) {   
 
-          navigate(`/chat/Public/${name}`,{replace: true})  
+          navigate(`/chat/Public/${name}`,{replace: true});  
           console.log('Usuario a Ingresado Sala Publica');
 
       } else {
