@@ -3,13 +3,16 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import TokenJwtUpdate from './TokenJwtUpdate';
+import tokenUtils from "../Hooks/utils";
 
 const CsrfProvider = ({ children }) => {
   const [csrfToken, setCsrfToken] = useState('');
+  const isLoggedIn = tokenUtils.checkIfIsLoggedIn();
+  const whoUser = tokenUtils.getLoggedInUseRol();
 
   useEffect(() => {
     // Inicializar el interceptor de respuesta para actualizar el token JWT
-    // TokenJwtUpdate.initTokenRefresh();
+     TokenJwtUpdate.initTokenRefresh();
 
     // Recupera el token CSRF del almacenamiento local al cargar la aplicación
     const storedCsrfToken = localStorage.getItem('csrfToken');
@@ -20,8 +23,7 @@ const CsrfProvider = ({ children }) => {
       console.log("CSRF Token old:", storedCsrfToken);
     } else {
       fetchCsrfToken(); // Si el token no está almacenado, obtén uno nuevo
-    }
-  
+    }  
     // Define la función para limpiar el token CSRF al cerrar la aplicación
     const clearCsrfToken = () => {
       localStorage.removeItem('csrfToken');
@@ -35,7 +37,22 @@ const CsrfProvider = ({ children }) => {
       window.removeEventListener('beforeunload', clearCsrfToken);
     };
   }, []);
+
+
+
+  useEffect(() => {   
+    const currentPath = window.location.pathname;
+   
+    if (isLoggedIn && currentPath === '/') {
+       if(whoUser === "user"){
+        window.location.href = "/DashboardUser";
+       }else{
+        window.location.href = "/DashboardAdmin";
+       }
+    }
+  }, [isLoggedIn]);
   
+
   
 
   const fetchCsrfToken = async () => {
@@ -51,6 +68,7 @@ const CsrfProvider = ({ children }) => {
       console.error('Error fetching CSRF token:', error);
     }
   };
+  
 
   return <>{children}</>;
 };

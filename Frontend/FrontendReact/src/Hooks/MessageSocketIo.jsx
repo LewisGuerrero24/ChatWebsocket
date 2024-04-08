@@ -12,16 +12,13 @@ const MessageSocketIo = ({socket}, name, nameRoom) => {
         setMessage(''); 
       };
     
-      
+      const receivedMessage = (m) => {
+        console.log(m);
+          setShowMessage((prevMessages) => [...prevMessages, { id: id++,name: m.name ,message: m.message }]);
+          console.log(showMessage)
+      };
 
     useEffect(() => {
-
-      const receivedMessage = (m) => {
-        console.log(m)
-        setShowMessage((prevMessages) => [...prevMessages, { id: id++,name: m.name ,message: m.message }]);
-    };
-
-
         socket.on('message', receivedMessage);
         return () => {
           socket.off('message',receivedMessage);

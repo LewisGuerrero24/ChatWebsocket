@@ -7,16 +7,18 @@ import useConnect from '../Hooks/useConnect';
 
 const TemporalLogin = () => {
 
-  const [name, setName] = useState('')
+  const [name, setName] = useState('');
   const {socket} = useConnect();
-  const {joinRoom,statusRoom,urlRoom} = useRoom({socket},"Public")
-  const navigate = useNavigate()
+  const {joinRoom,statusRoom} = useRoom({socket},"Public");
+  const navigate = useNavigate();
 
   const handleSubmit = async(e) => { 
     e.preventDefault();
     console.log(name)
     try {
-      const response = await axios.post(`http://127.0.0.1:5000/chat/resource/${name}`);
+      axios.post('http://localhost:5000/chat/resource', {
+        name
+      }, { withCredentials: true});
       joinRoom();
       if (response.status === 201 && statusRoom==true) {   
 
@@ -25,7 +27,7 @@ const TemporalLogin = () => {
 
       } else {
         navigate('/',{replace: true})
-        console.error('Error al eliminar al ingresar a la sala:', response.statusText);
+        console.error('Error al eliminar el recurso:', response.statusText);
       }
     } catch (error) {
       console.error('Error de red:', error);
