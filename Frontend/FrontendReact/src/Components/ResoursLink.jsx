@@ -15,6 +15,9 @@ const resoursLink = () => {
         <li>
             <Link to={'temporallogin'}>Temporal Chat</Link>
         </li>
+        <li>
+            <Link to={'temporallogintwo'}>Temporal Chat 2</Link>
+        </li>
       </ul>
       <hr />
     </div>

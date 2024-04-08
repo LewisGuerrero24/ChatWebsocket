@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import MessageSocketIo from '../Hooks/MessageSocketIo';
 import {useNavigate} from "react-router-dom";
 import image from '../Static/img/Carga.gif'
 import handleGoOut from '../Helpers/handleGoOut';
-import useConnect from '../Hooks/useConnect';
 
-const Chat = ({name}) => {
-  const {connected,socket} = useConnect();
-  const{message, setMessage,showMessage, sendMessage} = MessageSocketIo({socket}, name);
+
+const Chat = ({name, connected, socket, nameRoom}) => {
+  
+  const{message, setMessage,showMessage, sendMessage} = MessageSocketIo({socket}, name, nameRoom);
+  
   const navigate = useNavigate()
 
   const handleGoOutCallback = () => {

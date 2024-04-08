@@ -25,20 +25,25 @@ class SocketServer:
 
         @self.socketio.on('leave')
         def on_leave(data):
-            username = data['username']
-            room = data['room']
+            room = data
             leave_room(room)
-            self.socketio.emit('message', {'msg': username + ' ha salido de la sala ' + room}, room=room)
+            self.socketio.emit('leave_room', True ,room=room)
             
         @self.socketio.on('message')
         def handle_message(data):
             usuario_existente = self.temporalUsuario.objects(nombre=data['name']).first()
             if usuario_existente:
-                usuario_existente.mensajes.append(data['message'])
-                usuario_existente.save()
-                
+                if data['room'] in usuario_existente.mensajes:
+                    usuario_existente.mensajes[data['room']].append(data['message'])
+                else:
+                    message = list()
+                    usuario_existente.mensajes[data['room']] = message
+                    usuario_existente.mensajes[data['room']].append(data['message'])
+                usuario_existente.save()        
+            
             usuario = self.temporalUsuario.objects(nombre=data['name']).first()
-            res = {'name':usuario['nombre'],'message': usuario['mensajes']}
-            send(res, broadcast = True)
+            print(data['room'])
+            res = {'name':usuario['nombre'],'message': usuario.mensajes.get(data['room'],[])}
+            send(res, broadcast = True,room=data['room'])
 
 

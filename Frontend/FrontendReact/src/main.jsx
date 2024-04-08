@@ -12,6 +12,7 @@ import { Toaster } from 'react-hot-toast';
 import DashboardAdmin from './Components/DashboardAdmin.jsx';
 import DashboardUser from './Components/DashboardUser.jsx';
 import CsrfProvider from './Components/CsrfProvider.jsx';
+import TemporalLoginTwo from './Components/TemporalLoginTwo.jsx'
 
 const router = createBrowserRouter([
   {
@@ -24,7 +25,12 @@ const router = createBrowserRouter([
     element: <TemporalLogin/>,
   },
   {
-    path: "/Chat/Public/:name",
+    path: "/temporallogintwo",
+    element: <TemporalLoginTwo/>,
+  }
+  ,
+  {
+    path: "/Chat/:Room/:name",
     element: <PublicChat/>,
   }
   ,
@@ -50,9 +56,7 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <CsrfProvider>
       <RouterProvider router={router} />
-    </CsrfProvider>
   </React.StrictMode>
 
 )

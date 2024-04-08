@@ -9,7 +9,7 @@ const TemporalLogin = () => {
 
   const [name, setName] = useState('')
   const {socket} = useConnect();
-  const {joinRoom,statusRoom} = useRoom({socket},"Public")
+  const {joinRoom,statusRoom,urlRoom} = useRoom({socket},"Public")
   const navigate = useNavigate()
 
   const handleSubmit = async(e) => { 
@@ -20,12 +20,12 @@ const TemporalLogin = () => {
       joinRoom();
       if (response.status === 201 && statusRoom==true) {   
 
-          navigate(`/chat/Public/${name}`,{replace: true})  
+          navigate(`/chat/${urlRoom}/${name}`,{replace: true})  
           console.log('Usuario a Ingresado Sala Publica');
 
       } else {
         navigate('/',{replace: true})
-        console.error('Error al eliminar el recurso:', response.statusText);
+        console.error('Error al eliminar al ingresar a la sala:', response.statusText);
       }
     } catch (error) {
       console.error('Error de red:', error);
