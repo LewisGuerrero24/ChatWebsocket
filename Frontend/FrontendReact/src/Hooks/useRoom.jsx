@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react'
 const useRoom = ({socket},nameRoom) => {
 
   const [statusRoom,setStatusRoom] = useState(true)
+  const[urlRoom,setUrlRoom] = useState(nameRoom)
 
 
     const joinRoom = () => {
-        socket.emit('join',nameRoom);
+        socket.emit('join',urlRoom);
       };
 
       const statusJoin = (m) => {
@@ -25,6 +26,8 @@ const useRoom = ({socket},nameRoom) => {
       return {
         joinRoom,
         statusRoom,
+        urlRoom
+
       }
 }
 

@@ -52,12 +52,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
+    <CsrfProvider>
       <RouterProvider router={router} />
-<<<<<<< HEAD
-=======
-      <Toaster />
     </CsrfProvider>
->>>>>>> 104a428bd4922a54abf753d0df413a6773b4580a
+    <Toaster />
   </React.StrictMode>
 
 )

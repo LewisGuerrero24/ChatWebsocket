@@ -9,16 +9,18 @@ const TemporalLogin = () => {
 
   const [name, setName] = useState('');
   const {socket} = useConnect();
-  const {joinRoom,statusRoom} = useRoom({socket},"Public");
+  const {joinRoom,statusRoom, urlRoom} = useRoom({socket},"Public");
   const navigate = useNavigate();
 
   const handleSubmit = async(e) => { 
     e.preventDefault();
     console.log(name)
     try {
-      axios.post('http://localhost:5000/chat/resource', {
+
+     const response = await axios.post('http://localhost:5000/chat/resource', {
         name
       }, { withCredentials: true});
+
       joinRoom();
       if (response.status === 201 && statusRoom==true) {   
 
