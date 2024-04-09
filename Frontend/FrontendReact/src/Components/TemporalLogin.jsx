@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import './css/temporalLogin.css';
 import {useNavigate} from "react-router-dom";
 import axios from 'axios';
 import useRoom from '../Hooks/useRoom';
@@ -38,11 +37,26 @@ const TemporalLogin = () => {
 
   return (
     <>
-      <form  className='formT'  onSubmit={handleSubmit}>
+      {/* <form  className='formT'  onSubmit={handleSubmit}>
         <input type="text" value={name} onChange={(e)=> setName(e.target.value)}/>
         <button>Ingresar</button>
       </form>
-      
+       */}
+
+<div class="h-screen bg-emerald-500 flex justify-center items-center w-full">
+  <form onSubmit={handleSubmit}> 
+    <div class="bg-white px-10 py-8 rounded-xl w-screen shadow-md max-w-sm">
+      <div class="space-y-4">
+        <h1 class="text-center text-2xl font-semibold text-gray-600">Log In</h1>
+        <div>
+          <label for="username" class="block mb-1 text-gray-600 font-semibold">Username</label>
+          <input ype="text" value={name} onChange={(e)=> setName(e.target.value)}  class="bg-indigo-100 px-4 py-2 outline-none rounded-md w-full" />
+        </div>
+      </div>
+      <button  type="submit" class="mt-4 w-full bg-emerald-500 text-indigo-100 py-2 rounded-md text-lg tracking-wide">Iniciar</button>
+    </div>
+  </form>
+</div>
     </>
   )
 }

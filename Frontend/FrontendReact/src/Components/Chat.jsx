@@ -17,11 +17,12 @@ const Chat = ({name, connected, socket, nameRoom}) => {
 
   return (
     <>
+    <div class="h-screen bg-emerald-400 flex justify-center items-center w-full">
       {connected ? (
         <>
         <form className='chat-general' onSubmit={sendMessage}>
         <label>{name}</label>
-          <div className='chat-general-global-messages'>
+          <div className='h-96 w-96 border border-solid border-slate-500  bg-slate-300 '>
           {showMessage.map((msg) => (
               <div className='container-message' key={msg.id}>
                 <p className='container-message-name'>{msg.name}</p>
@@ -46,6 +47,7 @@ const Chat = ({name, connected, socket, nameRoom}) => {
         
         </>
       )}
+      </div>
     </>
   )
 }
