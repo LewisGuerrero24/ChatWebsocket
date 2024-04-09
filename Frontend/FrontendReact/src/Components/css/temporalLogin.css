@@ -1,0 +1,7 @@
+.formT {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(66, 66, 66);
+    padding: 5%;
+    border-radius: 10px;
+}
