@@ -7,17 +7,17 @@ MAX_FAILED_ATTEMPTS = 5
 LOCKOUT_DURATION = 5
 
 class AuthManager:
-    def __init__(self, app, Usuario, Rol):
+    def __init__(self, app, User, Rol):
 
         self.app = app  
         self.bcrypt = Bcrypt(app)
-        self.Usuario = Usuario
+        self.Usuario = User
         self.Rol = Rol
         self.login_manager = LoginManager(app)
         self.login_manager.login_view = 'login' # Cuando un usuario no autenticado trate de iniciar a una ruta protegida sera redirigido a login
         self.db = con()
         self.principal = Principal(app)
-        self.user_datastore = MongoEngineUserDatastore(self.db, Usuario, None)
+        self.user_datastore = MongoEngineUserDatastore(self.db,User, None)
         self.security = Security(self.app, self.user_datastore)
 
     def start(self):

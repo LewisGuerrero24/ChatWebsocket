@@ -1,11 +1,11 @@
 from Libraries import *
 from database.Models.role import Rol
 
-class Usuario(Document, UserMixin, RoleMixin):
-    apodo = StringField(required=True)
+class User(Document, UserMixin, RoleMixin):
+    name = StringField(required=True)
     password = StringField(required=True) 
     # foto = FileField()
-    roles = ReferenceField(Rol)
+    rol = ReferenceField(Rol)
     fs_uniquifier = StringField()
 
     failed_login_attempts = IntField(default=0)
