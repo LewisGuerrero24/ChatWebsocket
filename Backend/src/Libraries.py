@@ -11,7 +11,7 @@ import secrets
 from functools import wraps
 
 #Security login
-from flask import Flask, render_template, redirect, url_for, flash, jsonify, request, session, abort
+from flask import Flask, render_template, redirect, url_for, flash, jsonify, request, session, abort, make_response
 from flask_bcrypt import Bcrypt
 from flask_socketio import SocketIO, send, join_room, leave_room, emit
 from flask_cors import CORS

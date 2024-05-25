@@ -9,7 +9,7 @@ import tokenUtils from "../Hooks/utils";
 
 const Login = () => {
  // Estados para manejar los valores del formulario
- const [apodo, setUsername] = useState('');
+ const [name, setUsername] = useState('');
  const [password, setPassword] = useState('');
  const [loggedIn, setLoggedIn] = useState(false);
  const navigate = useNavigate();
@@ -23,7 +23,7 @@ const Login = () => {
     
     try{
       const response = await axios.post('http://localhost:5000/Login', {
-        apodo,
+        name,
         password,
       }, { withCredentials: true});
 
@@ -83,7 +83,7 @@ return (
         <h1 class="text-center text-2xl font-semibold text-gray-600">Log In</h1>
         <div>
           <label for="username" class="block mb-1 text-gray-600 font-semibold">Username</label>
-          <input type="text" value={apodo} onChange={(e) => setUsername(e.target.value)}  class="bg-indigo-100 px-4 py-2 outline-none rounded-md w-full" />
+          <input type="text" value={name} onChange={(e) => setUsername(e.target.value)}  class="bg-indigo-100 px-4 py-2 outline-none rounded-md w-full" />
         </div>
         <div>
           <label for="email" class="block mb-1 text-gray-600 font-semibold">Password</label>
@@ -94,20 +94,7 @@ return (
     </div>
   </form>
 </div>
-  // <div>
-  //   <h2>Login</h2>
-  //   <form onSubmit={handleSubmit}>
-  //     <label>Username:
-  //       <input type="text" value={apodo} onChange={(e) => setUsername(e.target.value)} />
-  //     </label>
-  //     <label>Password:
-  //       <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-  //     </label>
-  //     <button type="submit">Login</button>
-  //   </form>
-  //   <Link to="/">Ir al Inicio</Link>
-  //   <Link to="/Register">Register</Link>
-  // </div>
+
 );
 };
 

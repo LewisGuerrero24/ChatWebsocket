@@ -1,26 +1,44 @@
 import { jwtDecode } from "jwt-decode";
+import Cookies from 'js-cookie';
 
 
 
 const tokenUtils = {
+    //// getToken: () => {
+    //     if (typeof localStorage !== 'undefined'){
+    //         return localStorage.getItem("token");
+    //     }
+    // },
+
     getToken: () => {
-        if (typeof localStorage !== 'undefined'){
-            return localStorage.getItem("token");
-        }
-    },
+        return Cookies.get('token');
+      },
+      
 
+    //// setToken: (token) => {
+    //     if (typeof localStorage !== 'undefined'){
+    //         return localStorage.setItem("token", token);
+    //     }
+    // },
     setToken: (token) => {
-        if (typeof localStorage !== 'undefined'){
-            return localStorage.setItem("token", token);
-        }
-    },
+        // Configura las opciones de la cookie
+        const options = {
+          expires: 1, // Duración de la cookie en días
+          secure: true, // Asegura que la cookie solo se transmita a través de HTTPS
+          sameSite: 'strict', // Protección adicional contra ataques CSRF
+        };
+        Cookies.set('token', token, options);
+      },
 
 
+    //// removeToken: () => {
+    //     if (typeof localStorage !== 'undefined'){
+    //         return localStorage.removeItem("token");
+    //     }
+    // },
     removeToken: () => {
-        if (typeof localStorage !== 'undefined'){
-            return localStorage.removeItem("token");
-        }
-    },
+        Cookies.remove('token');
+      },
 
 
 
