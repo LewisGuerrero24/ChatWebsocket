@@ -62,6 +62,8 @@ const DashboardAdmin = () => {
                     <>
                         <div>Bienvenido <b>{user}</b></div>
                         <button onClick={handleLogout}>Cerrar sesión</button> 
+
+                        
                     </>
                 )}
             </nav>
