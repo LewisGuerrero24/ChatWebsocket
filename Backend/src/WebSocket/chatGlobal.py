@@ -2,10 +2,10 @@ from Libraries import *
 
 
 class SocketServer:
-    def __init__(self, socketio , app, TemporalUsuario):
+    def __init__(self, socketio , app, UserService):
         self.socketio = socketio
         self.app = app
-        self.temporalUsuario = TemporalUsuario
+        self.UserService = UserService
      
     def start(self):           
         @self.app.route('/')
@@ -30,20 +30,7 @@ class SocketServer:
             self.socketio.emit('leave_room', True ,room=room)
             
         @self.socketio.on('message')
-        def handle_message(data):
-            usuario_existente = self.temporalUsuario.objects(nombre=data['name']).first()
-            if usuario_existente:
-                if data['room'] in usuario_existente.mensajes:
-                    usuario_existente.mensajes[data['room']].append(data['message'])
-                else:
-                    message = list()
-                    usuario_existente.mensajes[data['room']] = message
-                    usuario_existente.mensajes[data['room']].append(data['message'])
-                usuario_existente.save()        
-            
-            usuario = self.temporalUsuario.objects(nombre=data['name']).first()
-            print(data['room'])
+        def handle_message(data):       
+            usuario = self.UserService.handle_messageDb(data)
             res = {'name':usuario['nombre'],'message': usuario.mensajes.get(data['room'],[])}
             send(res, broadcast = True,room=data['room'])
-
-

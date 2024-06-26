@@ -5,7 +5,6 @@ const socket = io('http://localhost:5000')
 
 const useConnect = () => {
 
-    
         const [connected, setConnected] = useState(socket.connected);
 
         const handleServerStatus = (m) => {
@@ -16,15 +15,12 @@ const useConnect = () => {
     const connect = () => {
         socket.on('server_status', handleServerStatus);
       };
-    
       useEffect(() => {
         connect();
         return () => {
           socket.off('server_status', handleServerStatus);
         };
       }, []);
-    
-
   return {
     connected,
     socket
