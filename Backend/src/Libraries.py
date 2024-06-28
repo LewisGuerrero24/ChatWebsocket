@@ -25,5 +25,5 @@ import json
 
 import uuid
 
-from mongoengine import connect,Document,   DictField, ListField, StringField, FileField, IntField, DateTimeField, ReferenceField
+from mongoengine import connect,Document,   DictField, ListField, StringField, FileField, IntField, DateTimeField, ReferenceField, EmbeddedDocument, EmbeddedDocumentField
 

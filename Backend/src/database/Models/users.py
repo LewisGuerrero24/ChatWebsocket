@@ -1,13 +1,14 @@
 from Libraries import *
 from database.Models.role import Rol
 
-class User(Document, UserMixin, RoleMixin):
+class User(Document, UserMixin, RoleMixin, EmbeddedDocument):
     name = StringField(required=True)
     password = StringField(required=True) 
     # foto = FileField()
     rol = ReferenceField(Rol)
     fs_uniquifier = StringField()
     suspendedAccount = IntField(default=1) # 1 significa que no esta suspendido y 0 esta suspendido
+    dateEntry = DateTimeField()
     contacts = ListField(ReferenceField('self')) 
 
     # Atributos de limite de intentos de session 

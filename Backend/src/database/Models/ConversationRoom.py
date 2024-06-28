@@ -1,7 +1,8 @@
 from Libraries import *
+from MessagesUser import MessageUser
 
 class ConversationsRooms():
     IdRooms = StringField()
-    Messages = ListField(StringField())
-    AuthoRizedUser = ListField(StringField())
+    Messages = ListField(EmbeddedDocumentField(MessageUser))
+    
     
