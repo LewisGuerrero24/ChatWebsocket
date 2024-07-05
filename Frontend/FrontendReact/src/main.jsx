@@ -10,15 +10,16 @@ import {createBrowserRouter, Router, RouterProvider} from 'react-router-dom';
 import TemporalLogin from './Components/TemporalLogin.jsx'
 import { Toaster } from 'react-hot-toast';
 import DashboardAdmin from './Components/DashboardAdmin.jsx';
-import DashboardUser from './Components/DashboardUser.jsx';
 import CsrfProvider from './Components/CsrfProvider.jsx';
+import DashboardUser from './Components/DashboardUser.jsx'
+
 
 
 const router = createBrowserRouter([
   {
 
     path: "/",
-    element: <App />,
+    element: <App/>,
   },
   {
     path: "/temporallogin",
@@ -44,14 +45,9 @@ const router = createBrowserRouter([
     element: <DashboardAdmin/>
   },
   {
-    path: "/DashboardUser",
+    path: "/DashboardUser/:name",
     element: <DashboardUser/>
-  },
-  // {
-  //   path: "/UserManagement",
-  //   element: <UserManagement/>
-  // }
-  
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
