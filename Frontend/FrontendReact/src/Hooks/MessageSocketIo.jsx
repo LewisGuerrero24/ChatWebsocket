@@ -16,7 +16,7 @@ const MessageSocketIo = ({socket}, name, nameRoom) => {
         console.log(m);
           setShowMessage((prevMessages) => [...prevMessages, { id: id++,name: m.name ,message: m.message }]);
           console.log(showMessage)
-      };
+      };  
 
     useEffect(() => {
         socket.on('message', receivedMessage);

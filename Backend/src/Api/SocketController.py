@@ -12,7 +12,7 @@ class SocketController:
              nuevo_usuario = self.temporalUsuario(nombre=name)
              nuevo_usuario.save()
              return f"Usuario {name} Creado con Exito", 201
-                
+                    
          @self.app.route('/chat/resources/<string:name>', methods=['DELETE'])
          def delete_resource(name):
             usuario_existente = self.temporalUsuario.objects(nombre=name).first()

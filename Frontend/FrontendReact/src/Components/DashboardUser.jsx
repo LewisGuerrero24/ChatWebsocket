@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import tokenUtils from "../Hooks/utils";
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; 
+import logoutUsers from "../Helpers/logoutUsers";
 
 const DashboardUser = () => {
     const isLoggedIn = tokenUtils.checkIfIsLoggedIn();
@@ -9,33 +9,33 @@ const DashboardUser = () => {
     const navigate = useNavigate();
     const [lastActive, setLastActive] = useState(new Date());
 
-    const handleLogout = async () => {
-        try {
-            // Realiza una solicitud POST a la ruta /logout para cerrar sesión
-            await axios.post('http://localhost:5000/logout');
+    // const handleLogout = async () => {
+    //     try {
+    //         // Realiza una solicitud POST a la ruta /logout para cerrar sesión
+    //         await axios.post('http://localhost:5000/logout');
             
-            // Elimina el token del almacenamiento local
-            tokenUtils.removeToken();
-            setLastActive(new Date());
-            // Redirige al usuario a la página de inicio
-            navigate('/');
+    //         // Elimina el token del almacenamiento local
+    //         tokenUtils.removeToken();
+    //         setLastActive(new Date());
+    //         // Redirige al usuario a la página de inicio
+    //         navigate('/');
 
-        // Reemplaza la entrada actual del historial con la página de inicio
-        window.history.pushState({}, '', '/');
+    //     // Reemplaza la entrada actual del historial con la página de inicio
+    //     window.history.pushState({}, '', '/');
         
-        // Recarga la página para asegurarse de que se aplique el cambio en el historial
-        window.location.reload();
-        } catch (error) {
-            console.error('Error during logout:', error);
-        }
-    }
+    //     // Recarga la página para asegurarse de que se aplique el cambio en el historial
+    //     window.location.reload();
+    //     } catch (error) {
+    //         console.error('Error during logout:', error);
+    //     }
+    // }
 
 
 
     useEffect(() => {
         const interval = setInterval(() => {
             if (isLoggedIn && (new Date() - lastActive) >= 2 * 60 * 1000) {
-                handleLogout();
+                logoutUsers(setLastActive, navigate);
             }
         }, 1000);
 
@@ -62,6 +62,10 @@ const DashboardUser = () => {
           navigate('/');
       }
   }, [isLoggedIn]);
+
+  const handleLogout = () => {
+    logoutUsers(setLastActive, navigate);
+  };
 
     return (
         <>

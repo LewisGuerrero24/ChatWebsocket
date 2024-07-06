@@ -13,9 +13,7 @@ const PublicChat = () => {
   return (
     <>
       {/* Aquí se utiliza la key prop para forzar la recarga del componente Chat */}
-      <Chat key={urlRoom} name={name} connected={connected} socket={socket} nameRoom={urlRoom}></Chat>
-
-      
+      <Chat key={urlRoom} name={name} connected={connected} socket={socket} nameRoom={urlRoom}></Chat>      
     </>
   );
 };
