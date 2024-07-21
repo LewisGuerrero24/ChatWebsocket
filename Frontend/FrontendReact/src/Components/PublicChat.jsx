@@ -12,8 +12,13 @@ const PublicChat = () => {
 
   return (
     <>
+    <div className="flex h-screen antialiased text-gray-800">
+    <div className="flex flex-row h-full w-full overflow-x-hidden">
       {/* Aquí se utiliza la key prop para forzar la recarga del componente Chat */}
-      <Chat key={urlRoom} name={name} connected={connected} socket={socket} nameRoom={urlRoom}></Chat>      
+      <Chat key={urlRoom} name={name} connected={connected} socket={socket} nameRoom={urlRoom}></Chat>
+    </div>
+    </div>
+      
     </>
   );
 };

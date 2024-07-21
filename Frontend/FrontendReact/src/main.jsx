@@ -14,7 +14,6 @@ import DashboardEstudiante from './Components/DashboardEstudiante.jsx'
 import DashboardDocente from './Components/DashboardDocente.jsx'
 import CsrfProvider from './Components/CsrfProvider.jsx';
 
-
 const router = createBrowserRouter([
   {
 
@@ -51,7 +50,11 @@ const router = createBrowserRouter([
   {
     path: "/DashboardDocente",
     element: <DashboardDocente/>
-  }
+  },
+  // {
+  //   path: "/DashboardUser/:name",
+  //   element: <DashboardUser/>
+  // }
   
 ]);
 

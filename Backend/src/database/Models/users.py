@@ -10,6 +10,7 @@ class User(Document, UserMixin):
     fs_uniquifier = StringField()
     suspendedAccount = IntField(default=1) # 1 significa que no esta suspendido y 0 esta suspendido
     dateEntry = DateTimeField()
+    dateEntry = DateTimeField()
     contacts = ListField(ReferenceField('self')) 
 
     # Atributos de limite de intentos de session 
@@ -18,7 +19,6 @@ class User(Document, UserMixin):
 
     def is_active(self):
         return True
-
     # Implementar métodos requeridos por RoleMixin si es necesario
     def has_role(self, role):
         return self.rol == role

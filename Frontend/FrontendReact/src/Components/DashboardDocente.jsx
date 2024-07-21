@@ -50,7 +50,13 @@ const DashboardDocente = () => {
             <nav>
                 {isLoggedIn && (
                     <>
-                        <div>Bienvenido <b>{user}</b></div>
+                        <div className="flex h-screen antialiased text-gray-800">
+                            <div className="flex flex-row h-full w-full overflow-x-hidden">
+                                <ListContact connected={connected} name={name}/>
+                                <h1>{name}</h1>
+                                <ChatUsers key={urlRoom} nameSendUser={"pedro"} name={name} connected={connected} socket={socket} nameRoom={urlRoom}/>
+                            </div>
+                        </div>
                         <button onClick={handleLogout}>Cerrar sesión</button> 
                     </>
                 )}

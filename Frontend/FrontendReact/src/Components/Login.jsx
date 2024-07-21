@@ -94,6 +94,7 @@ return (
       </div>
       <button  type="submit" className="mt-4 w-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-indigo-100 py-2 rounded-md text-lg tracking-wide">Iniciar</button>
     </div>
+    <Link to="/register">Registrate</Link>
   </form>
 </div>
 
