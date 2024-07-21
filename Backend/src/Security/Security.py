@@ -79,7 +79,7 @@ class AuthManager:
 
                 if user and self.bcrypt.check_password_hash(user.password, password):
 
-                    if "user" in user.rol.tipo or "admin" in user.rol.tipo:
+                    if "estudiante" in user.rol.tipo or "admin" in user.rol.tipo or "docente" in user.rol.tipo:
 
                         access_token = create_access_token(identity=name, additional_claims={"rol": user.rol.tipo})
                     
@@ -162,7 +162,7 @@ class AuthManager:
                 name = request.json["name"]
                 password = request.json["password"]
                 user_exists = self.Usuario.objects(name=name).first() is not None
-                type_rol = self.Rol.objects(tipo="user").first()
+                type_rol = self.Rol.objects(tipo="estudiante").first()
 
 
                 if user_exists:

@@ -79,6 +79,7 @@ const DashboardUser = () => {
                         <div className="flex h-screen antialiased text-gray-800">
                             <div className="flex flex-row h-full w-full overflow-x-hidden">
                                 <ListContact connected={connected} name={name}/>
+                                <h1>{name}</h1>
                                 <Chat key={urlRoom} name={name} connected={connected} socket={socket} nameRoom={urlRoom}></Chat>
                             </div>
                         </div>

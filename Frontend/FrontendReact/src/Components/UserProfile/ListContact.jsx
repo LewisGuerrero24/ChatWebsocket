@@ -1,6 +1,29 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'; 
+import tokenUtils from "../../Hooks/utils";
+
+
 
 const ListContact = ({name, connected}) => {
+  const [data, setData] = useState([]);
+
+  useEffect(()=>{
+
+    const apiUrl = 'http://localhost:5000/user/list'
+
+    axios.get(apiUrl,{ headers: {
+      authorization: `Bearer ${tokenUtils.getToken()}`
+    }
+  }).then(response => {
+        setData(response.data);
+        console.log(response.data)
+      })
+ 
+  },[])
+
+
+
+
   return (
     <>
      {/* Sidebar */}
@@ -42,10 +65,12 @@ const ListContact = ({name, connected}) => {
             </div>
             <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
               {/* Replace with actual active conversations buttons */}
-              <button className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2">
-                <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">H</div>
-                <div className="ml-2 text-sm font-semibold">Henry Boyd</div>
-              </button>
+              {data.map(item => (
+                <button className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2">
+                  <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">{item.name.charAt(0).toUpperCase()}</div>
+                  <div key={item.id} className="ml-2 text-sm font-semibold">{item.name}</div>
+                </button>
+               ))}
               {/* Repeat as needed for other active conversations */}
             </div>
           </div>

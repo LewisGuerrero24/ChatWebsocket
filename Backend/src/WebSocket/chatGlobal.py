@@ -4,7 +4,7 @@ from Libraries import *
 class SocketServer:
     def __init__(self, socketio , app, UserService):
         self.socketio = socketio
-        self.app = app
+        self.app = app 
         self.UserService = UserService
      
     def start(self):           

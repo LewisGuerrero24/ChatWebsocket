@@ -17,8 +17,8 @@ def main():
    app.config['SECURITY_PASSWORD_SALT'] = os.environ.get("SECURITY_PASSWORD_SALT", '146585145368132386173505678016728509634')
    app.config["JWT_SECRET_KEY"] = "x/dgAj77N5y5g84UWZoTchz9TH+at2UK71P8bLlNzex6CrbD4XnyDKeFRIIueFY8cEhgSsvsQ7tM4JzvL1gYbtB4YbqeZ1bAH2Q/mm+ZYsA"
    app.config['WTF_CSRF_SECRET_KEY'] = secrets.token_hex(16)
-  #  csrf = CSRFProtect(app)
-  #  csrf.init_app(app)
+   csrf = CSRFProtect(app)
+   csrf.init_app(app)
 
    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
    jwt = JWTManager(app)

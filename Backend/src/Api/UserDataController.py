@@ -15,8 +15,10 @@ class UserDataController():
             response = self.UserDataService.InsertUser(data)
             return jsonify(response.name), 201
         
+        @jwt_required
         @self.app.route('/user/list', methods=['GET'])
         def list_user():
             response = self.UserDataService.getAllUser()
+            print(response)
             return jsonify(response),200
             
