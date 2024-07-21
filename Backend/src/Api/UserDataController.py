@@ -19,6 +19,5 @@ class UserDataController():
         @self.app.route('/user/list', methods=['GET'])
         def list_user():
             response = self.UserDataService.getAllUser()
-            print(response)
             return jsonify(response),200
             

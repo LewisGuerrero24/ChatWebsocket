@@ -3,9 +3,10 @@ import MessageSocketIo from '../Hooks/MessageSocketIo';
 import { useNavigate } from 'react-router-dom';
 import image from '../Static/img/Carga.gif';
 import handleGoOut from '../Helpers/handleGoOut';
+import MessageSocketIoUsers from '../Hooks/MessageSocketIoUsers';
 
-const Chat = ({ name, connected, socket, nameRoom }) => {
-  const { message, setMessage, showMessage, sendMessage } = MessageSocketIo({ socket }, name, nameRoom);
+const ChatUsers = ({ name, nameSendUser ,connected, socket, nameRoom }) => {
+  const { message, setMessage, showMessage, sendMessage } = MessageSocketIoUsers({ socket },nameSendUser,name, nameRoom);
   const navigate = useNavigate();
 
   const handleGoOutCallback = () => {
@@ -23,10 +24,13 @@ const Chat = ({ name, connected, socket, nameRoom }) => {
                 {name}
                 {connected ? (
                   showMessage.map((msg) => (
+                   
                     <div key={msg.id} className={`col-start-${msg.name === name ? '6' : '1'} col-end-${msg.name === name ? '13' : '8'} p-3 rounded-lg`}>
                       <div className={`flex flex-row items-center ${msg.name === name ? 'justify-start flex-row-reverse' : ''}`}>
                         <div className={`flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0`}>
-                          {msg.name.charAt(0)}
+                          {msg.name.charAt(0)
+                          
+                          }
                         </div>
                         <div className={`relative ${msg.name === name ? 'mr-3' : 'ml-3'} text-sm bg-${msg.name === name ? 'indigo' : 'white'} py-2 px-4 shadow rounded-xl`}>
                           <div>{" " + msg.message[msg.message.length - 1]}</div>
@@ -86,4 +90,4 @@ const Chat = ({ name, connected, socket, nameRoom }) => {
   );
 };
 
-export default Chat;
+export default ChatUsers;

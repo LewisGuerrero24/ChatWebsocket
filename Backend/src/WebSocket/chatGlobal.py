@@ -34,3 +34,15 @@ class SocketServer:
             usuario = self.UserService.handle_messageDb(data)
             res = {'name':usuario['nombre'],'message': usuario.mensajes.get(data['room'],[])}
             send(res, broadcast = True,room=data['room'])
+            
+        @self.socketio.on('message_user')
+        def handle_message_UserAnduser(data):       
+            
+            d = {"name":data['user_primary']}
+            j =  self.UserService.handle_messageDb(d)
+            res = {'user_primary':j['nombre'],'id_User_second':data['user_second']}
+            print(res)
+            
+            
+            
+           

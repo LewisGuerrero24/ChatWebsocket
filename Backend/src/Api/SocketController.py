@@ -21,4 +21,3 @@ class SocketController:
                 return jsonify({'message': f"Recurso con nombre {usuario_existente.nombre} eliminado exitosamente"})
             return jsonify({'error': f"No se encontró el recurso con nombre {name}"}), 404
         
-         
