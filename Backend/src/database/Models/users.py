@@ -3,9 +3,9 @@ from database.Models.role import Rol
 from flask_security import UserMixin
 
 class User(Document, UserMixin):
-    name = StringField(required=True)
+    name = StringField(required=True)   
     password = StringField(required=True) 
-    # foto = FileField()
+    photo = FileField()
     rol = ReferenceField(Rol)
     fs_uniquifier = StringField()
     suspendedAccount = IntField(default=1) # 1 significa que no esta suspendido y 0 esta suspendido

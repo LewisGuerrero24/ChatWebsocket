@@ -44,8 +44,10 @@ const CsrfProvider = ({ children }) => {
     const currentPath = window.location.pathname;
    
     if (isLoggedIn && currentPath === '/') {
-       if(whoUser === "user"){
-        window.location.href = "/DashboardUser";
+       if(whoUser === "estudiante"){
+        window.location.href = "/DashboardEstudiante";
+       }else if (whoUser === "docente"){
+        window.location.href = "/DashboardDocente";
        }else{
         window.location.href = "/DashboardAdmin";
        }

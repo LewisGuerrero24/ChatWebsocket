@@ -13,28 +13,13 @@ class AuthManager:
         self.bcrypt = Bcrypt(app)
         self.Usuario = User
         self.Rol = Rol
-        self.login_manager = LoginManager(app)
-        self.login_manager.login_view = 'login' # Cuando un usuario no autenticado trate de iniciar a una ruta protegida sera redirigido a login
         self.db = con()
-        self.principal = Principal(app)
         self.user_datastore = MongoEngineUserDatastore(self.db,User, None)
         self.security = Security(self.app, self.user_datastore)
 
     def start(self):
 
         with self.app.app_context():  # Aquí comienza el contexto de la aplicación Flask
-
-            @identity_loaded.connect_via(self.app)
-            def on_identity_loaded(sender, identity):
-                for role in current_user.roles:
-                    identity.provides.add(RoleNeed(role))
-        
-       
-            @self.login_manager.user_loader
-            def load_user(user_id):
-                return self.Usuario.objects(pk=user_id).first()
-
-
 
             
             @self.app.after_request
@@ -62,12 +47,11 @@ class AuthManager:
 
             @self.app.route("/Login", methods=['POST'])
             def login():
-
+                
                 name = request.json["name"]
                 password = request.json["password"]
-                
+                                
                 user = self.Usuario.objects(name=name).first()
-
 
                 if user is None:
                     return jsonify({"error": "Unauthorized"}), 401
@@ -79,8 +63,8 @@ class AuthManager:
 
                 if user and self.bcrypt.check_password_hash(user.password, password):
 
-                    if "user" in user.rol.tipo or "admin" in user.rol.tipo:
-
+                    if "estudiante" in user.rol.tipo or "admin" in user.rol.tipo or "docente" in user.rol.tipo:
+                        
                         access_token = create_access_token(identity=name, additional_claims={"rol": user.rol.tipo})
                     
                         login_user(user, remember=True)
@@ -134,16 +118,17 @@ class AuthManager:
 
 
             # Ruta protegida con JWT De Ejemplo
-            @self.app.route('/profile', methods=["GET"])
-            @jwt_required()
-            @roles_required('user','admin') 
-            def my_profile():
-                current_user = get_jwt_identity()
-                # Lógica para obtener detalles del perfil (modifica según tus necesidades)
-                return jsonify({"user_id": current_user, "profile_details": "example"}), 200
+            # @self.app.route('/profile', methods=["GET"])
+            # @jwt_required()
+            # @roles_required('user','admin') 
+            # def my_profile():
+            #     current_user = get_jwt_identity()
+            #     # Lógica para obtener detalles del perfil (modifica según tus necesidades)
+            #     return jsonify({"user_id": current_user, "profile_details": "example"}), 200
 
 
             
+            # Mirar si implemento una lista de revocacion
             @self.app.route("/logout", methods=['POST'])
             @login_required
             def logout():
@@ -158,20 +143,35 @@ class AuthManager:
 
             @self.app.route("/register", methods=['POST'])
             def register():
-                
-                name = request.json["name"]
-                password = request.json["password"]
-                user_exists = self.Usuario.objects(name=name).first() is not None
-                type_rol = self.Rol.objects(tipo="user").first()
+                if 'name' not in request.form or 'password' not in request.form:
+                    return jsonify({"error": "Name and password are required"}), 400
 
+                name = request.form["name"]
+                password = request.form["password"]
+
+                if 'photo' not in request.files:
+                    return jsonify({"error": "No file part"}), 400
+                
+                file = request.files['photo']
+                if file.filename == '':
+                    return jsonify({"error": "No selected file"}), 400
+
+                user_exists = self.Usuario.objects(name=name).first() is not None
+                type_rol = self.Rol.objects(tipo="estudiante").first()
 
                 if user_exists:
                     return jsonify({"error": "User already exists"}), 409
 
                 hashed_password = self.bcrypt.generate_password_hash(password).decode('utf-8')
+                
                 new_user = self.Usuario(name=name, password=hashed_password, rol=type_rol)
+                
+                if file:
+                    filename = secure_filename(file.filename)
+                    new_user.photo.put(file, content_type=file.content_type, filename=filename)
+
                 new_user.save()
 
-                return "Registro exitoso", 200
+                return jsonify({"message": "User created successfully"}), 201
             
         

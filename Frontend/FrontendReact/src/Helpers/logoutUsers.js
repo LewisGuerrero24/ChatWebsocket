@@ -16,5 +16,4 @@ const logoutUsers = async (setLastActive, navigate) =>{
 }
 
 
-
 export default logoutUsers

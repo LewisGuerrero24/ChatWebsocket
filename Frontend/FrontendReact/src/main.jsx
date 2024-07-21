@@ -10,7 +10,8 @@ import {createBrowserRouter, Router, RouterProvider} from 'react-router-dom';
 import TemporalLogin from './Components/TemporalLogin.jsx'
 import { Toaster } from 'react-hot-toast';
 import DashboardAdmin from './Components/DashboardAdmin.jsx';
-import DashboardUser from './Components/DashboardUser.jsx';
+import DashboardEstudiante from './Components/DashboardEstudiante.jsx'
+import DashboardDocente from './Components/DashboardDocente.jsx'
 import CsrfProvider from './Components/CsrfProvider.jsx';
 
 
@@ -44,8 +45,12 @@ const router = createBrowserRouter([
     element: <DashboardAdmin/>
   },
   {
-    path: "/DashboardUser",
-    element: <DashboardUser/>
+    path: "/DashboardEstudiante",
+    element: <DashboardEstudiante/>
+  },
+  {
+    path: "/DashboardDocente",
+    element: <DashboardDocente/>
   }
   
 ]);

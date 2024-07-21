@@ -9,3 +9,6 @@ from database.conexion import con
 from database.Models.role import Rol
 from database.Service.UserService import UserService
 from database.Repository.UserRepository  import UserRepository
+
+from database.Service.UsuarioService import UsuarioService
+from database.Repository.UsuarioRepository import UsuarioRepository

@@ -3,7 +3,7 @@ import tokenUtils from "../Hooks/utils";
 import { useNavigate } from 'react-router-dom';
 import logoutUsers from "../Helpers/logoutUsers";
 
-const DashboardUser = () => {
+const DashboardEstudiante = () => {
     const isLoggedIn = tokenUtils.checkIfIsLoggedIn();
     const user = tokenUtils.getLoggedInUserId();
     const navigate = useNavigate();
@@ -69,7 +69,7 @@ const DashboardUser = () => {
 
     return (
         <>
-            <h1>Holaaaa User</h1>
+            <h1>Holaaaa Estudiante</h1>
             <nav>
                 {isLoggedIn && (
                     <>
@@ -82,4 +82,4 @@ const DashboardUser = () => {
     );
 }
 
-export default DashboardUser;
+export default DashboardEstudiante;
