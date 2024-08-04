@@ -10,3 +10,6 @@ class UsuarioRepository():
             # Ahora buscamos los usuarios que tienen este rol
             return self.User.objects(rol=rol)
         return []
+    
+    
+        

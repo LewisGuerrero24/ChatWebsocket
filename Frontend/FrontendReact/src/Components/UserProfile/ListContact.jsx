@@ -22,7 +22,17 @@ const ListContact = ({name, connected}) => {
   },[])
 
 
+  // const handleSubmit = async(e) => { 
+  //   try {
 
+  //    const response = await axios.post('http://localhost:5000/conversation/create', {
+  //       id_primary_user,
+  //       id_second_user
+  //     }, { withCredentials: true});
+  //   } catch (error) {
+  //     console.error('Error de red:', error);
+  //   }    
+  // }
 
   return (
     <>
@@ -66,7 +76,7 @@ const ListContact = ({name, connected}) => {
             <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
               {/* Replace with actual active conversations buttons */}
               {data.map(item => (
-                <button className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2">
+                <button  className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2">
                   <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">{item.name.charAt(0).toUpperCase()}</div>
                   <div key={item.id} className="ml-2 text-sm font-semibold">{item.name}</div>
                 </button>

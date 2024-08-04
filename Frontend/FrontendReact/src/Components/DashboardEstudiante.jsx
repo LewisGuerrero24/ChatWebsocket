@@ -9,7 +9,7 @@ import useRoom from '../Hooks/useRoom';
 import useConnect from '../Hooks/useConnect';
 import ChatUsers from './ChatUsers';
 
-const DashboardUser = () => {
+const DashboardEstudiante = () => {
     const isLoggedIn = tokenUtils.checkIfIsLoggedIn();
     const user = tokenUtils.getLoggedInUserId();
     const navigate = useNavigate();
@@ -81,7 +81,7 @@ const DashboardUser = () => {
                             <div className="flex flex-row h-full w-full overflow-x-hidden">
                                 <ListContact connected={connected} name={name}/>
                                 <h1>{name}</h1>
-                                <ChatUsers key={urlRoom} nameSendUser={"pedro"} name={name} connected={connected} socket={socket} nameRoom={urlRoom}/>
+                                <ChatUsers key={urlRoom} nameSendUser={"Maicol"} name={name} connected={connected} socket={socket} nameRoom={urlRoom}/>
                             </div>
                         </div>
                         <button onClick={handleLogout}>Cerrar sesión</button> 
@@ -92,4 +92,4 @@ const DashboardUser = () => {
     );
 }
 
-export default DashboardUser;
+export default DashboardEstudiante;

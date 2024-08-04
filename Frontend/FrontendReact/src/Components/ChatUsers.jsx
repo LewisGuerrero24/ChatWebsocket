@@ -28,9 +28,7 @@ const ChatUsers = ({ name, nameSendUser ,connected, socket, nameRoom }) => {
                     <div key={msg.id} className={`col-start-${msg.name === name ? '6' : '1'} col-end-${msg.name === name ? '13' : '8'} p-3 rounded-lg`}>
                       <div className={`flex flex-row items-center ${msg.name === name ? 'justify-start flex-row-reverse' : ''}`}>
                         <div className={`flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0`}>
-                          {msg.name.charAt(0)
-                          
-                          }
+                          {msg.name.charAt(0)}
                         </div>
                         <div className={`relative ${msg.name === name ? 'mr-3' : 'ml-3'} text-sm bg-${msg.name === name ? 'indigo' : 'white'} py-2 px-4 shadow rounded-xl`}>
                           <div>{" " + msg.message[msg.message.length - 1]}</div>

@@ -1,9 +1,9 @@
 from Libraries import *
 
 class MessageUser(EmbeddedDocument):
-    Sender = StringField() #Id_user
-    Content = StringField() #Message_user
-    TimeStap = DateTimeField() #TimeStap
+    Sender = StringField(required=True) #Id_user
+    Content = StringField(required=True) #Message_user
+    TimeStap = DateTimeField(required=True) #TimeStap
     
     
     

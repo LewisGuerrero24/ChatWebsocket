@@ -2,10 +2,12 @@ from Libraries import *
 
 
 class SocketServer:
-    def __init__(self, socketio , app, UserService):
+    def __init__(self, socketio , app, UserService,ConversationBetweenUsers, MessageUser):
         self.socketio = socketio
         self.app = app 
         self.UserService = UserService
+        self.ConversationBetweenUsers = ConversationBetweenUsers
+        self.MessageUser = MessageUser
      
     def start(self):           
         @self.app.route('/')
@@ -38,10 +40,25 @@ class SocketServer:
         @self.socketio.on('message_user')
         def handle_message_UserAnduser(data):       
             
-            d = {"name":data['user_primary']}
-            j =  self.UserService.handle_messageDb(d)
-            res = {'user_primary':j['nombre'],'id_User_second':data['user_second']}
-            print(res)
+            if data is not None:
+                #Consulto al primer Usuario
+                d = {"name":data['user_primary']}
+                User_One =  self.UserService.get_unique_user(d)
+                
+                #Consulto segundo usuario
+                l = {"name": data['user_second']}
+                user_second = self.UserService.get_unique_user(l)
+                
+                #Se crea la sala con los dos de los usuarios con mensajes vacios
+                messageUSER = self.MessageUser(Sender=str(User_One['id']), Content="How are You?", TimeStap=datetime.utcnow())
+                self.ConversationBetweenUsers.ConversationAndMessages(str(User_One['id']),str(user_second['id']),messageUSER)
+            
+          
+            
+            
+            
+            
+       
             
             
             

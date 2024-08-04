@@ -1,8 +1,8 @@
 from ..Repository.UserRepository import UserRepository
 
 class UserService(UserRepository):
-    def __init__(self,TemporalUsuario):
-        super().__init__(TemporalUsuario) 
+    def __init__(self,TemporalUsuario,User):
+        super().__init__(TemporalUsuario,User) 
         
     def handle_messageDb(self, data):
         UsuarioExistente = self.existUser(data)
@@ -17,6 +17,10 @@ class UserService(UserRepository):
             UsuarioExistente.save()  
         return self.existUser(data)
     
+    def get_unique_user(self,data):
+        UserData = self.verificationUser(data)
+        if UserData:
+            return UserData    
 
     def create_user(self, name):
         new_user = self.create_user_(name)
