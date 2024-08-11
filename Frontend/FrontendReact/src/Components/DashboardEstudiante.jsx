@@ -15,8 +15,13 @@ const DashboardEstudiante = () => {
     const navigate = useNavigate();
     const [lastActive, setLastActive] = useState(new Date());
     const { connected, socket } = useConnect();
-    const { name, Room } = useParams();
-    const [urlRoom, setUrlRoom] = useState(Room);;
+    const { name } = useParams();
+    const [selectedUser, setSelectedUser] = useState(null);
+
+
+
+    
+
 
     const handleLogout = async () => {
         try {
@@ -79,9 +84,8 @@ const DashboardEstudiante = () => {
                     <>
                         <div className="flex h-screen antialiased text-gray-800">
                             <div className="flex flex-row h-full w-full overflow-x-hidden">
-                                <ListContact connected={connected} name={name}/>
-                                <h1>{name}</h1>
-                                <ChatUsers key={urlRoom} nameSendUser={"Maicol"} name={name} connected={connected} socket={socket} nameRoom={urlRoom}/>
+                            <ListContact connected={connected} name={name} setSelectedUser={setSelectedUser}/>
+                            <ChatUsers  nameSendUser={selectedUser} name={name} connected={connected} socket={socket}/>
                             </div>
                         </div>
                         <button onClick={handleLogout}>Cerrar sesión</button> 

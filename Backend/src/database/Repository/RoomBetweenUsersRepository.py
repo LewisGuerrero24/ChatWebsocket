@@ -1,8 +1,9 @@
 
 class RoomBetweenUsersRepository():
     
-    def __init__(self,ConversationBetweenUsers):
+    def __init__(self,ConversationBetweenUsers,User):
         self.ConversationBetweenUsers = ConversationBetweenUsers
+        self.User = User
     
     
     def CreateRoomUsers(self,id_primary,id_second):
@@ -16,9 +17,19 @@ class RoomBetweenUsersRepository():
         return newconversation
             
         
-    def ReadDataMessageUser(self, id_primary, id_second,messageNew):
+    def ReadDataMessageUser(self, id_primary, id_second):
         conversation = self.ConversationBetweenUsers.objects(id_user_Primary=id_primary, id_user_Second=id_second).first()
         return conversation
+    
+    def verificationUser(self, data):
+        try: 
+            usuario_data = self.User.objects(name=data['name']).first()
+        except ValueError as e:
+            print(f"Ocurrio un error {e}")    
+        if usuario_data:
+            return usuario_data
+        return usuario_data
+    
         
         
         

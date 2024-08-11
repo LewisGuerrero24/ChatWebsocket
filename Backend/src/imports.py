@@ -18,3 +18,6 @@ from database.Repository.UserRepository  import UserRepository
 from database.Service.UsuarioService import UsuarioService
 from database.Repository.UsuarioRepository import UsuarioRepository
 from database.Models.MessagesUser import MessageUser
+from database.Models.ConversationUserAndUser import ConversationUserAndUser
+
+
