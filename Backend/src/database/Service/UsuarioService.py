@@ -6,3 +6,16 @@ class UsuarioService(UsuarioRepository):
 
     def get_userss(self):
         return self.get_all_users("estudiante")
+    
+    def get_user_counts(self):
+        return self.count_users_by_role()
+    
+    def save_student(self, newStudent):
+        return self.save_user_student(newStudent)
+    
+    def delete_user(self, user_id):
+        return self.detele_user_by_id(user_id) 
+    
+    def update_user(self, user_id, data, photo=None):
+        return self.update_user_by_id(user_id, data, photo)
+    

@@ -21,26 +21,29 @@ class AuthManager:
 
         with self.app.app_context():  # Aquí comienza el contexto de la aplicación Flask
 
-            
             @self.app.after_request
             def refresh_expiring_jwts(response):
                 try:
-                    exp_timestamp = get_jwt()["exp"]
-                    now = datetime.now(timezone.utc)
-                    target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
-                    if target_timestamp > exp_timestamp:
-                        access_token = create_access_token(identity=get_jwt_identity())
-                        data = response.get_json()
-                        if type(data) is dict:
-                            data["token"] = access_token 
-                            response.data = json.dumps(data)
+                    # Verifica si hay un token presente en la solicitud
+                    if 'Authorization' in request.headers and request.headers['Authorization'].startswith('Bearer '):
+                        print("Entra a verificar el token!!!!")
+                        exp_timestamp = get_jwt()["exp"]
+                        now = datetime.now(timezone.utc)
+                        target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
+                        if target_timestamp > exp_timestamp:
+                            access_token = create_access_token(identity=get_jwt_identity())
+                            data = response.get_json()
+                            if type(data) is dict:
+                                data["token"] = access_token
+                                response.data = json.dumps(data)
                     return response
                 except (RuntimeError, KeyError):
-                    # Case where there is not a valid JWT. Just return the original respone
+                    print("One ERROR!!!!")
+                    # Caso donde no hay un JWT válido. Simplemente devuelve la respuesta original
                     return response
 
 
-
+ 
 
 
 
@@ -50,8 +53,8 @@ class AuthManager:
                 
                 name = request.json["name"]
                 password = request.json["password"]
-                                
                 user = self.Usuario.objects(name=name).first()
+                #print(f"Intento de inicio de sesión para el usuario: {user.suspendedAccount}") 
 
                 if user is None:
                     return jsonify({"error": "Unauthorized"}), 401
@@ -99,14 +102,7 @@ class AuthManager:
 
                     flash('Login failed. Check your username and password.', 'danger')
                 return jsonify({'error': 'Invalid username or password'}), 401
-            
-
-
-            
-
-
-
-
+    
 
             @self.app.route('/csrf_token', methods=['GET'])
             def get_csrf_token():
@@ -136,6 +132,7 @@ class AuthManager:
                 session.pop('id', None)
                 session.pop('name', None)
                 response = jsonify({"msg": "logout successful"})
+                #response.delete_cookie('token')
                 unset_jwt_cookies(response)
                 return response
 

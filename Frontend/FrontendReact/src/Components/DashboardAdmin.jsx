@@ -4,10 +4,10 @@ import { useNavigate } from "react-router-dom";
 import NavAdmin from "./AdminView/NavAdmin";
 import logoutUsers from "../Helpers/logoutUsers";
 import ElectionCard from "./ElectionCards";
-
 import EstudiantesContent from "./AdminView/EstudiantesContent";
 import ProfesoresContent from "./AdminView/ProfesoresContent ";
 import GruposContent from "./AdminView/GruposContent";
+import cantidadUsarios from "../Helpers/listadoUsers";
 
 const DashboardAdmin = () => {
   const isLoggedIn = tokenUtils.checkIfIsLoggedIn();
@@ -15,8 +15,24 @@ const DashboardAdmin = () => {
   const navigate = useNavigate();
   const [lastActive, setLastActive] = useState(new Date());
   const [selectedCard, setSelectedCard] = useState(null);
+  const [cantUser, setCantUser] = useState({});
 
   useEffect(() => {
+    const fetchEstudiantes = async () => {
+      try {
+        const response = await cantidadUsarios();
+        setCantUser(response);
+        console.log(cantUser);
+      } catch (err) {
+        setError(err);
+      } 
+    };
+    fetchEstudiantes();
+  }, []);
+
+
+  useEffect(() => {
+
     const interval = setInterval(() => {
       if (isLoggedIn && new Date() - lastActive >= 2 * 60 * 1000) {
         logoutUsers(setLastActive, navigate);
@@ -79,19 +95,19 @@ const DashboardAdmin = () => {
         <ElectionCard
           imgSrc="https://www.questionpro.com/blog/wp-content/uploads/2018/08/Encuestas-estudiantes.jpg"
           title="Estudiantes"
-          members=""
+          members={cantUser.estudiante}
           onClick={handleCardClick}
         />
         <ElectionCard
           imgSrc="https://images.ecestaticos.com/Xg4lK7IufEiYj5ZH3zivHw78erk=/0x62:1251x769/1338x752/filters:fill(white):format(jpg)/f.elconfidencial.com%2Foriginal%2F47a%2Fc1d%2Ff66%2F47ac1df669dd66d669d59e33a479f6bd.jpg"
           title="Profesores"
-          members=""
+          members={cantUser.docente}
           onClick={handleCardClick}
         />
         <ElectionCard
           imgSrc="https://edutk.imss.gob.mx/pluginfile.php/576216/course/overviewfiles/BLANKARTE_impressive_mind_blowing_professional_photograph_for_e_b2427f1c-d68a-4302-b967-ca8515e058d9.png"
           title="Grupos"
-          members="1"
+          members="0"
           onClick={handleCardClick}
         />
       </div>

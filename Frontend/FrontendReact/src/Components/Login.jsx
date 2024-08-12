@@ -35,10 +35,10 @@ const Login = () => {
 
         if(response.data.rol  === 'admin'){
           navigate('/DashboardAdmin');
-        } else if(response.data.rol === 'estudiane'){
+        } else if(response.data.rol === 'estudiante'){
           navigate('/DashboardEstudiante');
         }else{
-          navigate('DashboardDocente');
+          navigate('/DashboardDocente');
         }
 
         toast.success('Login successful', {

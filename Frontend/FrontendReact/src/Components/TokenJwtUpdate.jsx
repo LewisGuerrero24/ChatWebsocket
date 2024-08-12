@@ -23,7 +23,7 @@ const TokenJwtUpdate = {
           
           const newToken = response.data.token;
           if (newToken) {
-            // Actualizar el token en el localStorage
+            // Actualizar el token en la cookie
             tokenUtils.setToken(newToken);
           }
           return response;
