@@ -44,7 +44,7 @@ const router = createBrowserRouter([
     element: <DashboardAdmin/>
   },
   {
-    path: "/DashboardEstudiante",
+    path: "/DashboardEstudiante/:name",
     element: <DashboardEstudiante/>
   },
   {

@@ -36,7 +36,7 @@ const Login = () => {
         if(response.data.rol  === 'admin'){
           navigate('/DashboardAdmin');
         } else if(response.data.rol === 'estudiante'){
-          navigate('/DashboardEstudiante');
+          navigate('/DashboardEstudiante/'+name);
         }else{
           navigate('/DashboardDocente');
         }

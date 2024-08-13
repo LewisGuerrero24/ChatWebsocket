@@ -1,36 +1,47 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 
-let  id = 0
-const MessageSocketIoUsers = ({socket}, nameSend,name, nameRoom) => {
-    const [message, setMessage] = useState('');
-    const [showMessage, setShowMessage] = useState([]);
+const MessageSocketIoUsers = ({ socket }, nameSend, name) => {
+  const [message, setMessage] = useState('');
+  const [showMessage, setShowMessage] = useState([]);
+  const [room, setRoom] = useState('');
 
+  useEffect(() => {
+    // Generar la sala única entre los dos usuarios
+    const generatedRoom = `chat_${Math.min(name, nameSend)}_${Math.max(name, nameSend)}`;
+    setRoom(generatedRoom);
 
-    const sendMessage = (e) => {
-        e.preventDefault();
-        socket.emit('message_user',{user_primary: name, user_second:nameSend});
-        setMessage(''); 
-      };
-    
-      const receivedMessage = (m) => {
-        console.log(m);
-          setShowMessage((prevMessages) => [...prevMessages, { id:"hola",name:"hola" ,message: "pedro" }]);
-          console.log(showMessage)
-      };
+    // Unirse a la sala
+    socket.emit('join', { room: generatedRoom });
 
-    useEffect(() => {
-        socket.on('message', receivedMessage);
-        return () => {
-          socket.off('message',receivedMessage);
-        };
-      }, []);
-    
+    // Escuchar mensajes desde el servidor
+    socket.on('message', (m) => {
+      setShowMessage((prevMessages) => [...prevMessages, m]);
+    });
+
+    return () => {
+      // Abandonar la sala cuando el componente se desmonte
+      socket.emit('leave', { room: generatedRoom });
+      socket.off('message');
+    };
+  }, [name, nameSend, socket]);
+
+  const sendMessage = (e) => {
+    e.preventDefault();
+    if (message.trim()) {
+      // Emitir el mensaje al servidor
+      socket.emit('message_user', { user_primary: name, user_second: nameSend, message });
+      socket.off('message_user');
+      setMessage(''); // Limpiar el campo de mensaje
+    }
+  };
+
   return {
     message,
     setMessage,
     showMessage,
     sendMessage
-  }
-}
+  };
+};
 
-export default MessageSocketIoUsers
+export default MessageSocketIoUsers;
+
