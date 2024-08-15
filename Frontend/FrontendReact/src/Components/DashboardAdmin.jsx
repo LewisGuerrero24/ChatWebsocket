@@ -17,18 +17,24 @@ const DashboardAdmin = () => {
   const [selectedCard, setSelectedCard] = useState(null);
   const [cantUser, setCantUser] = useState({});
 
+  const fetchEstudiantes = async () => {
+    try {
+      const response = await cantidadUsarios();
+      setCantUser(response);
+      console.log(cantUser);
+    } catch (err) {
+      setError(err);
+    }
+  };
+
   useEffect(() => {
-    const fetchEstudiantes = async () => {
-      try {
-        const response = await cantidadUsarios();
-        setCantUser(response);
-        console.log(cantUser);
-      } catch (err) {
-        setError(err);
-      } 
-    };
     fetchEstudiantes();
   }, []);
+
+
+  const handleUserChange = () => {
+    fetchEstudiantes(); 
+  };
 
 
   useEffect(() => {
@@ -76,18 +82,18 @@ const DashboardAdmin = () => {
 
   const renderContent = () => {
     if (selectedCard) {
-      // Renderiza el contenido específico basado en la tarjeta seleccionada
       switch (selectedCard) {
         case 'Estudiantes':
-          return <EstudiantesContent />;
+          return <EstudiantesContent onUserChange={handleUserChange} />;
         case 'Profesores':
-          return <ProfesoresContent />;
+          return <ProfesoresContent onUserChange={handleUserChange} />;
         case 'Grupos':
           return <GruposContent />;
         default:
           return null;
       }
     }
+
 
     // Si no hay tarjeta seleccionada, muestra las tarjetas originales
     return (

@@ -8,7 +8,7 @@ class UserController:
 
     def start(self):
 
-        # Metodo para los estudiantes
+        # Cors para los Estudiantes
         @self.app.route('/api/usuario', methods=['GET']) 
         @jwt_required()
         def get_users():
@@ -132,4 +132,72 @@ class UserController:
             except Exception as e:
                 return jsonify({'error': str(e)}), 500
 
+
+
+
         
+        # Cors para los Docentes
+        @self.app.route('/api/docente', methods=['GET']) 
+        @jwt_required()
+        def get_users_docentes():
+            try:
+                users = self.UserService.get_userss_teachers()
+                users_list = [{
+                    'id': str(user.id),
+                    'name': user.name,
+                    'rol': {
+                        'id': str(user.rol.id),
+                        'name': user.rol.tipo
+                    } if user.rol else None,
+                    'suspendedAccount': user.suspendedAccount, 
+                    'dateEntry': user.dateEntry, 
+                    'contacts': user.contacts,
+                    'photo': {
+                        'url': f'/api/get_photo/{str(user.id)}' if user.photo else None,
+                        'filename': user.photo.filename if user.photo else None
+                    }
+                } for user in users]
+                
+                return jsonify(users_list), 200
+            except Exception as e:
+                return jsonify({'error': str(e)}), 500
+            
+
+
+        @self.app.route('/api/registrarDocente', methods=['POST'])   
+        @jwt_required()
+        def registrarDocente():
+            if 'name' not in request.form or 'password' not in request.form:
+                return jsonify({"error": "Name and password are required"}), 400
+            
+            name = request.form["name"]
+            password = request.form["password"] 
+            suspendedAccount = request.form["suspendedAccount"]
+
+            if 'photo' not in request.files:
+                return jsonify({"error": "No file part"}), 400
+
+            file = request.files['photo']
+            if file.filename == '':
+                return jsonify({"error": "No selected file"}), 400
+            
+            user_exists = self.UserService.User.objects(name=name).first() is not None
+            type_rol = self.UserService.Rol.objects(tipo="docente").first()
+
+            if user_exists:
+                return jsonify({"error": "User already exists"}), 409
+
+            hashed_password = self.bcrypt.generate_password_hash(password).decode('utf-8')
+
+            new_user = self.UserService.User(name=name, password=hashed_password, rol=type_rol, suspendedAccount=suspendedAccount)
+
+            if file:
+                filename = secure_filename(file.filename)
+                new_user.photo.put(file, content_type=file.content_type, filename=filename)
+
+            try:
+                self.UserService.save_student(new_user) 
+                return jsonify({"message": "User created successfully"}), 201
+            
+            except Exception as e:
+                return jsonify({'error': str(e)}), 500

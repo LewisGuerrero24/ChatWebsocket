@@ -4,7 +4,7 @@ import CardUsuarios from "./CardUsuarios";
 import Modal from "./Modal";
 import Swal from 'sweetalert2'
 
-const EstudiantesContent = () => {
+const EstudiantesContent = ({ onUserChange }) => {
   const [estudiantes, setEstudiantes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
@@ -58,6 +58,7 @@ const EstudiantesContent = () => {
         if(result){
           setTimeout(() => {
             fetchEstudiantes();
+            onUserChange();
           }, 1000); // Espera 2 segundos (2000 milisegundos) antes de ejecutar
         }
       }
@@ -79,7 +80,7 @@ const EstudiantesContent = () => {
     }
     fetchEstudiantes(); // Volver a cargar la lista de estudiantes
     closeModal();
-    
+    onUserChange();
   };
 
   return (

@@ -10,6 +10,7 @@ class UsuarioRepository():
         self.db = get_db()  # Obtiene la instancia de la base de datos actual
         self.fs = GridFS(self.db)  # Inicializa GridFS con la conexión obtenida
 
+
     def get_all_users(self, role):
         # Primero, obtengamos el objeto Rol correspondiente
         rol = self.Rol.objects(tipo=role).first()
