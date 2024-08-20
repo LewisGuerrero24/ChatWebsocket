@@ -1,7 +1,7 @@
 from ..Repository.UsuarioRepository import UsuarioRepository
 
 class UsuarioService(UsuarioRepository):
-    def __ini__(self, User, Rol):
+    def __init__(self, User, Rol):
         super().__init__(User, Rol)
     
     def get_user_counts(self):
