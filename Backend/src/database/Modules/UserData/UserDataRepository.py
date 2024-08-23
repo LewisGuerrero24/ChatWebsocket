@@ -1,4 +1,5 @@
 from datetime import datetime
+from bson import ObjectId
 
 class UserDataRepository():
     def __init__(self, User):
@@ -27,3 +28,10 @@ class UserDataRepository():
             }
             listUser.append(userData)
         return listUser
+    
+    def userUniqueUser(self):
+         listUsers = []
+         object_id = ObjectId("65f7702da6dcd2a675620aa9")
+         users = self.User.objects(rol=object_id)
+
+         return users

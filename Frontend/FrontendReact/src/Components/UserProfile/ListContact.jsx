@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios'; 
 import tokenUtils from "../../Hooks/utils";
 
-const ListContact = ({ name, connected, setSelectedUser }) => {
+const ListContact = ({ name, connected, setSelectedUser,setInitialMessages}) => {
   const [data, setData] = useState([]);
+  const [statusMessage, setStatusMessage] = useState()
 
   useEffect(() => {
     const apiUrl = 'http://localhost:5000/user/list';
@@ -30,10 +31,30 @@ const ListContact = ({ name, connected, setSelectedUser }) => {
 
     console.log(name)
 
-     await axios.post('http://localhost:5000/conversation/create', {
-        user_one,
-        user_two
-      }, { withCredentials: true});
+    await axios.post('http://localhost:5000/conversation/create', {
+      user_one,
+      user_two
+    }, { withCredentials: true }).then(response => {
+      console.log(response.data);
+      setStatusMessage(response.data);
+    
+      if (response.data === true) {
+        const apiUrl = 'http://localhost:5000/conversation/message';
+    
+        axios.get(apiUrl, {
+          headers: { authorization: `Bearer ${tokenUtils.getToken()}` },
+          params: {
+            user_one,
+            user_two
+          }
+        }).then(response => {
+          setInitialMessages([...response.data])     
+
+        });
+      }
+    });
+
+   
    
    }
 
@@ -79,14 +100,14 @@ const ListContact = ({ name, connected, setSelectedUser }) => {
           <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
             {data.map(item => (
               <button 
-                key={item.id}
+                key={item}
                 className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
-                onClick={() => handleUserClick(item.name)} // Usa la función flecha aquí
+                onClick={() => handleUserClick(item)} // Usa la función flecha aquí
               >
                 <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
-                  {item.name.charAt(0).toUpperCase()}
+                  {item.charAt(0).toUpperCase()}
                 </div>
-                <div className="ml-2 text-sm font-semibold">{item.name}</div>
+                <div className="ml-2 text-sm font-semibold">{item}</div>
               </button>
             ))}
           </div>

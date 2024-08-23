@@ -1,22 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import MessageSocketIoUsers from '../Hooks/MessageSocketIoUsers';
 import { useNavigate } from 'react-router-dom';
 import handleGoOut from '../Helpers/handleGoOut';
 
-const ChatUsers = ({ name, nameSendUser, connected, socket }) => {
-  const { message, setMessage, showMessage, sendMessage } = MessageSocketIoUsers({ socket }, nameSendUser, name);
+const ChatUsers = ({ name, nameSendUser, connected, socket,initialMessages}) => {
+  const { message, setMessage, showMessage, sendMessage,setShowMessage} = MessageSocketIoUsers({ socket }, nameSendUser, name);
   const navigate = useNavigate();
+  const [allMessages, setAllMessages] = useState([]);
+  const [nameNew, setNameNew ]= useState("Nick")
 
   const handleGoOutCallback = () => {
     handleGoOut(name, navigate);
   };
 
 
-
+  useEffect(() => {
+    console.log(nameSendUser)
+    if(nameSendUser){
+      if(nameSendUser !== nameNew){
+        setNameNew(nameSendUser)
+        setShowMessage([])
+      }
+        setAllMessages([...initialMessages, ...showMessage]);
+    }
+  }, [initialMessages, showMessage, nameSendUser]);
 
 
   return (
     <>
+  
       {/* Main Chat Section */}
       <div className="flex flex-col flex-auto h-full p-6">
         <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">
@@ -25,18 +37,18 @@ const ChatUsers = ({ name, nameSendUser, connected, socket }) => {
               {/* Render messages here */}
               {nameSendUser}
               {connected ? (
-                  <div className="flex flex-col-reverse p-3">
-                    {showMessage.map((msg, index) => (
+                  <div className="flex flex-col p-3">
+                    {allMessages.map((msg, index) => (
                       <div
                         key={index}
                         className={`flex ${msg.sender === name ? 'justify-end' : 'justify-start'} mb-2`}
                       >
-                        <div className={`flex items-center ${msg.sender === name ? 'flex-row-reverse' : ''}`}>
+                        <div className={`flex items-center ${msg.sender.name === name ? 'flex-row-reverse' : ''}`}>
                           <div className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0">
-                            {msg.sender.charAt(0)}
+                            {msg.sender.name.charAt(0)}
                           </div>
                           <div
-                            className={`relative ${msg.sender === name ? 'mr-3' : 'ml-3'} text-sm bg-${msg.sender === name ? 'indigo' : 'white'} py-2 px-4 shadow rounded-xl`}
+                            className={`relative ${msg.sender.name === name ? 'mr-3' : 'ml-3'} text-sm bg-${msg.sender === name ? 'indigo' : 'white'} py-2 px-4 shadow rounded-xl`}
                           >
                             <div>{msg.content}</div>
                             <div className="text-xs text-gray-500 text-right">{msg.timestamp}</div>

@@ -17,6 +17,9 @@ const DashboardEstudiante = () => {
     const { connected, socket } = useConnect();
     const { name } = useParams();
     const [selectedUser, setSelectedUser] = useState(null);
+    const [initialMessages, setInitialMessages] = useState([]);
+    const[statusUser, setStatusUser]= useState(0);
+
 
 
 
@@ -84,8 +87,8 @@ const DashboardEstudiante = () => {
                     <>
                         <div className="flex h-screen antialiased text-gray-800">
                             <div className="flex flex-row h-full w-full overflow-x-hidden">
-                            <ListContact connected={connected} name={name} setSelectedUser={setSelectedUser}/>
-                            <ChatUsers  nameSendUser={selectedUser} name={name} connected={connected} socket={socket}/>
+                            <ListContact connected={connected} name={name} setSelectedUser={setSelectedUser} setInitialMessages={setInitialMessages} />
+                            <ChatUsers  nameSendUser={selectedUser} name={name} connected={connected} socket={socket} initialMessages={initialMessages}  />
                             </div>
                         </div>
                         <button onClick={handleLogout}>Cerrar sesión</button> 

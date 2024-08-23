@@ -1,4 +1,4 @@
-from ..Repository.UserRepository import UserRepository
+from .UserRepository import UserRepository
 
 class UserService(UserRepository):
     def __init__(self,TemporalUsuario,User):

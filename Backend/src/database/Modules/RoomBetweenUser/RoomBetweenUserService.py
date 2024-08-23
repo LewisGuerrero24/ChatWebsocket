@@ -1,4 +1,4 @@
-from ..Repository.RoomBetweenUsersRepository import RoomBetweenUsersRepository
+from .RoomBetweenUsersRepository import RoomBetweenUsersRepository
 
 
 
@@ -16,6 +16,10 @@ class RoomBetweenUserService(RoomBetweenUsersRepository):
         newRoom = self.CreateRoomUsers(str(user_one['id']), str(user_second['id']))
         return newRoom
     
+    def existConversation(self,idUser_one,ideUser_second):
+        Messages = self.ReadDataMessageUser(idUser_one,ideUser_second)
+        return Messages
+    
     def ConversationAndMessages(self, idUser_one,ideUser_second, messageNew):
         dataMessage = self.ReadDataMessageUser(idUser_one,ideUser_second)
         if dataMessage is not None:
@@ -25,6 +29,6 @@ class RoomBetweenUserService(RoomBetweenUsersRepository):
             print("Mensaje Guardado Exitosamente")
             returnMessage = self.ReadDataMessageUser(idUser_one,ideUser_second)
             return returnMessage
-            
+        
 
             

@@ -1,4 +1,4 @@
-from ..Repository.UsuarioRepository import UsuarioRepository
+from .UsuarioRepository import UsuarioRepository
 
 class UsuarioService(UsuarioRepository):
     def __ini__(self, User, Rol):

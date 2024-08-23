@@ -15,6 +15,7 @@ const MessageSocketIoUsers = ({ socket }, nameSend, name) => {
 
     // Escuchar mensajes desde el servidor
     socket.on('message', (m) => {
+      console.log(m)
       setShowMessage((prevMessages) => [...prevMessages, m]);
     });
 
@@ -39,8 +40,10 @@ const MessageSocketIoUsers = ({ socket }, nameSend, name) => {
     message,
     setMessage,
     showMessage,
-    sendMessage
+    sendMessage,
+    setShowMessage
   };
+  
 };
 
 export default MessageSocketIoUsers;

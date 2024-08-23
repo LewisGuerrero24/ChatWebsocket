@@ -2,6 +2,7 @@ from Libraries import *
 from database.Models.role import Rol
 from flask_security import UserMixin
 
+
 class User(Document, UserMixin):
     name = StringField(required=True)   
     password = StringField(required=True) 
@@ -24,3 +25,7 @@ class User(Document, UserMixin):
 
     def get_roles(self):
         return [self.rol] if self.rol else []
+    
+    def to_simple_dict(self):
+        simple_dict = dict(id= str(self.id), name = self.name)
+        return simple_dict

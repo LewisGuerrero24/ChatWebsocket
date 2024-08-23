@@ -55,7 +55,7 @@ class SocketServer:
                 join_room(room)
                 
                 # Crear el objeto mensaje
-                message_user = self.MessageUser(Sender=str(user_one['id']), Content=data['message'], TimeStap=datetime.utcnow())
+                message_user = self.MessageUser(Sender=user_one.to_simple_dict(), Content=data['message'], TimeStap=datetime.utcnow())
                 
                 # Crear la conversación y agregar mensajes
                 response_message = self.ConversationBetweenUsers.ConversationAndMessages(str(user_one['id']), str(user_second['id']), message_user)
