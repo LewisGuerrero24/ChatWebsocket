@@ -12,6 +12,9 @@ from database.Modules.User.UserService import UserService
 from database.Modules.RoomBetweenUser.RoomBetweenUserService import RoomBetweenUserService
 from database.Modules.UserData.UserDataService import UserDataService
 from database.Modules.User.UserRepository  import UserRepository
+from database.Models.Rooms import Rooms
+from database.Modules.Rooms.RoomsController import RoomsController
+from database.Modules.Rooms.RoomService import RoomService
 
 from database.Modules.Usuario.UsuarioService import UsuarioService
 from database.Modules.Usuario.UsuarioRepository import UsuarioRepository

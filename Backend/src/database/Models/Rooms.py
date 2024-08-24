@@ -1,10 +1,13 @@
 from Libraries import *
-from users import User
+from .users import User
 
-class Rooms():
-    AdminRoom = ListField(StringField())
+class Rooms(Document):
     Name = StringField()
+    Photo = FileField()
     Description = StringField()
     DateCreation = DateTimeField()
-    AuthoRizedUser = ListField(EmbeddedDocumentField(User))
+    UsersAdmin = ListField(ReferenceField(User))
+    AuthoRizedUser = ListField(ReferenceField(User))
+ 
+    
     

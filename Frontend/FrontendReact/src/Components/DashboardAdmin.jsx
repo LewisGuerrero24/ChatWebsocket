@@ -8,6 +8,7 @@ import EstudiantesContent from "./AdminView/EstudiantesContent";
 import ProfesoresContent from "./AdminView/ProfesoresContent ";
 import GruposContent from "./AdminView/GruposContent";
 import cantidadUsarios from "../Helpers/listadoUsers";
+import callApisRooms from "../Helpers/servicesRooms";
 
 const DashboardAdmin = () => {
   const isLoggedIn = tokenUtils.checkIfIsLoggedIn();
@@ -16,16 +17,26 @@ const DashboardAdmin = () => {
   const [lastActive, setLastActive] = useState(new Date());
   const [selectedCard, setSelectedCard] = useState(null);
   const [cantUser, setCantUser] = useState({});
+  const [cantRoom, setCantRoom] = useState({});
 
   const fetchEstudiantes = async () => {
     try {
-      const response = await cantidadUsarios();
-      setCantUser(response);
-      console.log(cantUser);
+        const response1 = await cantidadUsarios();
+        const response2 = await callApisRooms.cantidadRooms();
+        
+        // Asegúrate de que response1 y response2 sean lo que esperas
+        setCantUser({
+            estudiante: response1.estudiante || 0,  // O el valor que esperas
+            docente: response1.docente || 0,
+        });
+        setCantRoom({
+          rooms: response2 || 0
+      });
     } catch (err) {
-      setError(err);
+        console.error("Error fetching data:", err);
     }
-  };
+};
+
 
   useEffect(() => {
     fetchEstudiantes();
@@ -88,7 +99,7 @@ const DashboardAdmin = () => {
         case 'Profesores':
           return <ProfesoresContent onUserChange={handleUserChange} />;
         case 'Grupos':
-          return <GruposContent />;
+          return <GruposContent onUserChange={handleUserChange} />;
         default:
           return null;
       }
@@ -113,7 +124,7 @@ const DashboardAdmin = () => {
         <ElectionCard
           imgSrc="https://edutk.imss.gob.mx/pluginfile.php/576216/course/overviewfiles/BLANKARTE_impressive_mind_blowing_professional_photograph_for_e_b2427f1c-d68a-4302-b967-ca8515e058d9.png"
           title="Grupos"
-          members="0"
+          members={cantRoom.rooms}
           onClick={handleCardClick}
         />
       </div>

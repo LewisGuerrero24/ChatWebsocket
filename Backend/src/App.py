@@ -28,16 +28,12 @@ def main():
                 RoomBetweenUserService(ConversationUserAndUser,User),MessageUser), 
                 AuthManager(app, User, Rol), SocketController(app, TemporalUsuario),  
                 UserController(app, UsuarioService(User, Rol)), 
-                UserDataController(app, UserDataService(User),
-                           RoomBetweenUserService(ConversationUserAndUser, User))
+                UserDataController(app, UserDataService(User),RoomBetweenUserService(ConversationUserAndUser, User)),
+                RoomsController(app, RoomService(User, Rol, Rooms))
     ]
    
-   
-
-    
    if __name__ == '__main__':
       for instance in instances:
         instance.start()
       socketio.run(app, debug=True)
-         
 main()
