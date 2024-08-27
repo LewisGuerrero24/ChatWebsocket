@@ -9,7 +9,7 @@ class ResetPasswordRepository():
         return user
             
     def userByToken(self, token):
-        user = self.user.objects(reset_password_token=token).first()
+        user = self.user.objects(reset_password_token__regex=token).first()
         return user    
                 
         

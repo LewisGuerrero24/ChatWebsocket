@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const FormEmail = () => {
     const [email,setEmail] = useState()
+    const navigate = useNavigate()
 
     const handleSubmit = async(e) => { 
         e.preventDefault();
@@ -11,6 +13,9 @@ const FormEmail = () => {
             email
           }, { withCredentials: true}).then(response =>{
             console.log(response.data)
+            if(response.data == true){
+              navigate('/confirmation-token');
+            }
           })
     }
 

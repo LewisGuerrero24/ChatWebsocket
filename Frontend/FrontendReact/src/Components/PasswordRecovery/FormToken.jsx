@@ -1,10 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export const FormToken = () => {
 
   const [token,setToken] = useState()
+  const navigate = useNavigate(); 
 
-    const handleSubmit = async(e) => { }
+  const handleSubmit = async(e) => { 
+    e.preventDefault();
+    const response = await axios.get('http://localhost:5000/reset-password', {
+      params: {
+        token
+      }
+      }, { withCredentials: true}).then(response =>{
+        console.log(response.data)
+        if(response.data == true){
+          navigate('/password-reset', { state: { token: token} });
+        }
+      })
+}
+
 
   return (
     <div className="h-screen bg-emerald-500 flex justify-center items-center w-full">
