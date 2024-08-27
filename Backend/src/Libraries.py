@@ -19,6 +19,7 @@ from flask_principal import Principal, RoleNeed, Permission, identity_loaded
 from flask_security import Security,roles_required, MongoEngineUserDatastore, login_required, roles_accepted, logout_user, RoleMixin, UserMixin
 from flask_login import LoginManager, login_user, logout_user, current_user
 from werkzeug.utils import secure_filename
+from flask_mail import Mail, Message
 
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, JWTManager, unset_jwt_cookies, get_jwt
 import json

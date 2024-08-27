@@ -144,6 +144,7 @@ class AuthManager:
                     return jsonify({"error": "Name and password are required"}), 400
 
                 name = request.form["name"]
+                email = request.form["email"]
                 password = request.form["password"]
 
                 if 'photo' not in request.files:
@@ -161,7 +162,7 @@ class AuthManager:
 
                 hashed_password = self.bcrypt.generate_password_hash(password).decode('utf-8')
                 
-                new_user = self.Usuario(name=name, password=hashed_password, rol=type_rol)
+                new_user = self.Usuario(name=name, email=email,password=hashed_password, rol=type_rol)
                 
                 if file:
                     filename = secure_filename(file.filename)
