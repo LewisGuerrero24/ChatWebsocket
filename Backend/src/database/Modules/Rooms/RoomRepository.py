@@ -23,3 +23,15 @@ class RoomRepository():
     
     def save_rooms(self, room):
         room.save()
+
+    def detele_room_by_id(self, room_id):
+        room = self.Rooms.objects(id=room_id).first()
+        if room:
+            # Si la room tiene una foto, eliminar el archivo de GridFS
+            if room.Photo:
+                file_id = room.Photo.grid_id  # Obtener el ID del archivo
+                # Eliminar el archivo de GridFS
+                self.fs.delete(ObjectId(file_id))
+            room.delete()
+            return True
+        return False 

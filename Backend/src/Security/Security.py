@@ -46,8 +46,6 @@ class AuthManager:
  
 
 
-
-
             @self.app.route("/Login", methods=['POST'])
             def login():
                 
@@ -63,6 +61,10 @@ class AuthManager:
                 if user.locked_until and user.locked_until > datetime.utcnow():
                     remaining_time = user.locked_until - datetime.utcnow()
                     return jsonify({"error": f"Account is temporarily locked. Please try again after {remaining_time.total_seconds() // 60} minutes.", "remaining_time": int(remaining_time.total_seconds())}), 403
+
+               
+                if user.suspendedAccount == 0:
+                    return jsonify({"cuenta_bloqueada": "Esta cuenta se encuentra Bloqueada"}), 401
 
                 if user and self.bcrypt.check_password_hash(user.password, password):
 

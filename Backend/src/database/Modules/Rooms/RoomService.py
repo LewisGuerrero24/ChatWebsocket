@@ -24,3 +24,6 @@ class RoomService(RoomRepository):
             filename = secure_filename(photo.filename)
             new_room.Photo.put(photo, content_type=photo.content_type, filename=filename)
         self.save_rooms(new_room)
+
+    def delete_room(self, room_id):
+        return self.detele_room_by_id(room_id) 

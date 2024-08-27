@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie'; // Importa la librería js-cookie
 import { toast } from "react-hot-toast";  
 import tokenUtils from "../Hooks/utils";
-
+import Swal from 'sweetalert2'
 
 
 const Login = () => {
@@ -52,7 +52,14 @@ const Login = () => {
       }
 
     }catch(error){
-      if (error.response && error.response.status === 403 && error.response.data.remaining_time){
+      if(error.response.data.cuenta_bloqueada){
+        Swal.fire({
+          title: "Cuenta Bloqueada",
+          text: "Contactar con sistemas!",
+          icon: "error"
+        });
+
+      }else if (error.response && error.response.status === 403 && error.response.data.remaining_time){
         const remainingTime = error.response.data.remaining_time;
         toast.error(`Account is temporarily locked. Please try again after ${Math.floor(remainingTime / 60)} minutes.`, {
           position: 'bottom-right',

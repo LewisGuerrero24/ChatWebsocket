@@ -1,6 +1,6 @@
 import React from "react";
 
-const CardRooms = ({ nombre, foto, onEditar, onEliminar, onVerUsuarios }) => {
+const CardRooms = ({ nombre, foto, onEditar, onEliminar }) => {
   return (
     <div className="bg-gray-900 py-10 px-4 flex flex-col space-y-2 items-center rounded-md hover:bg-gray-900/80 hover:smooth-hover transition-transform transform hover:scale-105">
       <img
@@ -16,24 +16,24 @@ const CardRooms = ({ nombre, foto, onEditar, onEliminar, onVerUsuarios }) => {
         {nombre}
       </h4>
       <div className="flex space-x-2">
-        <button
+      <button
           onClick={onEditar}
-          className="middle none center rounded-lg bg-blue-500 py-2 px-2 font-sans text-[10px] font-bold uppercase text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+          className="middle none center rounded-lg bg-blue-500 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
           data-ripple-light="true">
           Editar
         </button>
         <button
           onClick={onEliminar}
-          className="middle none center rounded-lg bg-red-500 py-2 px-2 font-sans text-[10px] font-bold uppercase text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-red-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+          className="middle none center rounded-lg bg-red-500 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-red-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
           data-ripple-light="true">
           Eliminar
         </button>
-        <button
+        {/* <button
           onClick={onVerUsuarios}
           className="middle none center rounded-lg bg-green-500 py-2 px-2 font-sans text-[10px] font-bold uppercase text-white shadow-md shadow-orange-500/20 transition-all hover:shadow-lg hover:shadow-red-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
           data-ripple-light="true">
           Ver Usuarios
-        </button>
+        </button> */}
       </div>
     </div>
   );

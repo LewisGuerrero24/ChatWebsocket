@@ -26,6 +26,17 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
     if (isOpen) {
       setShouldRender(true);
       if (room) {
+
+
+
+        const usersAdminParsed = room.UsersAdmin ? room.UsersAdmin.map(user => JSON.parse(user)) : [];
+        const authorizedUsersParsed = room.AuthoRizedUser ? room.AuthoRizedUser.map(user => JSON.parse(user)) : [];
+  
+        setAdminUsers(usersAdminParsed); 
+        setAuthorizedUsers(authorizedUsersParsed);
+
+        console.log("DATA: ", authorizedUsersParsed)
+
         setFormData({
           nombre: room.name,
           descripcion: room.description,
@@ -36,8 +47,9 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
         setPreview(
           room.photo ? `http://localhost:5000${room.photo.url}` : null
         );
-        setAdminUsers(room.UsersAdmin.map(user => user.id)); // Inicializar adminUsers
-        setAuthorizedUsers(room.AuthoRizedUser.map(user => user.id)); // Inicializar authorizedUsers
+        console.log("")
+        //  setAdminUsers(room.UsersAdmin.map(user => user.id)); // Inicializar adminUsers
+        // setAuthorizedUsers(room.AuthoRizedUser.map(user => user.id)); // Inicializar authorizedUsers
       }
 
     }
@@ -307,7 +319,7 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
                         <input
                           type="checkbox"
                           className="form-checkbox text-blue-600"
-                          checked={adminUsers.some((u) => u.id === usuario.id)}
+                          checked={adminUsers.some((u) => u._id === usuario.id)}
                           onChange={() => handleUserSelection("admin", usuario)}
                         />
                         <span className="ml-2 text-gray-300">{usuario.name}</span>
@@ -328,7 +340,7 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
                         <input
                           type="checkbox"
                           className="form-checkbox text-blue-600"
-                          checked={authorizedUsers.some((u) => u.id === usuario.id)}
+                          checked={authorizedUsers.some((u) => u._id === usuario.id)}
                           onChange={() => handleUserSelection("estudiante", usuario)}
                         />
                         <span className="ml-2 text-gray-300">{usuario.name}</span>

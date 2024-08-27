@@ -64,7 +64,7 @@ const GruposContent = ({ onUserChange }) => {
       confirmButtonText: "Si, eliminar!"
     }).then((result) => {
       if (result.isConfirmed) {
-        //let result = callApisUserEstudents.eliminarUsuario(id)
+        let result = callApisRooms.eliminarRoom(id)
         Swal.fire({
           title: "¡Eliminado!",
           text: "Grupo Eliminado.",
@@ -146,7 +146,6 @@ const GruposContent = ({ onUserChange }) => {
               }
               onEditar={() => handleEditar(room)}
               onEliminar={() => handleEliminar(room.id)}
-              onVerUsuarios={() => handleVerUsuarios(room.id)}
             />
           ))}
         </div>

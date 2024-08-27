@@ -100,3 +100,13 @@ class RoomsController:
             except Exception as e:
                 return jsonify({'error': str(e)}), 500
 
+
+        @self.app.route('/api/eliminarRoom/<string:room_id>', methods=['DELETE'])
+        @jwt_required()
+        def delete_room_controller(room_id):
+            try:
+                self.RoomService.delete_room(room_id)
+                return jsonify({'message': 'User deleted successfully'}), 200
+            except Exception as e:
+                return jsonify({'error': str(e)}), 500
+

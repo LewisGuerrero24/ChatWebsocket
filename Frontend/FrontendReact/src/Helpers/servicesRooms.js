@@ -66,7 +66,22 @@ guardarRoom: async (sendData) => {
           },
         });
       }
+},
+eliminarRoom: async (roomId) => {
+  try {
+    const response = await axios.delete(`http://localhost:5000/api/eliminarRoom/${roomId}`, {
+        headers: {
+            authorization: `Bearer ${tokenUtils.getToken()}`
+        },
+        withCredentials: true
+    });
+    console.log(response.data.message); // Mensaje de éxito
+    return true;
+} catch (e) {
+    console.error(e);
+    return false; 
 }
+},
 
 }
 
