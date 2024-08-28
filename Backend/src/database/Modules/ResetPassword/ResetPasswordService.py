@@ -13,7 +13,7 @@ class ResetPasswordService(ResetPasswordRepository):
             if User:
                 token = User.set_reset_password_token()
                 
-                self.send_reset_email(User.email,token)
+                self.send_reset_email(User.email,token[0:5])
             return True
         except Exception as e:
             print(f"Error al generar el token: {e}")
@@ -37,8 +37,9 @@ class ResetPasswordService(ResetPasswordRepository):
             print(f"Error al confirmar el token: {e}")
             return None
 
-    def reset_Password(self, user, new_password):
+    def reset_Password(self, token, new_password):
         try:
+            user = self.userByToken(token[0:5])
             user.set_password(new_password)
             user.reset_password_token = None
             user.token_expires_at = None

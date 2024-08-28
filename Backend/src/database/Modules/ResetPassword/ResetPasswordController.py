@@ -23,6 +23,6 @@ class ResetPasswordCOntroller():
                return jsonify(True),200
            
            if request.method == 'POST':
-                new_password = request.json()
-                self.resetPasswordService.reset_Password(data_User,new_password)
+                data = request.json
+                self.resetPasswordService.reset_Password(data["token"],data["password"])
                 return jsonify(True), 200

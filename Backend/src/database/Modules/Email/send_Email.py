@@ -27,7 +27,7 @@ class send_Email:
                 <h2>Correo Electronico: </h2>
                 <h2>{email}</h2>
                 <h3>Token:</h3>
-                <h3>{token[0:5]}</h3>
+                <h3>{token}</h3>
             </body>
             </html>
             """

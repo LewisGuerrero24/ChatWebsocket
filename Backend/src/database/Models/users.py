@@ -42,5 +42,7 @@ class User(Document, UserMixin):
         return token
 
     def set_password(self, new_password):
-        self.password = Bcrypt.generate_password_hash(new_password).decode('utf-8')
-        self.save()
+        bcrypt = Bcrypt()
+        self.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+        print(self.password)
+        

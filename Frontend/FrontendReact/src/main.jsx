@@ -14,12 +14,22 @@ import DashboardEstudiante from './Components/DashboardEstudiante.jsx'
 import DashboardDocente from './Components/DashboardDocente.jsx'
 import CsrfProvider from './Components/CsrfProvider.jsx';
 import FormEmail from './Components/PasswordRecovery/FormEmail.jsx'
+import { FormToken } from './Components/PasswordRecovery/FormToken.jsx'
+import FormPasswordReset from './Components/PasswordRecovery/FormPasswordReset.jsx'
 
 const router = createBrowserRouter([
   {
 
     path: "/",
     element: <App />,
+  },{
+
+    path: "/password-reset",
+    element: <FormPasswordReset/>,
+  },{
+
+    path: "/confirmation-token",
+    element: <FormToken />,
   },{
 
     path: "/forgot-password",
