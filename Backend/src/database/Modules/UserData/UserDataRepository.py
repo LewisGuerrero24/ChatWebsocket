@@ -29,9 +29,9 @@ class UserDataRepository():
             listUser.append(userData)
         return listUser
     
-    def userUniqueUser(self):
+    def userUniqueUser(self,id):
          listUsers = []
-         object_id = ObjectId("65f7702da6dcd2a675620aa9")
+         object_id = ObjectId(id)
          users = self.User.objects(rol=object_id)
 
          return users

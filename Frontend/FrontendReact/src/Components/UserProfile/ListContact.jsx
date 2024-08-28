@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'; 
 import tokenUtils from "../../Hooks/utils";
+import HandelSubmitEndpointUsers from '../../Helpers/HandelSubmitEndpointUsers';
 
 const ListContact = ({ name, connected, setSelectedUser,setInitialMessages}) => {
   const [data, setData] = useState([]);
   const [statusMessage, setStatusMessage] = useState()
+  const [typeList, setTypeList]= useState("estudiante")
 
   useEffect(() => {
     const apiUrl = 'http://localhost:5000/user/list';
 
     axios.get(apiUrl, { 
-      headers: { authorization: `Bearer ${tokenUtils.getToken()}` } 
+      headers: { authorization: `Bearer ${tokenUtils.getToken()}` } , params: {
+        typeList,
+      } 
     }).then(response => {
       setData(response.data);
       console.log(response.data);
@@ -58,6 +62,38 @@ const ListContact = ({ name, connected, setSelectedUser,setInitialMessages}) => 
    
    }
 
+
+   const mapList = () => {
+    if(typeList == "room" ){
+      return data.map(item => (
+        <button 
+          key={item.Name}
+          className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
+          onClick={() => handleUserClick(item.Name)} // Usa la función flecha aquí
+        >
+          <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
+            {item.Name.charAt(0).toUpperCase()}
+          </div>
+          <div className="ml-2 text-sm font-semibold">{item.Name}</div>
+        </button>
+      ))
+    }else{
+      return data.map(item => (
+        <button 
+          key={item}
+          className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
+          onClick={() => handleUserClick(item)} // Usa la función flecha aquí
+        >
+          <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
+            {item.charAt(0).toUpperCase()}
+          </div>
+          <div className="ml-2 text-sm font-semibold">{item}</div>
+        </button>
+      ))
+    }
+   }
+
+
   return (
     <>
       {/* Sidebar */}
@@ -93,25 +129,30 @@ const ListContact = ({ name, connected, setSelectedUser,setInitialMessages}) => 
           <div className="text-xs text-gray-500">{connected ? 'Active' : 'Inactive'}</div>
         </div>
         <div className="flex flex-col mt-8">
-          <div className="flex flex-row items-center justify-between text-xs">
+            <div className="flex flex-row items-center justify-between text-xs space-x-2 flex-wrap">
+            <button onClick={() => HandelSubmitEndpointUsers(setData, setTypeList,"estudiante")}  className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg shadow-lg hover:shadow-xl transform transition-transform duration-300 hover:scale-105">
+              Estudiantes
+            </button>
+            <button onClick={() => HandelSubmitEndpointUsers(setData, setTypeList,"docente")}  className="flex-1 px-4 py-2 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-lg shadow-lg hover:shadow-xl transform transition-transform duration-300 hover:scale-105">
+              Docentes
+            </button>
+            <button onClick={()=>setTypeList("room")} className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg shadow-lg hover:shadow-xl transform transition-transform duration-300 hover:scale-105">
+              Grupos
+            </button>
+          </div>
+
+          <div className="flex flex-row items-center justify-between text-xs mt-4">
             <span className="font-bold">Active Conversations</span>
             <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">4</span>
           </div>
+          
           <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
-            {data.map(item => (
-              <button 
-                key={item}
-                className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
-                onClick={() => handleUserClick(item)} // Usa la función flecha aquí
-              >
-                <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
-                  {item.charAt(0).toUpperCase()}
-                </div>
-                <div className="ml-2 text-sm font-semibold">{item}</div>
-              </button>
-            ))}
+            {mapList()}
           </div>
+
+
         </div>
+
       </div>
     </>
   );

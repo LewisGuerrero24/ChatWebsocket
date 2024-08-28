@@ -20,7 +20,8 @@ class UserDataController():
         @jwt_required
         @self.app.route('/user/list', methods=['GET'])
         def list_user():
-            users = self.UserDataService.getAllUserStudents()
+            typeUser = request.args.get('typeList')
+            users = self.UserDataService.getAllUsers(typeUser)
             response = [user.name for user in users]
             return jsonify(response),200
         
