@@ -23,6 +23,7 @@ class UserController:
                     } if user.rol else None,
                     'suspendedAccount': user.suspendedAccount, 
                     'dateEntry': user.dateEntry, 
+                    'email': user.email, 
                     'contacts': user.contacts,
                     'photo': {
                         'url': f'/api/get_photo/{str(user.id)}' if user.photo else None,
@@ -68,6 +69,7 @@ class UserController:
                 return jsonify({"error": "Name and password are required"}), 400
             
             name = request.form["name"]
+            email = request.form["email"]
             password = request.form["password"] 
             suspendedAccount = request.form["suspendedAccount"]
 
@@ -86,7 +88,7 @@ class UserController:
 
             hashed_password = self.bcrypt.generate_password_hash(password).decode('utf-8')
 
-            new_user = self.UserService.User(name=name, password=hashed_password, rol=type_rol, suspendedAccount=suspendedAccount)
+            new_user = self.UserService.User(name=name, email=email, password=hashed_password, rol=type_rol, suspendedAccount=suspendedAccount)
 
             if file:
                 filename = secure_filename(file.filename)
@@ -151,6 +153,7 @@ class UserController:
                     } if user.rol else None,
                     'suspendedAccount': user.suspendedAccount, 
                     'dateEntry': user.dateEntry, 
+                    'email': user.email, 
                     'contacts': user.contacts,
                     'photo': {
                         'url': f'/api/get_photo/{str(user.id)}' if user.photo else None,
@@ -171,6 +174,7 @@ class UserController:
                 return jsonify({"error": "Name and password are required"}), 400
             
             name = request.form["name"]
+            email = request.form["email"]
             password = request.form["password"] 
             suspendedAccount = request.form["suspendedAccount"]
 
@@ -189,7 +193,7 @@ class UserController:
 
             hashed_password = self.bcrypt.generate_password_hash(password).decode('utf-8')
 
-            new_user = self.UserService.User(name=name, password=hashed_password, rol=type_rol, suspendedAccount=suspendedAccount)
+            new_user = self.UserService.User(name=name, email=email, password=hashed_password, rol=type_rol, suspendedAccount=suspendedAccount)
 
             if file:
                 filename = secure_filename(file.filename)

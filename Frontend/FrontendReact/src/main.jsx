@@ -13,12 +13,17 @@ import DashboardAdmin from './Components/DashboardAdmin.jsx';
 import DashboardEstudiante from './Components/DashboardEstudiante.jsx'
 import DashboardDocente from './Components/DashboardDocente.jsx'
 import CsrfProvider from './Components/CsrfProvider.jsx';
+import FormEmail from './Components/PasswordRecovery/FormEmail.jsx'
 
 const router = createBrowserRouter([
   {
 
     path: "/",
     element: <App />,
+  },{
+
+    path: "/forgot-password",
+    element: <FormEmail />,
   },
   {
     path: "/temporallogin",

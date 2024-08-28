@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast";
 
 const Register = () => {
   const [name, setUsername] = useState("");
+  const [email,setEmail] = useState("")
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [file, setFile] = useState(null);
@@ -49,6 +50,7 @@ const Register = () => {
 
     const formData = new FormData();
     formData.append('name', name);
+    formData.append('email', email)
     formData.append('password', password);
     formData.append('photo', file);
 
@@ -99,6 +101,10 @@ const Register = () => {
             <div>
               <label for="username" class="block mb-1 text-gray-600 font-semibold">Username</label>
               <input type="text" value={name} onChange={(e) => setUsername(e.target.value)} class="bg-indigo-100 px-4 py-2 outline-none rounded-md w-full" />
+            </div>
+            <div>
+              <label for="email" class="block mb-1 text-gray-600 font-semibold">Email</label>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} class="bg-indigo-100 px-4 py-2 outline-none rounded-md w-full" />
             </div>
             <div>
               <label for="email" class="block mb-1 text-gray-600 font-semibold">Password</label>

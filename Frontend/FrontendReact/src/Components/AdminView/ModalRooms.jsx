@@ -19,23 +19,17 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
 
   const [formData, setFormData] = useState(initialFormData);
 
-
-
-
   useEffect(() => {
     if (isOpen) {
       setShouldRender(true);
       if (room) {
-
-
-
         const usersAdminParsed = room.UsersAdmin ? room.UsersAdmin.map(user => JSON.parse(user)) : [];
-        const authorizedUsersParsed = room.AuthoRizedUser ? room.AuthoRizedUser.map(user => JSON.parse(user)) : [];
+        const authorizedUsersParsed = room.AuthorizedUser ? room.AuthorizedUser.map(user => JSON.parse(user)) : [];
   
         setAdminUsers(usersAdminParsed); 
         setAuthorizedUsers(authorizedUsersParsed);
 
-        console.log("DATA: ", authorizedUsersParsed)
+        console.log("Estos son los datos jeje: ", room)
 
         setFormData({
           nombre: room.name,
@@ -44,34 +38,31 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
           AuthoRizedUser: room.AuthoRizedUser,
           foto: room.photo ? `http://localhost:5000${room.photo.url}` : "",
         });
-        setPreview(
-          room.photo ? `http://localhost:5000${room.photo.url}` : null
-        );
-        console.log("")
-        //  setAdminUsers(room.UsersAdmin.map(user => user.id)); // Inicializar adminUsers
-        // setAuthorizedUsers(room.AuthoRizedUser.map(user => user.id)); // Inicializar authorizedUsers
+        setPreview(room.photo ? `http://localhost:5000${room.photo.url}` : null);
       }
-
     }
   }, [isOpen, room]);
-  
 
-
-
+  const resetForm = () => {
+    setFormData(initialFormData);
+    setAdminUsers([]);
+    setAuthorizedUsers([]);
+    setFile(null);
+    setPreview(null);
+  };
 
   const handleAnimationEnd = () => {
     if (!isOpen) {
       setShouldRender(false);
-      setFormData(initialFormData); // Limpiar el formulario solo después de la animación de salida
-      setPreview(null);
+      resetForm(); // Limpiar el formulario después de cerrar el modal
     }
   };
 
+  const handleClose = () => {
+    resetForm(); // Limpiar el formulario al cancelar
+    onClose();
+  };
 
-
-
-  // Funcion para manejar las fotos cuando son actualizadas
-  // Depurar la funcion handleChasge si no esta haciendo nada
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "foto") {
@@ -82,14 +73,10 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
     }
   };
 
-
-
-
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
 
-    // Crear una vista previa de la imagen
     const reader = new FileReader();
     reader.onloadend = () => {
       setPreview(reader.result);
@@ -97,16 +84,18 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
     reader.readAsDataURL(selectedFile);
   };
 
-
-
   const handleUserSelection = (role, user) => {
     const updateSelection = (prevState, setState) => {
-      const exists = prevState.some((u) => u.id === user.id);
+        
+
+      const exists = prevState.some((u) => u._id.$oid === user.id);
       if (exists) {
-        setState(prevState.filter((u) => u.id !== user.id));
+        setState(prevState.filter((u) => u._id.$oid !== user.id));
       } else {
-        setState([...prevState, user]); // Aquí se guarda el objeto completo
+        setState([...prevState, user]);
       }
+
+      console.log("blabla: ", prevState)
     };
   
     if (role === "admin") {
@@ -115,64 +104,6 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
       updateSelection(authorizedUsers, setAuthorizedUsers);
     }
   };
-  
-
-
-
-
-
-
-
-
-  // Proceso interno de enviar los datos guardar 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-
-  //   if(usuario == null){
-  //     if(formData.password !== formData.confirmPassword || 
-  //       formData.confirmPassword == "" || 
-  //       formData.password == "" || 
-  //       formData.nombre == "" ||
-  //       preview == null ||
-  //       formData.estado == ""){
-  //       toast.error('Las contraseñas no coinciden o hay campos vacios', {
-  //         position: "bottom-right",
-  //         style: {
-  //           background: "red",
-  //           color: "#fff",
-  //         },
-  //       });
-  //       return;
-  //     }
-  //   }
-
-  //   if (usuario){
-  //       if(formData.nombre == "" ||
-  //         formData.estado == "" ||
-  //         preview == null
-  //       ){
-  //         toast.error('hay campos vacios', {
-  //           position: "bottom-right",
-  //           style: {
-  //             background: "red",
-  //             color: "#fff",
-  //           },
-  //         });
-  //         return;
-  //       }
-  //   }
-
-  //   const updatedFormData = {
-  //     ...formData,
-  //     suspendedAccount: formData.estado === "activo" ? 1 : 0,
-  //   };
-  //   sendData.append('name', updatedFormData.nombre)
-  //   sendData.append('password', updatedFormData.password)
-  //   sendData.append('photo', file)
-  //   sendData.append('suspendedAccount', updatedFormData.suspendedAccount)
-  //   onSubmit(sendData);
-  // };
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -192,16 +123,11 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
     console.log("Data being sent:", updatedFormData);
   
     onSubmit(sendData);
+    resetForm(); // Limpiar el formulario después de enviar
   };
-  
-
-
-
-
 
   if (!shouldRender) return null;
 
-  
   return (
     <div
       className={`fixed inset-0 z-50 overflow-y-auto bg-gray-900 bg-opacity-50 ${
@@ -213,14 +139,8 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
       onAnimationEnd={handleAnimationEnd}
     >
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <div
-          className="fixed inset-0 transition-opacity"
-          aria-hidden="true"
-        ></div>
-        <span
-          className="hidden sm:inline-block sm:align-middle sm:h-screen"
-          aria-hidden="true"
-        >
+        <div className="fixed inset-0 transition-opacity" aria-hidden="true"></div>
+        <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
           &#8203;
         </span>
 
@@ -308,61 +228,61 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
                   </div>
                 </div>
 
-              <div>
-                <label className="text-gray-300 text-sm font-medium leading-tight tracking-normal">
-                  Seleccionar Administradores
-                </label>
-                <div className="mt-2 space-y-2">
-                  {usuariosDocentes.filter(u => u.rol['name'] === "docente").map((usuario) => (
-                    <div key={usuario.id}>
-                      <label className="inline-flex items-center">
-                        <input
-                          type="checkbox"
-                          className="form-checkbox text-blue-600"
-                          checked={adminUsers.some((u) => u._id === usuario.id)}
-                          onChange={() => handleUserSelection("admin", usuario)}
-                        />
-                        <span className="ml-2 text-gray-300">{usuario.name}</span>
-                      </label>
-                    </div>
-                  ))}
+                <div>
+                  <label className="text-gray-300 text-sm font-medium leading-tight tracking-normal">
+                    Seleccionar Administradores
+                  </label>
+                  <div className="mt-2 space-y-2">
+                    {usuariosDocentes.filter(u => u.rol['name'] === "docente").map((usuario) => (
+                      <div key={usuario.id}>
+                        <label className="inline-flex items-center">
+                          <input
+                            type="checkbox"
+                            className="form-checkbox text-blue-600"
+                            checked={adminUsers.some((u) => u._id.$oid === usuario.id)}
+                            onChange={() => handleUserSelection("admin", usuario)}
+                          />
+                          <span className="ml-2 text-gray-300">{usuario.name}</span>
+                        </label>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <label className="text-gray-300 text-sm font-medium leading-tight tracking-normal">
-                  Seleccionar Estudiantes Autorizados
-                </label>
-                <div className="mt-2 space-y-2">
-                  {usuariosEstudiantes.filter(u => u.rol['name'] === "estudiante").map((usuario) => (
-                    <div key={usuario.id}>
-                      <label className="inline-flex items-center">
-                        <input
-                          type="checkbox"
-                          className="form-checkbox text-blue-600"
-                          checked={authorizedUsers.some((u) => u._id === usuario.id)}
-                          onChange={() => handleUserSelection("estudiante", usuario)}
-                        />
-                        <span className="ml-2 text-gray-300">{usuario.name}</span>
-                      </label>
-                    </div>
-                  ))}
+                <div>
+                  <label className="text-gray-300 text-sm font-medium leading-tight tracking-normal">
+                    Seleccionar Estudiantes Autorizados
+                  </label>
+                  <div className="mt-2 space-y-2">
+                    {usuariosEstudiantes.filter(u => u.rol['name'] === "estudiante").map((usuario) => (
+                      <div key={usuario.id}>
+                        <label className="inline-flex items-center">
+                          <input
+                            type="checkbox"
+                            className="form-checkbox text-blue-600"
+                            checked={authorizedUsers.some((u) => u._id.$oid === usuario.id)}
+                            onChange={() => handleUserSelection("estudiante", usuario)}
+                          />
+                          <span className="ml-2 text-gray-300">{usuario.name}</span>
+                        </label>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
 
               </div>
             </div>
-            <div className="bg-gray-900 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+            <div className="bg-gray-800 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
               <button
                 type="submit"
                 className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
               >
-                {room ? "Actualizar" : "Crear"}
+                Guardar
               </button>
               <button
                 type="button"
-                className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:w-auto sm:text-sm"
-                onClick={onClose}
+                onClick={handleClose}
+                className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-gray-700 text-base font-medium text-gray-300 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:w-auto sm:text-sm"
               >
                 Cancelar
               </button>

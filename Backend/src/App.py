@@ -29,7 +29,8 @@ def main():
                 AuthManager(app, User, Rol), SocketController(app, TemporalUsuario),  
                 UserController(app, UsuarioService(User, Rol)), 
                 UserDataController(app, UserDataService(User),RoomBetweenUserService(ConversationUserAndUser, User)),
-                RoomsController(app, RoomService(User, Rol, Rooms))
+                RoomsController(app, RoomService(User, Rol, Rooms)),
+                ResetPasswordCOntroller(app,ResetPasswordService(User,send_Email))
     ]
    
    if __name__ == '__main__':

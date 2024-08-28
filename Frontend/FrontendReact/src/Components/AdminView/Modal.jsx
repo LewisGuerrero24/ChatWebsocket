@@ -11,6 +11,7 @@ const Modal = ({ isOpen, onClose, title, onSubmit, usuario }) => {
 
   const initialFormData = {
     nombre: usuario?.name || "",
+    email: usuario?.email || "",
     password: "",
     confirmPassword: "",
     estado: usuario
@@ -29,6 +30,7 @@ const Modal = ({ isOpen, onClose, title, onSubmit, usuario }) => {
       if (usuario) {
         setFormData({
           nombre: usuario.name,
+          email: usuario.email,
           password: "",
           confirmPassword: "",
           estado: usuario.suspendedAccount === 1 ? "activo" : "inactivo",
@@ -88,9 +90,10 @@ const Modal = ({ isOpen, onClose, title, onSubmit, usuario }) => {
         formData.confirmPassword == "" || 
         formData.password == "" || 
         formData.nombre == "" ||
+        formData.email == "" ||
         preview == null ||
-        formData.estado == ""){
-        toast.error('Las contraseñas no coinciden o hay campos vacios', {
+        formData.estado == ""){ 
+        toast.error('Hay campos vacios o las contraseñas no coinciden', {
           position: "bottom-right",
           style: {
             background: "red",
@@ -103,6 +106,7 @@ const Modal = ({ isOpen, onClose, title, onSubmit, usuario }) => {
 
     if (usuario){
         if(formData.nombre == "" ||
+          formData.email == "" ||
           formData.estado == "" ||
           preview == null
         ){
@@ -122,6 +126,7 @@ const Modal = ({ isOpen, onClose, title, onSubmit, usuario }) => {
       suspendedAccount: formData.estado === "activo" ? 1 : 0,
     };
     sendData.append('name', updatedFormData.nombre)
+    sendData.append('email', updatedFormData.email)
     sendData.append('password', updatedFormData.password)
     sendData.append('photo', file)
     sendData.append('suspendedAccount', updatedFormData.suspendedAccount)
@@ -181,6 +186,24 @@ const Modal = ({ isOpen, onClose, title, onSubmit, usuario }) => {
                     onChange={handleChange}
                     className="mt-2 text-gray-200 bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 font-normal w-full h-10 flex items-center pl-3 text-sm rounded-md"
                     placeholder="Ingrese el nombre"
+                  />
+                </div>
+
+
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="text-gray-300 text-sm font-medium leading-tight tracking-normal"
+                  >
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="mt-2 text-gray-200 bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 font-normal w-full h-10 flex items-center pl-3 text-sm rounded-md"
+                    placeholder="Ingrese su correo"
                   />
                 </div>
 
