@@ -11,9 +11,11 @@ class UserDataService(UserDataRepository):
     def getAllUser(self):
         return self.userFindAll()
     
-    def getAllUserStudents(self):
-        print(self.userUniqueUser())
-        return self.userUniqueUser()
+    def getAllUsers(self, typeUser):
+        if typeUser == "docente":
+            return self.userUniqueUser("6694027d0d8417fe863bdd09")
+        if typeUser == "estudiante":
+            return self.userUniqueUser("65f7702da6dcd2a675620aa9")
     
     def verificationUser(self, data):
         try: 
