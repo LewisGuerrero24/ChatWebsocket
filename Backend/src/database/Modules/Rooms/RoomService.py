@@ -27,3 +27,6 @@ class RoomService(RoomRepository):
 
     def delete_room(self, room_id):
         return self.detele_room_by_id(room_id) 
+    
+    def update_room(self, room_id, data, photo=None):
+        return self.update_room_by_id(room_id, data, photo)

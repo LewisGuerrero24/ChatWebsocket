@@ -86,7 +86,7 @@ const GruposContent = ({ onUserChange }) => {
   const handleSubmit = async (data) => {
     if (currentRooms) {
       // Actualizar estudiante
-      //const response = await callApisUserEstudents.editarEstudiante(data, currentEstudiante.id);
+      const response = await callApisRooms.editarRoom(data, currentRooms.id);
       console.log("Actualizar Room:", data);
 
     } else {

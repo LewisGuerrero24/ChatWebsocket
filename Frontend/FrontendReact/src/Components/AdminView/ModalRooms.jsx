@@ -23,13 +23,17 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
     if (isOpen) {
       setShouldRender(true);
       if (room) {
-        const usersAdminParsed = room.UsersAdmin ? room.UsersAdmin.map(user => JSON.parse(user)) : [];
-        const authorizedUsersParsed = room.AuthorizedUser ? room.AuthorizedUser.map(user => JSON.parse(user)) : [];
-  
+        const usersAdminParsed = room.UsersAdmin
+        ? room.UsersAdmin.map(userId => ({ id: userId }))
+        : [];
+
+      const authorizedUsersParsed = room.AuthorizedUser
+        ? room.AuthorizedUser.map(userId => ({ id: userId }))
+        : [];
         setAdminUsers(usersAdminParsed); 
         setAuthorizedUsers(authorizedUsersParsed);
 
-        console.log("Estos son los datos jeje: ", room)
+         console.log("Data: ", usersAdminParsed)
 
         setFormData({
           nombre: room.name,
@@ -39,6 +43,7 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
           foto: room.photo ? `http://localhost:5000${room.photo.url}` : "",
         });
         setPreview(room.photo ? `http://localhost:5000${room.photo.url}` : null);
+
       }
     }
   }, [isOpen, room]);
@@ -87,15 +92,14 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
   const handleUserSelection = (role, user) => {
     const updateSelection = (prevState, setState) => {
         
-
-      const exists = prevState.some((u) => u._id.$oid === user.id);
+      
+      const exists = prevState.some((u) => u.id === user.id);
       if (exists) {
-        setState(prevState.filter((u) => u._id.$oid !== user.id));
+        setState(prevState.filter((u) => u.id !== user.id));
       } else {
         setState([...prevState, user]);
       }
 
-      console.log("blabla: ", prevState)
     };
   
     if (role === "admin") {
@@ -111,7 +115,7 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
     const updatedFormData = {
       ...formData,
       UsersAdmin: adminUsers,
-      AuthoRizedUser: authorizedUsers,
+      AuthoRizedUser: authorizedUsers,  
     };
   
     sendData.append("name", updatedFormData.nombre);
@@ -119,8 +123,9 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
     sendData.append("UsersAdmin", JSON.stringify(updatedFormData.UsersAdmin));
     sendData.append("AuthoRizedUser", JSON.stringify(updatedFormData.AuthoRizedUser));
     sendData.append("photo", file);
+
+    console.log("Datos Actualizados: ", updatedFormData)
   
-    console.log("Data being sent:", updatedFormData);
   
     onSubmit(sendData);
     resetForm(); // Limpiar el formulario después de enviar
@@ -239,7 +244,7 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
                           <input
                             type="checkbox"
                             className="form-checkbox text-blue-600"
-                            checked={adminUsers.some((u) => u._id.$oid === usuario.id)}
+                            checked={adminUsers.some((u) => u.id === usuario.id)}
                             onChange={() => handleUserSelection("admin", usuario)}
                           />
                           <span className="ml-2 text-gray-300">{usuario.name}</span>
@@ -260,7 +265,7 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
                           <input
                             type="checkbox"
                             className="form-checkbox text-blue-600"
-                            checked={authorizedUsers.some((u) => u._id.$oid === usuario.id)}
+                            checked={authorizedUsers.some((u) => u.id === usuario.id)}
                             onChange={() => handleUserSelection("estudiante", usuario)}
                           />
                           <span className="ml-2 text-gray-300">{usuario.name}</span>

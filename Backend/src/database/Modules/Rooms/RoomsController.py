@@ -4,9 +4,10 @@ import json
 
 
 class RoomsController:
-    def __init__(self, app, RoomService):
+    def __init__(self, app, RoomService, User):
         self.app = app
         self.RoomService = RoomService
+        self.User = User
 
 
     def start(self):
@@ -33,10 +34,9 @@ class RoomsController:
                         'filename': room.Photo.filename if room.Photo else None
                     },
                     'description': room.Description,
-                    'UsersAdmin': [admin.to_json() for admin in room.UsersAdmin],  # Serializa el objeto completo de admin
-                    'AuthorizedUser': [user.to_json() for user in room.AuthoRizedUser]  # Serializa el objeto completo de user
+                    'UsersAdmin': [str(admin.id) for admin in room.UsersAdmin],  # Serializa el objeto completo de admin
+                    'AuthorizedUser': [str(user.id) for user in room.AuthoRizedUser]  # Serializa el objeto completo de user
                 } for room in rooms]
-
                 return jsonify(rooms_list), 200
             except Exception as e:
                 return jsonify({'error': str(e)}), 500
@@ -80,13 +80,13 @@ class RoomsController:
             # Deserializar los JSON strings en listas de diccionarios
             users_admin_data = json.loads(request.form.get("UsersAdmin", "[]"))
             authorized_user_data = json.loads(request.form.get("AuthoRizedUser", "[]"))
-            
-            # Buscar los objetos completos de los usuarios
-            users_admin = [self.RoomService.User.objects(id=ObjectId(user["id"])).first() for user in users_admin_data]
-            authorized_users = [self.RoomService.User.objects(id=ObjectId(user["id"])).first() for user in authorized_user_data]
 
-            if not users_admin:
+            if not users_admin_data:
                 return jsonify({"error": "At least one user admin is required"}), 400
+
+            # Convertir los diccionarios a objetos de usuario
+            users_admin = [self.User.objects(id=ObjectId(user["id"])).first() for user in users_admin_data]
+            authorized_users = [self.User.objects(id=ObjectId(user["id"])).first() for user in authorized_user_data]
 
             if 'photo' in request.files:
                 photo = request.files['photo']
@@ -94,11 +94,11 @@ class RoomsController:
                 photo = None
 
             try:
-                # Guardar el objeto completo de los usuarios en lugar de solo el ID
                 self.RoomService.create_room(name, photo, description, users_admin, authorized_users)
                 return jsonify({"message": "Room created successfully"}), 201
             except Exception as e:
                 return jsonify({'error': str(e)}), 500
+
 
 
         @self.app.route('/api/eliminarRoom/<string:room_id>', methods=['DELETE'])
@@ -107,6 +107,28 @@ class RoomsController:
             try:
                 self.RoomService.delete_room(room_id)
                 return jsonify({'message': 'User deleted successfully'}), 200
+            except Exception as e:
+                return jsonify({'error': str(e)}), 500
+            
+        
+        @self.app.route('/api/actualizarRoom/<string:room_id>', methods=['PUT'])
+        @jwt_required()
+        def update_roomm(room_id):
+            try:
+                data = request.form.to_dict()  # Obtener datos del formulario
+                photo = request.files.get('photo')  # Obtener el archivo de imagen
+
+                if 'UsersAdmin' in data:
+                    data['UsersAdmin'] = [ObjectId(user['id']) for user in json.loads(data['UsersAdmin'])]
+
+                if 'AuthoRizedUser' in data:
+                    data['AuthoRizedUser'] = [ObjectId(user['id']) for user in json.loads(data['AuthoRizedUser'])]
+
+
+                updated_room = self.RoomService.update_room(room_id, data, photo)
+                if updated_room:
+                    return jsonify({'message': 'room updated successfully'}), 200
+                return jsonify({'error': 'room not found'}), 404
             except Exception as e:
                 return jsonify({'error': str(e)}), 500
 

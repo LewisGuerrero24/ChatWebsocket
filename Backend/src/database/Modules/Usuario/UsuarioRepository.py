@@ -54,6 +54,9 @@ class UsuarioRepository():
 
             if 'name' in data:
                 user.name = data['name']
+
+            if 'email' in data:
+                user.email = data['email']
             
             if 'suspendedAccount' in data:
                 user.suspendedAccount = int(data['suspendedAccount'])
@@ -69,10 +72,7 @@ class UsuarioRepository():
 
             user.save()
 
-
-            
             return user
-        
         except Exception as e:
             # Aquí puedes utilizar un logger para registrar el error
             print(f"Error updating user: {str(e)}")

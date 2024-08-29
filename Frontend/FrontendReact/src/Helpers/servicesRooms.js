@@ -83,6 +83,40 @@ eliminarRoom: async (roomId) => {
 }
 },
 
+editarRoom: async (sendData, roomId) => {
+  try {
+      const response = await axios.put(`http://localhost:5000/api/actualizarRoom/${roomId}`,
+          sendData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            authorization: `Bearer ${tokenUtils.getToken()}`
+          },
+          withCredentials: true
+        }
+      );
+
+      console.log(response.data);
+      toast.success('Actualizacion Realizada', {
+        position: "bottom-right",
+        style: {
+          background: "green",
+          color: "#fff",
+        },
+      });
+
+    } catch (error) {
+      console.log('Error during update:', error);
+      toast.error('Error durante update', {
+        position: "bottom-right",
+        style: {
+          background: "red",
+          color: "#fff",
+        },
+      });
+    }
+}
+
 }
 
 
