@@ -142,7 +142,7 @@ const ListContact = ({ name, connected, setSelectedUser,setInitialMessages}) => 
           </div>
 
           <div className="flex flex-row items-center justify-between text-xs mt-4">
-            <span className="font-bold">Active Conversations</span>
+            <span className="font-bold">Active Conversationss</span>
             <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">4</span>
           </div>
           
