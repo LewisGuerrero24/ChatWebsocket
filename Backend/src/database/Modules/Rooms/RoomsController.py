@@ -37,6 +37,7 @@ class RoomsController:
                     'UsersAdmin': [str(admin.id) for admin in room.UsersAdmin],  # Serializa el objeto completo de admin
                     'AuthorizedUser': [str(user.id) for user in room.AuthoRizedUser]  # Serializa el objeto completo de user
                 } for room in rooms]
+                print(rooms_list)
                 return jsonify(rooms_list), 200
             except Exception as e:
                 return jsonify({'error': str(e)}), 500
