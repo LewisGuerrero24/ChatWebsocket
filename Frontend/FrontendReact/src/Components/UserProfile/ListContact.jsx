@@ -3,7 +3,7 @@ import axios from 'axios';
 import tokenUtils from "../../Hooks/utils";
 import HandelSubmitEndpointUsers from '../../Helpers/HandelSubmitEndpointUsers';
 
-const ListContact = ({ name, connected, setSelectedUser,setInitialMessages}) => {
+const ListContact = ({ name, connected, setSelectedUser,setInitialMessages, socket}) => {
   const [data, setData] = useState([]);
   const [statusMessage, setStatusMessage] = useState()
   const [typeList, setTypeList]= useState("estudiante")
@@ -39,10 +39,15 @@ const ListContact = ({ name, connected, setSelectedUser,setInitialMessages}) => 
       user_one,
       user_two
     }, { withCredentials: true }).then(response => {
+      const roomName = response.data.room; // Asegúrate de obtener el nombre de la sala del servidor
+      
+      // Emitir el evento para unirse a la sala
+      socket.emit('join_room_event', { room: roomName });
       console.log(response.data);
+    
       setStatusMessage(response.data);
     
-      if (response.data === true) {
+      if (response.data.success === true) {
         const apiUrl = 'http://localhost:5000/conversation/message';
     
         axios.get(apiUrl, {
@@ -52,14 +57,10 @@ const ListContact = ({ name, connected, setSelectedUser,setInitialMessages}) => 
             user_two
           }
         }).then(response => {
-          setInitialMessages([...response.data])     
-
+          setInitialMessages([...response.data]); // Cargar los mensajes iniciales en la conversación
         });
       }
     });
-
-   
-   
    }
 
 

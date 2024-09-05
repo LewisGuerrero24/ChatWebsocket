@@ -24,6 +24,15 @@ class SocketServer:
             room = data['room']
             join_room(room)
             self.socketio.emit('join_room', True, room=room)
+            
+        @self.socketio.on('join_room_event')
+        def on_join(data):
+            if 'room' in data:
+                room = data['room']
+                join_room(room)
+                emit('joined_room', {'msg': f'Joined room: {room}'}, room=room)
+            else:
+                emit('error', {'msg': "'room' key is missing"})
 
         @self.socketio.on('leave')
         def on_leave(data):
@@ -32,7 +41,8 @@ class SocketServer:
             self.socketio.emit('leave_room', True, room=room)
             
         @self.socketio.on('message')
-        def handle_message(data):       
+        def handle_message(data): 
+            print(data)
             usuario = self.UserService.handle_messageDb(data)
             res = {'name': usuario['nombre'], 'message': usuario.mensajes.get(data['room'], [])}
             send(res, broadcast=True, room=data['room'])

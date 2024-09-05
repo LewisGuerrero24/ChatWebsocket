@@ -24,11 +24,10 @@ def main():
    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
    jwt = JWTManager(app)
    
-   instances = [SocketServer(socketio, app, UserService(TemporalUsuario, User),
+   instances = [SocketServer(socketio, app, UserService(TemporalUsuario, User, Rol),
                 RoomBetweenUserService(ConversationUserAndUser,User),MessageUser), 
                 AuthManager(app, User, Rol), SocketController(app, TemporalUsuario),  
-                UserController(app, UsuarioService(User, Rol)), 
-                UserDataController(app, UserDataService(User),RoomBetweenUserService(ConversationUserAndUser, User)),
+                UserController(app, UserService(TemporalUsuario, User, Rol),RoomBetweenUserService(ConversationUserAndUser, User)),
                 RoomsController(app, RoomService(User, Rol, Rooms), User),
                 ResetPasswordCOntroller(app,ResetPasswordService(User,send_Email))
     ]

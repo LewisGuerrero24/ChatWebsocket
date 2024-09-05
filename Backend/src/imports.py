@@ -20,8 +20,7 @@ from database.Modules.Rooms.RoomService import RoomService
 from database.Modules.Email.send_Email import send_Email
 
 
-from database.Modules.Usuario.UsuarioService import UsuarioService
-from database.Modules.Usuario.UsuarioRepository import UsuarioRepository
+
 from database.Models.MessagesUser import MessageUser
 from database.Models.ConversationUserAndUser import ConversationUserAndUser
 

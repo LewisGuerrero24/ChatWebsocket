@@ -1,7 +1,5 @@
 from .RoomBetweenUsersRepository import RoomBetweenUsersRepository
 
-
-
 class RoomBetweenUserService(RoomBetweenUsersRepository):
     def __init__(self, ConversationBetweenUsers, User):
         super().__init__(ConversationBetweenUsers, User)
