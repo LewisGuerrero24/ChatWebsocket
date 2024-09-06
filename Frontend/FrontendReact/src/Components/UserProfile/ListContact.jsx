@@ -64,25 +64,31 @@ const ListContact = ({ name, connected, setSelectedUser,setInitialMessages}) => 
 
 
    const mapList = () => {
-    if(typeList == "room" ){
+    if (!Array.isArray(data)) {
+      console.error("El dato no es un array", data);
+      return null;
+    }
+  
+    if(typeList === "room" ){
+
       return data.map(item => (
         <button 
-          key={item.Name}
+          key={item.name}
           className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
-          onClick={() => handleUserClick(item.Name)} // Usa la función flecha aquí
+          onClick={() => handleUserClick(item.name)}
         >
           <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
-            {item.Name.charAt(0).toUpperCase()}
+             {item.name.charAt(0).toUpperCase()}
           </div>
-          <div className="ml-2 text-sm font-semibold">{item.Name}</div>
+          <div className="ml-2 text-sm font-semibold">{item.name}</div>
         </button>
       ))
-    }else{
+    } else {
       return data.map(item => (
         <button 
           key={item}
           className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
-          onClick={() => handleUserClick(item)} // Usa la función flecha aquí
+          onClick={() => handleUserClick(item)}
         >
           <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
             {item.charAt(0).toUpperCase()}
@@ -91,7 +97,8 @@ const ListContact = ({ name, connected, setSelectedUser,setInitialMessages}) => 
         </button>
       ))
     }
-   }
+  }
+  
 
 
   return (
@@ -136,7 +143,7 @@ const ListContact = ({ name, connected, setSelectedUser,setInitialMessages}) => 
             <button onClick={() => HandelSubmitEndpointUsers(setData, setTypeList,"docente")}  className="flex-1 px-4 py-2 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-lg shadow-lg hover:shadow-xl transform transition-transform duration-300 hover:scale-105">
               Docentes
             </button>
-            <button onClick={()=>setTypeList("room")} className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg shadow-lg hover:shadow-xl transform transition-transform duration-300 hover:scale-105">
+            <button onClick={()=>HandelSubmitEndpointUsers(setData,setTypeList,"room")} className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg shadow-lg hover:shadow-xl transform transition-transform duration-300 hover:scale-105">
               Grupos
             </button>
           </div>
