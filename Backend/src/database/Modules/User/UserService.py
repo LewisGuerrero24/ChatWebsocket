@@ -22,18 +22,6 @@ class UserService(UserRepository):
         if UserData:
             return UserData    
 
-    # def create_user(self, name):
-    #     new_user = self.create_user_(name)
-    #     return f"Usuario {name} Creado con Exito"
-    
-
-    # def delete_user(self, name):
-    #     user = self.find_user_by_name(name)
-    #     if user:
-    #         self.delete_user_(user)
-    #         return {'message': f"Recurso con nombre {name} eliminado exitosamente"}, 200
-    #     return {'error': f"No se encontró el recurso con nombre {name}"}, 404
-    
     #User Data Service
     def InsertUser(self, data):
         newUser = self.createUser(data)
@@ -86,3 +74,13 @@ class UserService(UserRepository):
     # Para los Docentes
     def get_userss_teachers(self):
         return self.get_all_users("docente")
+    def delete_user(self, name):
+        user = self.find_user_by_name(name)
+        if user:
+            self.delete_user_(user)
+            return {'message': f"Recurso con nombre {name} eliminado exitosamente"}, 200
+        return {'error': f"No se encontró el recurso con nombre {name}"}, 404
+    
+    def search_users(self, query):
+        resultado = self.find_user(query) 
+        return resultado

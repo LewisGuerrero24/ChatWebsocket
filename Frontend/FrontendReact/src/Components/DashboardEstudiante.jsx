@@ -8,6 +8,7 @@ import Chat from './Chat';
 import useRoom from '../Hooks/useRoom';
 import useConnect from '../Hooks/useConnect';
 import ChatUsers from './ChatUsers';
+import BuscadorUsuarios from './AdminView/BuscardorUsuarios';
 
 const DashboardEstudiante = () => {
     const isLoggedIn = tokenUtils.checkIfIsLoggedIn();
@@ -19,12 +20,6 @@ const DashboardEstudiante = () => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [initialMessages, setInitialMessages] = useState([]);
     const[statusUser, setStatusUser]= useState(0);
-
-
-
-
-    
-
 
     const handleLogout = async () => {
         try {
@@ -46,8 +41,6 @@ const DashboardEstudiante = () => {
             console.error('Error during logout:', error);
         }
     }
-
-
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -73,7 +66,6 @@ const DashboardEstudiante = () => {
     }, [isLoggedIn, lastActive, navigate]);
 
 
-
     useEffect(() => {
       if (!isLoggedIn) {
           navigate('/');
@@ -82,7 +74,10 @@ const DashboardEstudiante = () => {
 
     return (
         <>
+
+        <BuscadorUsuarios/>
             <nav>
+
                 {isLoggedIn && (
                     <>
                         <div className="flex h-screen antialiased text-gray-800">

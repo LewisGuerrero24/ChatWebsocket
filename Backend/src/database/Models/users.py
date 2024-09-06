@@ -23,6 +23,7 @@ class User(Document, UserMixin):
 
     def is_active(self):
         return True
+                
     # Implementar métodos requeridos por RoleMixin si es necesario
     def has_role(self, role):
         return self.rol == role
