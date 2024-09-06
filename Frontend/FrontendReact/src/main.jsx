@@ -19,7 +19,6 @@ import FormPasswordReset from './Components/PasswordRecovery/FormPasswordReset.j
 
 const router = createBrowserRouter([
   {
-
     path: "/",
     element: <App />,
   },{

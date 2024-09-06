@@ -8,6 +8,8 @@ const Chat = ({ name, connected, socket, nameRoom }) => {
   const { message, setMessage, showMessage, sendMessage } = MessageSocketIo({ socket }, name, nameRoom);
   const navigate = useNavigate();
 
+
+
   const handleGoOutCallback = () => {
     handleGoOut(name, navigate);
   };

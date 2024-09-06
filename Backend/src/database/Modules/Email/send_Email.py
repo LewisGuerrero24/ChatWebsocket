@@ -12,7 +12,6 @@ class send_Email:
         password = 'ytyh zbth spio sdll'
         server = 'smtp.gmail.com'  
         port = 465  
-
         to = email
 
 

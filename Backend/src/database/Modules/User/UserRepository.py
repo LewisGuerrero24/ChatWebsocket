@@ -1,3 +1,5 @@
+from bson.regex import Regex
+from mongoengine import Q
 class UserRepository():
     def __init__(self, TemporalUsuario, User):
         self.TemporalUsuario = TemporalUsuario
@@ -21,5 +23,9 @@ class UserRepository():
             return usuario_data
         return usuario_data
     
+    def find_user(self, query):
+        regex = f'^{query}'
+        results = self.User.objects(Q(name__iregex=regex)).only('name', 'id')
+        return [{'id': str(user.id), 'name': user.name} for user in results]
     
     

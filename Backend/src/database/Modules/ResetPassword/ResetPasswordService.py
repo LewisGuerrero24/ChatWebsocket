@@ -27,6 +27,7 @@ class ResetPasswordService(ResetPasswordRepository):
         except Exception as e:
             print(f"Error al enviar el correo de restablecimiento: {e}")
 
+
     def confirmation_Token(self, token):
         try:
             user = self.userByToken(token)

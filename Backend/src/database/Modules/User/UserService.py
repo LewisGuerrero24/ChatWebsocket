@@ -33,3 +33,7 @@ class UserService(UserRepository):
             self.delete_user_(user)
             return {'message': f"Recurso con nombre {name} eliminado exitosamente"}, 200
         return {'error': f"No se encontró el recurso con nombre {name}"}, 404
+    
+    def search_users(self, query):
+        resultado = self.find_user(query) 
+        return resultado
