@@ -20,6 +20,24 @@ const callApisUserEstudents = {
     }
 },
 
+searchUser: async (name) => {
+  try {
+    const response = await axios.get(`http://localhost:5000/api/search-for-name/${name}`, {
+        headers: {
+            authorization: `Bearer ${tokenUtils.getToken()}`
+        },
+        withCredentials: true
+    });
+    
+    return response.data;
+} catch (e) {
+    console.error(e);
+    return false; 
+}
+},
+
+
+
 eliminarUsuario: async (userId) => {
     try {
       const response = await axios.delete(`http://localhost:5000/api/eliminarUsuario/${userId}`, {

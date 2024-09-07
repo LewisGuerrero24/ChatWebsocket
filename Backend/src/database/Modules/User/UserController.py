@@ -31,7 +31,6 @@ class UserController:
                         'filename': user.photo.filename if user.photo else None
                     }
                 } for user in users]
-                
                 return jsonify(users_list), 200
             except Exception as e:
                 return jsonify({'error': str(e)}), 500
@@ -136,6 +135,31 @@ class UserController:
                 return jsonify({'error': str(e)}), 500
 
 
+        @self.app.route('/api/search-for-name/<string:name>', methods=['GET']) 
+        @jwt_required() 
+        def buscar_usuario_por_nombre(name): 
+            try:
+                user = self.UserService.search_user_for_name(name) 
+
+                userBest = {
+                    'id': str(user.id),
+                    'name': user.name,
+                    'rol': {
+                    'id': str(user.rol.id),
+                    'name': user.rol.tipo
+                    } if user.rol else None,
+                    'suspendedAccount': user.suspendedAccount, 
+                    'dateEntry': user.dateEntry, 
+                    'email': user.email, 
+                    'contacts': user.contacts,
+                    'photo': {
+                    'url': f'/api/get_photo/{str(user.id)}' if user.photo else None,
+                    'filename': user.photo.filename if user.photo else None
+                    }
+                }
+                return jsonify(userBest), 200 
+            except Exception as e:
+                return jsonify({'error': str(e)}), 500
 
 
         

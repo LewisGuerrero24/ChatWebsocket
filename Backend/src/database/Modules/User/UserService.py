@@ -74,6 +74,8 @@ class UserService(UserRepository):
     # Para los Docentes
     def get_userss_teachers(self):
         return self.get_all_users("docente")
+    
+    
     def delete_user(self, name):
         user = self.find_user_by_name(name)
         if user:
@@ -81,6 +83,11 @@ class UserService(UserRepository):
             return {'message': f"Recurso con nombre {name} eliminado exitosamente"}, 200
         return {'error': f"No se encontró el recurso con nombre {name}"}, 404
     
+
+    
     def search_users(self, query):
         resultado = self.find_user(query) 
         return resultado
+    
+    def search_user_for_name(self, name):
+        return self.search_user_name(name)

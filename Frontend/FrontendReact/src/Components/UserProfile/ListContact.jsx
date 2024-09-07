@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios'; 
 import tokenUtils from "../../Hooks/utils";
 import HandelSubmitEndpointUsers from '../../Helpers/HandelSubmitEndpointUsers';
+import callApisUserEstudents from "../../Helpers/servicesEstudiantes";
 
 const ListContact = ({ name, connected, setSelectedUser,setInitialMessages, socket}) => {
   const [data, setData] = useState([]);
   const [statusMessage, setStatusMessage] = useState()
   const [typeList, setTypeList]= useState("estudiante")
+  const [user, setUser] = useState({});
 
-  useEffect(() => {
+  useEffect( () => {
     const apiUrl = 'http://localhost:5000/user/list';
 
     axios.get(apiUrl, { 
@@ -20,7 +22,15 @@ const ListContact = ({ name, connected, setSelectedUser,setInitialMessages, sock
       console.log(response.data);
     });
 
+     searchUserForName()
+
   }, []);
+
+  const searchUserForName = async () => {
+    const response = await callApisUserEstudents.searchUser(name);
+    console.log("blalalblab: ", response)
+    setUser(response);
+  };
 
   const handleUserClick = (userName) => {
     if (setSelectedUser) { // Verifica que setSelectedUser es una función
@@ -128,7 +138,10 @@ const ListContact = ({ name, connected, setSelectedUser,setInitialMessages, sock
         <div className="flex flex-col items-center bg-indigo-100 border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg">
           <div className="h-20 w-20 rounded-full border overflow-hidden">
             <img
-              src="https://avatars3.githubusercontent.com/u/2763884?s=128"
+              src={                
+                user.photo && user.photo.url
+                ? `http://localhost:5000${user.photo.url}`
+                : "URL_de_imagen_por_defecto"}
               alt="Avatar"
               className="h-full w-full"
             />
