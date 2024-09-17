@@ -21,8 +21,7 @@ class SocketServer:
         
         @self.socketio.on('join')
         def on_join(data):
-            room = data
-            print("ACA SE VE QUE TIENE ROOM: ", room)
+            room = data["room"]
             join_room(room)
             self.socketio.emit('join_room', True, room=room)
             
@@ -37,7 +36,7 @@ class SocketServer:
 
         @self.socketio.on('leave')
         def on_leave(data):
-            room = data
+            room = data["room"]
             leave_room(room)
             self.socketio.emit('leave_room', True, room=room)
             
@@ -76,7 +75,10 @@ class SocketServer:
                 emit('message', res, room=room)
                 
                 # Notificar a los usuarios que se han unido a la sala
-                self.socketio.emit('user_joined_room', {'room': room}, room=room)
+                self.socketio.emit('new_message',{"newMessage": True})
+                
+                
+                
 
 
         @self.socketio.on('search')

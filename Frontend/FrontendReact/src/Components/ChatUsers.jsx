@@ -15,13 +15,14 @@ const ChatUsers = ({ name, nameSendUser, connected, socket,initialMessages}) => 
 
 
   useEffect(() => {
-    console.log(nameSendUser)
     if(nameSendUser){
       if(nameSendUser !== nameNew){
         setNameNew(nameSendUser)
         setShowMessage([])
       }
+
         setAllMessages([...initialMessages, ...showMessage]);
+       
     }
   }, [initialMessages, showMessage, nameSendUser]);
 

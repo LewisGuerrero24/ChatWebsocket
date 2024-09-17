@@ -1,4 +1,5 @@
 from .UserRepository import UserRepository
+from bson import ObjectId
 
 class UserService(UserRepository):
     def __init__(self,TemporalUsuario,User, Rol):
@@ -30,11 +31,15 @@ class UserService(UserRepository):
     def getAllUser(self):
         return self.userFindAll()
     
-    def getAllUsers(self, typeUser):
+    def getAllUsers(self, typeUser, name):
+        data = {'name': name}
+        userData = self.verificationUser(data)
         if typeUser == "docente":
-            return self.userUniqueUser("6694027d0d8417fe863bdd09")
+            # # return self.userUniqueUser("6694027d0d8417fe863bdd09")
+            return self.userUniqueUser(userData["id"],"6694027d0d8417fe863bdd09")
         if typeUser == "estudiante":
-            return self.userUniqueUser("65f7702da6dcd2a675620aa9")
+            # return self.userUniqueUser("65f7702da6dcd2a675620aa9")
+            return self.userUniqueUser(userData["id"],"65f7702da6dcd2a675620aa9")
     
     def verificationUser(self, data):
         try: 
@@ -50,7 +55,25 @@ class UserService(UserRepository):
         if UserData:
             return UserData 
     
-    
+    def insertContact(self, data):
+        user = self.verificationUser(data)  
+
+        # if not user:
+        #     raise ValueError("Usuario no encontrado")
+
+        userSelected = self.get_user_by_id(ObjectId(data["id"]))
+  
+        # if not userSelected:
+        #     raise ValueError("Usuario seleccionado no encontrado")
+        
+        DtoUser = userSelected.to_contact_DTO()
+        if 'contacts' not in user:
+            user['contacts'] = []
+        if DtoUser not in user['contacts']:
+            user['contacts'].append(DtoUser)
+        user.save()
+        return True
+
     #COdigo Maicol
     
     

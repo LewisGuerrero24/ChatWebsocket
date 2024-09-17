@@ -1,4 +1,5 @@
 from Libraries import *
+from bson import ObjectId
 
 class UserController:
     def __init__(self, app, UserService,RoomBetweenUserService):
@@ -8,10 +9,9 @@ class UserController:
         self.RoomBetweenUserService = RoomBetweenUserService
      
     def start(self):
-
         # Cors para los Estudiantes
         @self.app.route('/api/usuario', methods=['GET']) 
-        @jwt_required()
+        # @jwt_required()
         def get_users():
             try:
                 users = self.UserService.get_userss()
@@ -19,19 +19,19 @@ class UserController:
                     'id': str(user.id),
                     'name': user.name,
                     'rol': {
-                        'id': str(user.rol.id),
-                        'name': user.rol.tipo
-                    } if user.rol else None,
+                        'id': str(user.rol.id) if user.rol else None,
+                        'name': user.rol.tipo if user.rol else None
+                    },
                     'suspendedAccount': user.suspendedAccount, 
                     'dateEntry': user.dateEntry, 
                     'email': user.email, 
-                    'contacts': user.contacts,
+                    'contacts':[] ,
                     'photo': {
                         'url': f'/api/get_photo/{str(user.id)}' if user.photo else None,
                         'filename': user.photo.filename if user.photo else None
                     }
                 } for user in users]
-                
+                print(users_list)
                 return jsonify(users_list), 200
             except Exception as e:
                 return jsonify({'error': str(e)}), 500
@@ -221,8 +221,8 @@ class UserController:
         @self.app.route('/user/list', methods=['GET'])
         def list_user():
             typeUser = request.args.get('typeList')
-            users = self.UserService.getAllUsers(typeUser)
-            response = [user.name for user in users]
+            name = request.args.get('name')
+            response = self.UserService.getAllUsers(typeUser, name)
             return jsonify(response),200
         
 
@@ -230,7 +230,7 @@ class UserController:
         @self.app.route('/conversation/create', methods = ['POST'])
         def create_Conversation():
             dataUsers = request.json
-            print(dataUsers['user_one'])
+        
             d = {"name": dataUsers['user_one']}
             user_one = self.UserService.get_unique_user(d)
                 
@@ -270,4 +270,47 @@ class UserController:
             else:
                 return jsonify("No hay Mensajes aun"), 201
             
+        @jwt_required
+        @self.app.route('/insert/contact', methods = ['PUT'])
+        def insert_Contact():
+            data = request.json
             
+            userData = self.UserService.insertContact(data)
+            if userData:
+                return jsonify("Contacto agregado correctamente"), 201
+            
+            return jsonify("error al agregar contacto")
+        
+        
+        @jwt_required 
+        @self.app.route('/notification/newmessage', methods = ['GET'])
+        def messages_notificacion():
+            user_one = request.args.get('user_one')
+            user_two = request.args.get('user_two')
+
+            d = {"name": user_one}
+            user_one = self.UserService.get_unique_user(d)
+                
+                # Consulto al segundo usuario
+            l = {"name": user_two}
+            user_second = self.UserService.get_unique_user(l)
+                
+            response = self.RoomBetweenUserService.MessagesIsNotRead(str(user_one['id']),str(user_second['id']))
+            print(response)
+            return jsonify(response), 200
+        
+        @jwt_required 
+        @self.app.route('/update/statusMessage', methods = ['PUT'])
+        def messages_notificacion_status():
+            dataUsers = request.json
+        
+            d = {"name": dataUsers['user_one']}
+            user_one = self.UserService.get_unique_user(d)
+                
+                # Consulto al segundo usuario
+            l = {"name": dataUsers['user_two']}
+            user_second = self.UserService.get_unique_user(l)
+                
+            response = self.RoomBetweenUserService.updateMessageStatus(str(user_one['id']),str(user_second['id']))
+            print(response)
+            return jsonify(response), 200

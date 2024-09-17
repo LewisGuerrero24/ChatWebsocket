@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import io from 'socket.io-client';
 import useConnect from "../../Hooks/useConnect";
+import axios from "axios";
 
 
-const BuscadorUsuarios = () => {
+const BuscadorUsuarios = ({name,setStatusListContact}) => {
   const {socket} = useConnect()
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
@@ -21,6 +22,7 @@ const BuscadorUsuarios = () => {
 
     return () => {
       socket.off('search_results');
+      
     };
   }, [query]);
 
@@ -31,6 +33,17 @@ const BuscadorUsuarios = () => {
     } else {
       setResults([]);
     }
+  }
+
+  const endpointContacts = (name, id) => {
+    axios.put('http://localhost:5000/insert/contact', {
+      name,
+      id
+    }, { withCredentials: true }).then((response)=>{
+      console.log(response.data)
+      setStatusListContact(true)
+      query("")
+    })
   }
 
   return (
@@ -54,9 +67,9 @@ const BuscadorUsuarios = () => {
         <ul className="absolute z-10 w-full max-w-full bg-white shadow-lg rounded-lg mt-2 max-h-60 overflow-y-auto">
           {results.map((user, index) => (
             <li 
+              onClick={()=>endpointContacts(name,user.id)}
               key={index} 
               className="px-4 py-2 hover:bg-gray-100 cursor-pointer truncate"
-              value={user.id}
               style={{
                 whiteSpace: 'nowrap', 
                 overflow: 'hidden', 
