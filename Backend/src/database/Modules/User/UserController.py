@@ -281,6 +281,16 @@ class UserController:
             
             return jsonify("error al agregar contacto")
         
+        @jwt_required
+        @self.app.route('/exist/contact', methods = ['PUT'])
+        def exist_Contact():
+            data = request.json
+            
+            statusContact = self.UserService.existContact(data)
+            if statusContact:
+                return jsonify(statusContact["status"]), 201
+            return jsonify(statusContact["status"])
+        
         
         @jwt_required 
         @self.app.route('/notification/newmessage', methods = ['GET'])

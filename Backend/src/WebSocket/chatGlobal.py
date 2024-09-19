@@ -61,9 +61,6 @@ class SocketServer:
                 # Genero la sala de chat usando los IDs de los usuarios
                 room = f"chat_{min(user_one['id'], user_second['id'])}_{max(user_one['id'], user_second['id'])}"
                 
-                # Unir a ambos usuarios a la sala
-                join_room(room)
-                
                 # Crear el objeto mensaje
                 message_user = self.MessageUser(Sender=user_one.to_simple_dict(), Content=data['message'], TimeStap=datetime.utcnow())
                 
@@ -74,13 +71,9 @@ class SocketServer:
                 res = {'sender': message_user.Sender, 'content': message_user.Content, 'timestamp': message_user.TimeStap.strftime('%H:%M:%S')}
                 emit('message', res, room=room)
                 
-                # Notificar a los usuarios que se han unido a la sala
-                self.socketio.emit('new_message',{"newMessage": True})
+                # hay un mensaje nuevo en el sistema
+                self.socketio.emit('new_message',{"SenderId":str(user_one['id']),"Sender":data['user_primary'],"Received":data['user_second'],"newMessage": True})
                 
-                
-                
-
-
         @self.socketio.on('search')
         def handle_search(data):
             if isinstance(data, str):

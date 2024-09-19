@@ -56,25 +56,24 @@ class UserService(UserRepository):
             return UserData 
     
     def insertContact(self, data):
-        user = self.verificationUser(data)  
+        exist_Contact=self.existContact(data)
+        if exist_Contact and exist_Contact["status"]:
+            user = exist_Contact["user"]
+            user['contacts'].append(exist_Contact["Dto"])
+            user.save()
+            return True
+        return False  
 
-        # if not user:
-        #     raise ValueError("Usuario no encontrado")
 
+    def existContact(self, data):
+        user = self.verificationUser(data) 
         userSelected = self.get_user_by_id(ObjectId(data["id"]))
-  
-        # if not userSelected:
-        #     raise ValueError("Usuario seleccionado no encontrado")
-        
         DtoUser = userSelected.to_contact_DTO()
         if 'contacts' not in user:
-            user['contacts'] = []
+            return {"status": False}
         if DtoUser not in user['contacts']:
-            user['contacts'].append(DtoUser)
-        user.save()
-        return True
-
-    #COdigo Maicol
+            return {"user": user, "Dto": DtoUser, "status": True}
+        return {"status": False}
     
     
     def get_user_counts(self):

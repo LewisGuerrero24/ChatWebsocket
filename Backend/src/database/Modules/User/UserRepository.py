@@ -40,8 +40,8 @@ class UserRepository():
 
     def find_user(self, query):
         regex = f'^{query}'
-        results = self.User.objects(Q(name__iregex=regex)).only('name', 'id')
-        return [{'id': str(user.id), 'name': user.name} for user in results]
+        results = self.User.objects(Q(name__iregex=regex)).only('name', 'id','suspendedAccount')
+        return [{'id': str(user.id), 'name': user.name,"suspendedAccount":user.suspendedAccount} for user in results]
 
     
     def createUser(self, data):

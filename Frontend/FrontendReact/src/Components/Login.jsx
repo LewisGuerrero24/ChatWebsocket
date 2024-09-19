@@ -38,7 +38,7 @@ const Login = () => {
         } else if(response.data.rol === 'estudiante'){
           navigate('/DashboardEstudiante/'+name);
         }else{
-          navigate('/DashboardDocente');
+          navigate('/DashboardDocente/'+name);
         }
 
         toast.success('Login successful', {

@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import io from 'socket.io-client';
 import useConnect from "../../Hooks/useConnect";
 import axios from "axios";
+import addContact from "../../Helpers/addContact";
+
+
 
 
 const BuscadorUsuarios = ({name,setStatusListContact}) => {
@@ -35,17 +38,6 @@ const BuscadorUsuarios = ({name,setStatusListContact}) => {
     }
   }
 
-  const endpointContacts = (name, id) => {
-    axios.put('http://localhost:5000/insert/contact', {
-      name,
-      id
-    }, { withCredentials: true }).then((response)=>{
-      console.log(response.data)
-      setStatusListContact(true)
-      query("")
-    })
-  }
-
   return (
     <div className="relative w-full max-w-lg mx-auto bg-white rounded-lg shadow-xl">
       <div className="flex items-center px-3.5 py-2 text-gray-400 group hover:ring-1 hover:ring-gray-300 focus-within:!ring-2 ring-inset focus-within:!ring-teal-500 rounded-md">
@@ -66,19 +58,23 @@ const BuscadorUsuarios = ({name,setStatusListContact}) => {
       {results.length > 0 && (
         <ul className="absolute z-10 w-full max-w-full bg-white shadow-lg rounded-lg mt-2 max-h-60 overflow-y-auto">
           {results.map((user, index) => (
-            <li 
-              onClick={()=>endpointContacts(name,user.id)}
-              key={index} 
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer truncate"
-              style={{
-                whiteSpace: 'nowrap', 
-                overflow: 'hidden', 
-                textOverflow: 'ellipsis',
-                maxWidth: '100%' 
-              }}
-            >
-              {user.name}
-            </li>
+            
+            (user.name != name && user.suspendedAccount != 0) && (
+              
+              <li 
+                onClick={() => addContact(name, user.id, setStatusListContact)}
+                key={index} 
+                className="px-4 py-2 hover:bg-gray-100 cursor-pointer truncate"
+                style={{
+                  whiteSpace: 'nowrap', 
+                  overflow: 'hidden', 
+                  textOverflow: 'ellipsis',
+                  maxWidth: '100%' 
+                }}
+              >
+                {user.name}
+              </li>
+            )
           ))}
         </ul>
       )}

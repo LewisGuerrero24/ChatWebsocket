@@ -4,6 +4,9 @@ import tokenUtils from "../../Hooks/utils";
 import HandelSubmitEndpointUsers from '../../Helpers/HandelSubmitEndpointUsers';
 import HandleSubmitListContact from '../../Helpers/HandleSubmitListContact';
 import TypeListMap from './TypeListMap';
+import Swal from 'sweetalert2'
+import addContact from '../../Helpers/addContact';
+import existContact from '../../Helpers/existContact';
 
 
 const ListContact = ({ name, connected, setSelectedUser, setInitialMessages, socket, statusListContact, setStatusListContact }) => {
@@ -48,7 +51,7 @@ const ListContact = ({ name, connected, setSelectedUser, setInitialMessages, soc
 
       };
     }
-
+    newMessage()
 
   }, [statusListContact, typeList, notificationStatus]);
 
@@ -57,11 +60,31 @@ const ListContact = ({ name, connected, setSelectedUser, setInitialMessages, soc
     socket.on('new_message', (m) => {
       // Cuando se reciba un nuevo mensaje, actualiza el contador de notificaciones
       setNotificationStatus(m.newMessage);
+      if(m.Received == name ){
+        existContact(name,m.SenderId).then(res =>{
+          if(res==true){
+            Swal.fire({
+              title: m.Sender,
+              text: "Este usuario se esta comunicando contigo, deseas agregarlo!",
+              icon: "question",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Agregar" 
+            }).then((result) => {
+              if (result.isConfirmed) {
+                addContact(name,m.SenderId, setStatusListContact)
+              }
+            
+            })
+          }
+        })
+    }
     });
   }
 
 
-  newMessage()
+
 
 
   return (

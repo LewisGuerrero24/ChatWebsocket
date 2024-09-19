@@ -62,7 +62,7 @@ const router = createBrowserRouter([
     element: <DashboardEstudiante/>
   },
   {
-    path: "/DashboardDocente",
+    path: "/DashboardDocente/:name",
     element: <DashboardDocente/>
   },
   // {
