@@ -9,6 +9,7 @@ import addContact from '../../Helpers/addContact';
 import existContact from '../../Helpers/existContact';
 
 
+
 const ListContact = ({ name, connected, setSelectedUser, setInitialMessages, socket, statusListContact, setStatusListContact }) => {
   const [data, setData] = useState([]);
   const [statusMessage, setStatusMessage] = useState()
@@ -35,6 +36,7 @@ const ListContact = ({ name, connected, setSelectedUser, setInitialMessages, soc
     }
     if (notificationStatus == true) {
       HandelSubmitEndpointUsers(setData, setTypeList, "estudiante", name)
+
       setNotificationStatus(false)
       if (typeList == "docente") {
         HandelSubmitEndpointUsers(setData, setTypeList, "docente", name)
@@ -56,10 +58,14 @@ const ListContact = ({ name, connected, setSelectedUser, setInitialMessages, soc
   }, [statusListContact, typeList, notificationStatus]);
 
 
+
+
+
   const newMessage = () => {
     socket.on('new_message', (m) => {
       // Cuando se reciba un nuevo mensaje, actualiza el contador de notificaciones
       setNotificationStatus(m.newMessage);
+
       if(m.Received == name ){
         existContact(name,m.SenderId).then(res =>{
           if(res==true){
