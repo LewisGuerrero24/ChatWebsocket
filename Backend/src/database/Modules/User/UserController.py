@@ -10,30 +10,42 @@ class UserController:
     def start(self):
 
         # Cors para los Estudiantes
-        @self.app.route('/api/usuario', methods=['GET']) 
+        @self.app.route('/api/usuario', methods=['GET'])
         @jwt_required()
         def get_users():
             try:
-                users = self.UserService.get_userss()
-                users_list = [{
-                    'id': str(user.id),
-                    'name': user.name,
-                    'rol': {
-                        'id': str(user.rol.id),
-                        'name': user.rol.tipo
-                    } if user.rol else None,
-                    'suspendedAccount': user.suspendedAccount, 
-                    'dateEntry': user.dateEntry, 
-                    'email': user.email, 
-                    'contacts': user.contacts,
-                    'photo': {
-                        'url': f'/api/get_photo/{str(user.id)}' if user.photo else None,
-                        'filename': user.photo.filename if user.photo else None
-                    }
-                } for user in users]
+                users = self.UserService.get_userss()  # Obtiene la lista de usuarios
+                users_list = []
+                
+                # Procesa cada usuario
+                for user in users:
+                    try:
+                        user_data = {
+                            'id': str(user.id),
+                            'name': user.name,
+                            'rol': {
+                                'id': str(user.rol.id),
+                                'name': user.rol.tipo
+                            } if user.rol else None,
+                            'suspendedAccount': user.suspendedAccount,
+                            'dateEntry': user.dateEntry,
+                            'email': user.email,
+                            # Procesa contacts solo si está bien formado, si no, devuelve un array vacío
+                            'contacts': [str(contact.id) for contact in user.contacts] if isinstance(user.contacts, list) else [],
+                            'photo': {
+                                'url': f'/api/get_photo/{str(user.id)}' if user.photo else None,
+                                'filename': user.photo.filename if user.photo else None
+                            }
+                        }
+                        users_list.append(user_data)
+                    except TypeError as te:
+                        print(f"Error en el procesamiento de un usuario: {te}")
                 return jsonify(users_list), 200
+            
             except Exception as e:
+                print(f"Error occurred: {str(e)}")  # Agregar esto para más detalles en el log
                 return jsonify({'error': str(e)}), 500
+
             
 
             
@@ -41,7 +53,7 @@ class UserController:
         @jwt_required()
         def delete_user(user_id):
             try:
-                self.UserService.delete_user(user_id)
+                self.UserService.delete_user_id(user_id)
                 return jsonify({'message': 'User deleted successfully'}), 200
             except Exception as e:
                 return jsonify({'error': str(e)}), 500
@@ -179,7 +191,7 @@ class UserController:
                     'suspendedAccount': user.suspendedAccount, 
                     'dateEntry': user.dateEntry, 
                     'email': user.email, 
-                    'contacts': user.contacts,
+                    'contacts': [str(contact.id) for contact in user.contacts] if isinstance(user.contacts, list) else [],
                     'photo': {
                         'url': f'/api/get_photo/{str(user.id)}' if user.photo else None,
                         'filename': user.photo.filename if user.photo else None
@@ -254,10 +266,10 @@ class UserController:
         @self.app.route('/conversation/create', methods = ['POST'])
         def create_Conversation():
             dataUsers = request.json
-            print(dataUsers['user_one'])
+
             d = {"name": dataUsers['user_one']}
-            user_one = self.UserService.get_unique_user(d)
-                
+            user_one = self.UserService.get_unique_user(d)  
+
                 # Consulto al segundo usuario
             l = {"name": dataUsers['user_two']}
             user_second = self.UserService.get_unique_user(l)
@@ -265,12 +277,15 @@ class UserController:
              # Genero la sala de chat usando los IDs de los usuarios
             room = f"chat_{min(user_one['id'], user_second['id'])}_{max(user_one['id'], user_second['id'])}"
                 
-            existConversation = self.RoomBetweenUserService.existConversation(str(user_one['id']),str(user_second['id']))
+            existConversation = self.RoomBetweenUserService.existConversation(str(user_one['id']), str(user_second['id']))
             if existConversation:
                   return jsonify({"success": True, "room": room}), 201
             self.RoomBetweenUserService.CreateRoom(dataUsers['user_one'],dataUsers['user_two'])
             return jsonify({"success": False, "room": room}), 201
             
+
+
+
         @jwt_required
         @self.app.route('/conversation/message', methods = ['GET'])
         def messages_Conversation():

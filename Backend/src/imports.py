@@ -9,6 +9,7 @@ from database.Models.users import User
 from database.Models.role import Rol
 from database.Modules.User.UserService import UserService
 from database.Modules.RoomBetweenUser.RoomBetweenUserService import RoomBetweenUserService
+from database.Modules.RoomBetweenUserAndRoom.RoomBetweenUserAndRoomService import RoomBetweenUserAndRoomService
 from database.Modules.ResetPassword.ResetPasswordService import ResetPasswordService
 from database.Modules.User.UserRepository  import UserRepository
 from database.Models.Rooms import Rooms

@@ -30,3 +30,12 @@ class RoomService(RoomRepository):
     
     def update_room(self, room_id, data, photo=None):
         return self.update_room_by_id(room_id, data, photo)
+    
+    def get_room_by_name(self, nameRoom):
+        roomData = self.verificarRoom(nameRoom)
+        if roomData:
+            return roomData
+    
+    def list_room_for_name(self):
+        rooms = self.Rooms.objects().only('Name') 
+        return [room.Name for room in rooms]

@@ -36,6 +36,7 @@ class UserService(UserRepository):
         if typeUser == "estudiante":
             return self.userUniqueUser("65f7702da6dcd2a675620aa9")
     
+    
     def verificationUser(self, data):
         try: 
             usuario_data = self.User.objects(name=data['name']).first()
@@ -64,7 +65,7 @@ class UserService(UserRepository):
     def save_student(self, newStudent):
         return self.save_user_student(newStudent)
     
-    def delete_user(self, user_id):
+    def delete_user_id(self, user_id):
         return self.detele_user_by_id(user_id) 
     
     def update_user(self, user_id, data, photo=None):

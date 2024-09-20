@@ -13,7 +13,9 @@ class User(Document, UserMixin):
     suspendedAccount = IntField(default=1) # 1 significa que no esta suspendido y 0 esta suspendido
     dateEntry = DateTimeField()
     status = IntField()
-    contacts = ListField(ReferenceField('self')) 
+    contacts = ListField(ReferenceField('self'), default=[]) 
+    groupParticipating = ListField(ReferenceField('Rooms'))
+
 
     # Atributos de limite de intentos de session 
     failed_login_attempts = IntField(default=0)
