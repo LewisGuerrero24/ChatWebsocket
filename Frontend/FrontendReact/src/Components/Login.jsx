@@ -39,7 +39,7 @@ const Login = () => {
           navigate('/DashboardEstudiante/'+name);
           localStorage.setItem('nombreDeSession', name)
         }else{
-          navigate('/DashboardDocente');
+          navigate('/DashboardDocente/'+name);
         }
 
         toast.success('Login successful', {

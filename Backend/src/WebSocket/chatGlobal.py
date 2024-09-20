@@ -19,6 +19,13 @@ class SocketServer:
         def handle_connect():
             print("SERVIDOR CONECTADO")
             self.socketio.emit('server_status', True)
+
+        @self.socketio.on('join')
+        def on_join(data):
+            room = data["room"]
+            join_room(room)
+            self.socketio.emit('join_room', True, room=room)
+
             
         @self.socketio.on('join_room_event')
         def on_join(data):
@@ -40,7 +47,7 @@ class SocketServer:
             
         @self.socketio.on('leave')
         def on_leave(data):
-            room = data
+            room = data["room"]
             leave_room(room)
             self.socketio.emit('leave_room', True, room=room)
             
@@ -76,8 +83,8 @@ class SocketServer:
                 res = {'sender': message_user.Sender, 'content': message_user.Content, 'timestamp': message_user.TimeStap.strftime('%H:%M:%S')}
                 emit('message', res, room=room)
                 
-                # Notificar a los usuarios que se han unido a la sala
-                self.socketio.emit('user_joined_room', {'room': room}, room=room)
+                # hay un mensaje nuevo en el sistema
+                self.socketio.emit('new_message',{"SenderId":str(user_one['id']),"Sender":data['user_primary'],"Received":data['user_second'],"newMessage": True})
 
 
 
@@ -114,13 +121,6 @@ class SocketServer:
                     emit('error', {'msg': 'Sender not found'})
             else:
                 emit('error', {'msg': 'Room not found'})
-
-
-
-
-
-
-
 
 
         @self.socketio.on('search')

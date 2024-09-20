@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import io from 'socket.io-client';
 import useConnect from "../../Hooks/useConnect";
+import axios from "axios";
+import addContact from "../../Helpers/addContact";
 
-
-const BuscadorUsuarios = () => {
+const BuscadorUsuarios = ({name,setStatusListContact}) => {
   const {socket} = useConnect()
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
@@ -21,6 +22,7 @@ const BuscadorUsuarios = () => {
 
     return () => {
       socket.off('search_results');
+      
     };
   }, [query]);
 
@@ -53,19 +55,23 @@ const BuscadorUsuarios = () => {
       {results.length > 0 && (
         <ul className="absolute z-10 w-full max-w-full bg-white shadow-lg rounded-lg mt-2 max-h-60 overflow-y-auto">
           {results.map((user, index) => (
-            <li 
-              key={index} 
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer truncate"
-              value={user.id}
-              style={{
-                whiteSpace: 'nowrap', 
-                overflow: 'hidden', 
-                textOverflow: 'ellipsis',
-                maxWidth: '100%' 
-              }}
-            >
-              {user.name}
-            </li>
+            
+            (user.name != name && user.suspendedAccount != 0) && (
+              
+              <li 
+                onClick={() => addContact(name, user.id, setStatusListContact)}
+                key={index} 
+                className="px-4 py-2 hover:bg-gray-100 cursor-pointer truncate"
+                style={{
+                  whiteSpace: 'nowrap', 
+                  overflow: 'hidden', 
+                  textOverflow: 'ellipsis',
+                  maxWidth: '100%' 
+                }}
+              >
+                {user.name}
+              </li>
+            )
           ))}
         </ul>
       )}

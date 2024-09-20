@@ -15,8 +15,7 @@ const ChatUsers = ({ name, nameSendUser, connected, socket, initialMessages}) =>
     handleGoOut(name, navigate);
   };
 
-  useEffect(() => {   
-    console.log(nameSendUser)
+  useEffect(() => {
     if(nameSendUser){
       if(nameSendUser !== nameNew){
         setNameNew(nameSendUser)

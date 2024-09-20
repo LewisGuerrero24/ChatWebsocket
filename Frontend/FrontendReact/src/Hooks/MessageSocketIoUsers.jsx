@@ -6,10 +6,8 @@ const MessageSocketIoUsers = ({ socket }, nameSend, name) => {
 
 
   useEffect(() => {
-    // Escuchar mensajes desde el servidor
     socket.on('message', (m) => {
       setShowMessage((prevMessages) => [...prevMessages, m]);
-
     });
 
     return () => {

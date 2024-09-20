@@ -46,8 +46,47 @@ class RoomBetweenUserService(RoomBetweenUsersRepository):
                 print("No se encontró la conversación para agregar el mensaje.")
                 return None
         except Exception as e:
-            print(f"Ocurrió un error al gestionar la conversación y los mensajes: {e}")
+            print(f"Ocurrió un error al gestionar la Uconversación y los mensajes: {e}")
             return None
 
 
+    def MessagesIsNotRead(self, idUser_one, ideUser_second):
+        countMessage = 0
+        dataMessage = self.ReadDataMessageUser(idUser_one, ideUser_second)
+        
+        if dataMessage :
+            messages = dataMessage['Messages']
             
+            # Inicializamos la variable sender con None
+            sender = None
+            response = []
+            
+            for m in messages: 
+                # Asumiendo que estás iterando sobre los mensajes
+                if m.Is_read == False and m.Sender["id"] != idUser_one:
+                    countMessage += 1
+                    sender = m.Sender
+            
+            if sender:       
+                response.append({"IdSender": sender["id"], "messageNotRead": countMessage})
+                print(response) 
+                return response
+        else:
+            return []
+
+    def updateMessageStatus(self, idUser_one, ideUser_second):
+        dataMessage = self.ReadDataMessageUser(idUser_one, ideUser_second)
+        
+        if dataMessage :
+            # Inicializamos la variable sender con None
+            sender = None
+            
+            for m in dataMessage['Messages']: 
+                # Asumiendo que estás iterando sobre los mensajes
+                if m.Is_read == False and m.Sender["id"] != idUser_one:
+                    m.Is_read = True
+            dataMessage.save()
+            return True
+        else:
+            return False
+        

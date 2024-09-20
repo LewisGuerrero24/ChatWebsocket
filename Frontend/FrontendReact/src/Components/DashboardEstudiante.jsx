@@ -20,7 +20,9 @@ const DashboardEstudiante = () => {
     const { name } = useParams();
     const [selectedUser, setSelectedUser] = useState(null);
     const [initialMessages, setInitialMessages] = useState([]);
-    const[statusUser, setStatusUser]= useState(0);
+    const[statusListContact, setStatusListContact]= useState(false);
+    const [notificationData, setNotificationData]=useState({})
+    
 
     const[isRoom, setIsRoom] = useState("");
 
@@ -90,13 +92,14 @@ const DashboardEstudiante = () => {
     return (
         <>
 
-        <BuscadorUsuarios/>
+        <BuscadorUsuarios setStatusListContact={setStatusListContact} name={name}/>
             <nav>
                 {isLoggedIn && (
                     <>  
                         <div className="flex h-screen antialiased text-gray-800">
                             <div className="flex flex-row h-full w-full overflow-x-hidden">
-                            <ListContact connected={connected} name={name} setSelectedUser={setSelectedUser} setInitialMessages={setInitialMessages} socket={socket} setIsRoom={setIsRoom} />
+                            <ListContact connected={connected} name={name} setSelectedUser={setSelectedUser} setInitialMessages={setInitialMessages} 
+                            setStatusListContact={setStatusListContact} statusListContact={statusListContact} socket={socket} setIsRoom={setIsRoom}/>
                             {determineWhichComponentToDisplay()}
                             </div>
                         </div>

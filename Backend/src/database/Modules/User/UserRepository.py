@@ -33,14 +33,15 @@ class UserRepository():
         if usuario_data:
             return usuario_data
         return usuario_data
+        
     
 
     #Data Repository
 
     def find_user(self, query):
         regex = f'^{query}'
-        results = self.User.objects(Q(name__iregex=regex)).only('name', 'id')
-        return [{'id': str(user.id), 'name': user.name} for user in results]
+        results = self.User.objects(Q(name__iregex=regex)).only('name', 'id','suspendedAccount')
+        return [{'id': str(user.id), 'name': user.name,"suspendedAccount":user.suspendedAccount} for user in results]
 
     
     def createUser(self, data):
@@ -61,18 +62,23 @@ class UserRepository():
         listUser = list()
         for user in self.User.objects:
             userData = {
+                "id": str(user.id),
                 "name":user.name,
-                "password":user.password
             }
             listUser.append(userData)
         return listUser
     
-    def userUniqueUser(self,id):
-         listUsers = []
-         object_id = ObjectId(id)
-         users = self.User.objects(rol=object_id)
-
-         return users
+    def userUniqueUser(self,id,rol):
+        
+         users = self.User.objects(id=id).first()
+         print(users["name"])
+         if users:
+            print(users["contacts"])
+            dataContacts = [{"id":contact["id"],"name":contact["name"],"CountMessages":0} for contact in users["contacts"] if contact["rol"] == ObjectId(rol)]
+            return dataContacts
+         else:
+            return None, None
+    
     
     #Codigo de Maicol
     

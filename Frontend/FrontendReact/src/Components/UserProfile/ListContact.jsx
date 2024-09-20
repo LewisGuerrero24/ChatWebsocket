@@ -1,43 +1,98 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios'; 
+import axios from 'axios';
 import tokenUtils from "../../Hooks/utils";
 import HandelSubmitEndpointUsers from '../../Helpers/HandelSubmitEndpointUsers';
 import callApisUserEstudents from "../../Helpers/servicesEstudiantes";
+import HandleSubmitListContact from '../../Helpers/HandleSubmitListContact';
+import TypeListMap from './TypeListMap';
+import Swal from 'sweetalert2'
+import addContact from '../../Helpers/addContact';
+import existContact from '../../Helpers/existContact'
 
-const ListContact = ({ name, connected, setSelectedUser,setInitialMessages, socket, setIsRoom}) => { 
+
+const ListContact = ({ name, connected, setSelectedUser,setInitialMessages, socket, setIsRoom, statusListContact, setStatusListContact }) => { 
   const [data, setData] = useState([]);
-  const [typeList, setTypeList]= useState("estudiante")
-  const [user, setUser] = useState({});
+  const [statusMessage, setStatusMessage] = useState()
+  const [typeList, setTypeList] = useState("estudiante")
+  const [notificationStatus, setNotificationStatus] = useState(false)
 
-  useEffect( () => { 
-    const apiUrl = 'http://localhost:5000/user/list';
-    axios.get(apiUrl, { 
-      headers: { authorization: `Bearer ${tokenUtils.getToken()}` } , params: {
-        typeList,
-      } 
-    }).then(response => {
-      setData(response.data);
-      console.log(response.data)
-    });
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    if (typeList == "estudiante") {
+      HandelSubmitEndpointUsers(setData, setTypeList, "estudiante", name)
+
+    }
+    
+    if (typeList == "room") {
+      HandelSubmitEndpointUsers(setData, setTypeList, "room", name)
+
+    }
+
+
+    if (typeList == "docente") {
+      HandelSubmitEndpointUsers(setData, setTypeList, "docente", name)
+
+    }
+    if (notificationStatus == true) {
+      HandelSubmitEndpointUsers(setData, setTypeList, "estudiante", name)
+
+      setNotificationStatus(false)
+      if (typeList == "docente") {
+        HandelSubmitEndpointUsers(setData, setTypeList, "docente", name)
+
+      }
+
+    }
+    if (statusListContact == true) {
+
+      return () => {
+        setStatusListContact(false)
+
+        // socket.off('new_message');
+
+      };
+    }
     setIsRoom("")
-     searchUserForName()
-    }, []);
+    searchUserForName()
+    newMessage()
+
+
+  }, [statusListContact, typeList, notificationStatus]);
+
+  const newMessage = () => {
+    socket.on('new_message', (m) => {
+      // Cuando se reciba un nuevo mensaje, actualiza el contador de notificaciones
+      setNotificationStatus(m.newMessage);
+
+      if(m.Received == name ){
+        existContact(name,m.SenderId).then(res =>{
+          if(res==true){
+            Swal.fire({
+              title: m.Sender,
+              text: "Este usuario se esta comunicando contigo, deseas agregarlo!",
+              icon: "question",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Agregar" 
+            }).then((result) => {
+              if (result.isConfirmed) {
+                addContact(name,m.SenderId, setStatusListContact)
+              }
+            
+            })
+          }
+        })
+    }
+    });
+  }
+
 
   const searchUserForName = async () => {
     const response = await callApisUserEstudents.searchUser(name);
     setUser(response);
   };
-
-
-  const handleUserClick = (userName) => {
-    if (setSelectedUser) { // Verifica que setSelectedUser es una función
-      setSelectedUser(userName);
-      handleSubmit(name, userName)
-    } else {
-      console.error('setSelectedUser is not a function');
-    }
-  };
-
 
   const handleUserClickRoom = (nameRoom) => {
     if(setSelectedUser){
@@ -48,9 +103,6 @@ const ListContact = ({ name, connected, setSelectedUser,setInitialMessages, sock
       console.error('setSelectedUser is not a function');
     }
   }
-
-
-
 
 
   const handleSubmitRoom = async (nameUserActually, nameRoom) => {
@@ -90,76 +142,10 @@ const ListContact = ({ name, connected, setSelectedUser,setInitialMessages, sock
 
 
 
-  const handleSubmit = async(user_one, user_two) => { 
-
-    await axios.post('http://localhost:5000/conversation/create', {
-      user_one,
-      user_two
-    }, { withCredentials: true }).then(response => {
-      const roomName = response.data.room; // Asegúrate de obtener el nombre de la sala del servidor
-    
-    
-      if (response.data.success === true) {
-        const apiUrl = 'http://localhost:5000/conversation/message';
-    
-        axios.get(apiUrl, {
-          headers: { authorization: `Bearer ${tokenUtils.getToken()}` },
-          params: {
-            user_one,
-            user_two
-          }        
-        }).then(response => {
-          setInitialMessages([...response.data]); // Cargar los mensajes iniciales en la conversación
-        });
-      }
-      setIsRoom("")
-    });
-  }
-
-
-
-
-const mapList = () => {
-    if (!Array.isArray(data)) {
-      return null;
-    }
-  
-    if(typeList === "room" ){
-      return data.map(item => (
-        
-        <button 
-          key={item}
-          className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
-          onClick={() => handleUserClickRoom(item)}
-        >
-          <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
-             {item.charAt(0).toUpperCase()}
-          </div>
-          <div className="ml-2 text-sm font-semibold">{item}</div>
-        </button>
-      ))
-    } else {
-      return data.map(item => (
-        <button 
-          key={item}
-          className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
-          onClick={() => handleUserClick(item)}
-        >
-          <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
-            {item.charAt(0).toUpperCase()}
-          </div>
-          <div className="ml-2 text-sm font-semibold">{item}</div>
-        </button>
-      ))
-    }
-  }
-  
-
-
-
 
 
   return (
+
     <>
       {/* Sidebar */}
       <div className="flex flex-col py-8 pl-6 pr-2 w-64 bg-white flex-shrink-0">
@@ -187,9 +173,7 @@ const mapList = () => {
         <div className="h-20 w-22 rounded-full border overflow-hidden">
         <img
           src={                
-            user.photo && user.photo.url
-            ? `http://localhost:5000${user.photo.url}`
-            : "URL_de_imagen_por_defecto"}
+            user ? `http://localhost:5000${user.photo.url}` : "URL_de_imagen_por_defecto"}
           alt="Avatar"
           className="h-full w-full"
         />
@@ -199,14 +183,14 @@ const mapList = () => {
           <div className="text-xs text-gray-500">{connected ? 'Active' : 'Inactive'}</div>
         </div>
         <div className="flex flex-col mt-8">
-            <div className="flex flex-row items-center justify-between text-xs space-x-2 flex-wrap">
-            <button onClick={() => HandelSubmitEndpointUsers(setData, setTypeList,"estudiante")}  className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg shadow-lg hover:shadow-xl transform transition-transform duration-300 hover:scale-105">
+          <div className="flex flex-row items-center justify-between text-xs space-x-2 flex-wrap">
+            <button onClick={() => HandelSubmitEndpointUsers(setData, setTypeList, "estudiante", name)} className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg shadow-lg hover:shadow-xl transform transition-transform duration-300 hover:scale-105">
               Estudiantes
             </button>
-            <button onClick={() => HandelSubmitEndpointUsers(setData, setTypeList,"docente")}  className="flex-1 px-4 py-2 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-lg shadow-lg hover:shadow-xl transform transition-transform duration-300 hover:scale-105">
+            <button onClick={() => HandelSubmitEndpointUsers(setData, setTypeList, "docente", name)} className="flex-1 px-4 py-2 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-lg shadow-lg hover:shadow-xl transform transition-transform duration-300 hover:scale-105">
               Docentes
             </button>
-            <button onClick={()=>HandelSubmitEndpointUsers(setData,setTypeList,"room")} className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg shadow-lg hover:shadow-xl transform transition-transform duration-300 hover:scale-105">
+            <button onClick={() => HandelSubmitEndpointUsers(setData, setTypeList, "room", name)} className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg shadow-lg hover:shadow-xl transform transition-transform duration-300 hover:scale-105">
               Grupos
             </button>
           </div>
@@ -215,15 +199,15 @@ const mapList = () => {
             <span className="font-bold">Active Conversationss</span>
             <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">4</span>
           </div>
-          
+
           <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
-        {mapList()}
+
+
+            {TypeListMap(data, typeList, name, setSelectedUser, socket, setStatusMessage, setInitialMessages, setNotificationStatus)}
+          </div>
+        </div>
       </div>
 
-
-    </div>
-
-  </div>
 </>
 ); }
 

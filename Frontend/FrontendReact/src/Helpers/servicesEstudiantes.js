@@ -11,7 +11,8 @@ const callApisUserEstudents = {
             headers: {
                 authorization: `Bearer ${tokenUtils.getToken()}`
             }
-        });
+        })
+        console.log(response.data)
         return response.data;
     } catch (e) {
         console.error(e);
