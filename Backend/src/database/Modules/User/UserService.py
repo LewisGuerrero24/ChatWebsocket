@@ -41,6 +41,7 @@ class UserService(UserRepository):
             # return self.userUniqueUser("65f7702da6dcd2a675620aa9")
             return self.userUniqueUser(userData["id"],"65f7702da6dcd2a675620aa9")
     
+    
     def verificationUser(self, data):
         try: 
             usuario_data = self.User.objects(name=data['name']).first()
@@ -86,7 +87,7 @@ class UserService(UserRepository):
     def save_student(self, newStudent):
         return self.save_user_student(newStudent)
     
-    def delete_user(self, user_id):
+    def delete_user_id(self, user_id):
         return self.detele_user_by_id(user_id) 
     
     def update_user(self, user_id, data, photo=None):
@@ -96,6 +97,8 @@ class UserService(UserRepository):
     # Para los Docentes
     def get_userss_teachers(self):
         return self.get_all_users("docente")
+    
+    
     def delete_user(self, name):
         user = self.find_user_by_name(name)
         if user:
@@ -103,6 +106,11 @@ class UserService(UserRepository):
             return {'message': f"Recurso con nombre {name} eliminado exitosamente"}, 200
         return {'error': f"No se encontró el recurso con nombre {name}"}, 404
     
+
+    
     def search_users(self, query):
         resultado = self.find_user(query) 
         return resultado
+    
+    def search_user_for_name(self, name):
+        return self.search_user_name(name)

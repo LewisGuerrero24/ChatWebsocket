@@ -3,8 +3,10 @@ import MessageSocketIoUsers from '../Hooks/MessageSocketIoUsers';
 import { useNavigate } from 'react-router-dom';
 import handleGoOut from '../Helpers/handleGoOut';
 
-const ChatUsers = ({ name, nameSendUser, connected, socket,initialMessages}) => {
+const ChatUsers = ({ name, nameSendUser, connected, socket, initialMessages}) => {
   const { message, setMessage, showMessage, sendMessage,setShowMessage} = MessageSocketIoUsers({ socket }, nameSendUser, name);
+
+
   const navigate = useNavigate();
   const [allMessages, setAllMessages] = useState([]);
   const [nameNew, setNameNew ]= useState("Nick")
@@ -13,23 +15,19 @@ const ChatUsers = ({ name, nameSendUser, connected, socket,initialMessages}) => 
     handleGoOut(name, navigate);
   };
 
-
   useEffect(() => {
     if(nameSendUser){
       if(nameSendUser !== nameNew){
         setNameNew(nameSendUser)
         setShowMessage([])
       }
-
         setAllMessages([...initialMessages, ...showMessage]);
-       
     }
   }, [initialMessages, showMessage, nameSendUser]);
 
 
   return (
     <>
-  
       {/* Main Chat Section */}
       <div className="flex flex-col flex-auto h-full p-6">
         <div className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4">

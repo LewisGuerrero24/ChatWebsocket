@@ -37,6 +37,7 @@ const Login = () => {
           navigate('/DashboardAdmin');
         } else if(response.data.rol === 'estudiante'){
           navigate('/DashboardEstudiante/'+name);
+          localStorage.setItem('nombreDeSession', name)
         }else{
           navigate('/DashboardDocente/'+name);
         }

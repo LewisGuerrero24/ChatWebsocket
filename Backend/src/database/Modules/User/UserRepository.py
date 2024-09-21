@@ -149,3 +149,6 @@ class UserRepository():
             print(f"Error updating user: {str(e)}")
             raise
     
+    def search_user_name(self, name):
+        user = self.User.objects(name=name).first()
+        return user

@@ -4,10 +4,13 @@ import json
 
 
 class RoomsController:
-    def __init__(self, app, RoomService, User):
+    def __init__(self, app, RoomService, User, RoomBetweenUserAndRoomService, UserService):
         self.app = app
         self.RoomService = RoomService
         self.User = User
+        self.RoomBetweenUserAndRoomService = RoomBetweenUserAndRoomService
+        self.UserService = UserService
+
 
 
     def start(self):
@@ -41,9 +44,15 @@ class RoomsController:
                 return jsonify(rooms_list), 200
             except Exception as e:
                 return jsonify({'error': str(e)}), 500
-
-            
         
+        @self.app.route('/api/room/forName', methods=['GET'])
+        @jwt_required()
+        def get_rooms_for_name():
+            try:
+                rooms = self.RoomService.list_room_for_name()
+                return jsonify(rooms), 200
+            except Exception as e:
+                return jsonify({'error': str(e)}), 500
 
         
         @self.app.route('/api/get_photo_room/<room_id>', methods=['GET'])
@@ -132,4 +141,75 @@ class RoomsController:
                 return jsonify({'error': 'room not found'}), 404
             except Exception as e:
                 return jsonify({'error': str(e)}), 500
+
+
+        # Para las rooms
+        @self.app.route('/conversation/room/create', methods = ['POST'])
+        @jwt_required()
+        def create_Conversation_room():
+            data = request.json
+            nameRoom = data['nameRoom']
+            nameUser = data['nameUserActually']
+
+            nombreUsuarioSala = {"name": nameUser}
+            usuario = self.UserService.get_unique_user(nombreUsuarioSala)
+
+            room = self.RoomService.get_room_by_name(nameRoom)
+
+            if not room:
+                return jsonify({"success": False, "message": "Room not found"}), 404
+            if not usuario:
+                return jsonify({"success": False, "message": "User not found"}), 404
+            
+        # Convertir IDs a str para comparación
+            user_id_str = str(usuario.id)
+            admin_ids = [str(u.id) for u in room.UsersAdmin]
+            authorized_ids = [str(u.id) for u in room.AuthoRizedUser]
+
+            # Verificar si el usuario ya está en la sala
+            if user_id_str in admin_ids or user_id_str in authorized_ids:
+                return jsonify({"success": True, "room": str(room.id), "message": "User already in room"}), 200
+
+
+                # Decidimos si agregarlo como administrador o usuario autorizado
+            if usuario.rol == '6694027d0d8417fe863bdd09':
+                room.UsersAdmin.append(usuario)
+                room.save()
+            else:
+                room.AuthoRizedUser.append(usuario)
+                room.save()
+
+
+            # Verificamos si la sala ya está en el atributo `groupParticipating` del usuario
+            if room not in usuario.groupParticipating:
+                usuario.groupParticipating.append(room)  # Agregamos la sala al campo groupParticipating
+                usuario.save()  # Guardamos los cambios en el usuario
+            
+
+            return jsonify({"success": True, "room": str(room.id)}), 201
+        
+
+        @self.app.route('/conversation/room/history', methods=['GET'])   
+        @jwt_required()
+        def messages_Conversation_room():
+            nameUser = request.args.get('nameUserActually')
+            nameRoom = request.args.get('nameRoom') 
+
+            nombreUsuarioSala = {"name": nameUser}
+            usuario = self.UserService.get_unique_user(nombreUsuarioSala)
+
+            room = self.RoomService.get_room_by_name(nameRoom)
+
+            if room in usuario.groupParticipating:
+                listMessages = []
+                if room.Messages:
+                    for message in room.Messages:
+                        dataMessages = {
+                            "sender": message.Sender,  # Puedes cambiar esto según la estructura de 'Sender'
+                            "content": message.Content,
+                            "timestamp": message.TimeStap.strftime('%H:%M:%S')
+                        }
+                        listMessages.append(dataMessages)
+                return jsonify(listMessages), 200
+            return jsonify({"success": False, "message": "Algo salio mal"}), 403
 

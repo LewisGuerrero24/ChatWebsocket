@@ -25,10 +25,10 @@ def main():
    jwt = JWTManager(app)
    
    instances = [SocketServer(socketio, app, UserService(TemporalUsuario, User, Rol),
-                RoomBetweenUserService(ConversationUserAndUser,User),MessageUser), 
+                RoomBetweenUserService(ConversationUserAndUser,User),MessageUser, RoomService(User, Rol, Rooms)), 
                 AuthManager(app, User, Rol), SocketController(app, TemporalUsuario),  
-                UserController(app, UserService(TemporalUsuario, User, Rol),RoomBetweenUserService(ConversationUserAndUser, User)),
-                RoomsController(app, RoomService(User, Rol, Rooms), User),
+                UserController(app, UserService(TemporalUsuario, User, Rol), RoomBetweenUserService(ConversationUserAndUser, User)),
+                RoomsController(app, RoomService(User, Rol, Rooms), User, RoomBetweenUserAndRoomService(Rooms, User), UserService(TemporalUsuario, User, Rol)),
                 ResetPasswordCOntroller(app,ResetPasswordService(User,send_Email))
     ]
    

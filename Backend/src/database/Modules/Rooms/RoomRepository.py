@@ -75,3 +75,12 @@ class RoomRepository():
             # Aquí puedes utilizar un logger para registrar el error
             print(f"Error updating room: {str(e)}")
             raise
+
+    def verificarRoom(self, nameRoom):
+        try: 
+            room_data = self.Rooms.objects(Name=nameRoom).first()
+        except ValueError as e:
+            print(f"Ocurrio un error {e}")    
+        if room_data:
+            return room_data
+        return room_data

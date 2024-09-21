@@ -4,9 +4,6 @@ import useConnect from "../../Hooks/useConnect";
 import axios from "axios";
 import addContact from "../../Helpers/addContact";
 
-
-
-
 const BuscadorUsuarios = ({name,setStatusListContact}) => {
   const {socket} = useConnect()
   const [query, setQuery] = useState('');

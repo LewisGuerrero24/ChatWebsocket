@@ -1,5 +1,4 @@
 from Libraries import *
-from .users import User
 from .MessagesUser import MessageUser
 
 

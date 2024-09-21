@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import tokenUtils from "../../Hooks/utils";
 import HandelSubmitEndpointUsers from '../../Helpers/HandelSubmitEndpointUsers';
-import HandleSubmitListContact from '../../Helpers/HandleSubmitListContact';
+import callApisUserEstudents from "../../Helpers/servicesEstudiantes";
 import TypeListMap from './TypeListMap';
 import Swal from 'sweetalert2'
 import addContact from '../../Helpers/addContact';
-import existContact from '../../Helpers/existContact';
+import existContact from '../../Helpers/existContact'
 
 
-
-const ListContact = ({ name, connected, setSelectedUser, setInitialMessages, socket, statusListContact, setStatusListContact }) => {
+const ListContact = ({ name, connected, setSelectedUser,setInitialMessages, socket, setIsRoom, statusListContact, setStatusListContact }) => { 
   const [data, setData] = useState([]);
   const [statusMessage, setStatusMessage] = useState()
   const [typeList, setTypeList] = useState("estudiante")
   const [notificationStatus, setNotificationStatus] = useState(false)
 
-
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     if (typeList == "estudiante") {
@@ -53,13 +50,12 @@ const ListContact = ({ name, connected, setSelectedUser, setInitialMessages, soc
 
       };
     }
+    setIsRoom("")
+    searchUserForName()
     newMessage()
 
+
   }, [statusListContact, typeList, notificationStatus]);
-
-
-
-
 
   const newMessage = () => {
     socket.on('new_message', (m) => {
@@ -90,6 +86,10 @@ const ListContact = ({ name, connected, setSelectedUser, setInitialMessages, soc
   }
 
 
+  const searchUserForName = async () => {
+    const response = await callApisUserEstudents.searchUser(name);
+    setUser(response)
+  };
 
 
 
@@ -118,13 +118,17 @@ const ListContact = ({ name, connected, setSelectedUser, setInitialMessages, soc
           <div className="ml-2 font-bold text-2xl">Chat Publico</div>
         </div>
         <div className="flex flex-col items-center bg-indigo-100 border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg">
-          <div className="h-20 w-20 rounded-full border overflow-hidden">
-            <img
-              src="https://avatars3.githubusercontent.com/u/2763884?s=128"
-              alt="Avatar"
-              className="h-full w-full"
-            />
-          </div>
+        
+        <div className="h-20 w-22 rounded-full border overflow-hidden">
+        <img
+          src={                
+            user ? `http://localhost:5000${user.photo.url}` : "URL_de_imagen_por_defecto"}
+          alt="Avatar"
+          className="h-full w-full"
+        />
+
+      </div>
+
           <div className="text-sm font-semibold mt-2">{name}</div>
           <div className="text-xs text-gray-500">{connected ? 'Active' : 'Inactive'}</div>
         </div>
@@ -147,15 +151,14 @@ const ListContact = ({ name, connected, setSelectedUser, setInitialMessages, soc
           </div>
 
           <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
-            {TypeListMap(data, typeList, name, setSelectedUser, socket, setStatusMessage, setInitialMessages, setNotificationStatus)}
+
+
+            {TypeListMap(data, typeList, name, setSelectedUser, socket, setStatusMessage, setInitialMessages, setNotificationStatus,setIsRoom)}
           </div>
-
-
         </div>
-
       </div>
-    </>
-  );
-}
+
+</>
+); }
 
 export default ListContact;

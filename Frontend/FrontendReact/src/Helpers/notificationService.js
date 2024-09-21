@@ -10,7 +10,8 @@ const notificationService = async(user_one, user_two) => {
             params: {
                 user_one,
                 user_two
-            } 
+            },
+            withCredentials:true
         });
         // Verificar si data es un array y tiene al menos un elemento
         if (response.data && Array.isArray(response.data) && response.data.length > 0) {

@@ -7,15 +7,15 @@ const MessageSocketIoUsers = ({ socket }, nameSend, name) => {
 
   useEffect(() => {
     socket.on('message', (m) => {
-      console.log(m)
       setShowMessage((prevMessages) => [...prevMessages, m]);
     });
 
     return () => {
-
       socket.off('message');
     };
   }, [name, nameSend, socket]);
+
+
 
   const sendMessage = (e) => {
     e.preventDefault();

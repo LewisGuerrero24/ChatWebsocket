@@ -8,6 +8,7 @@ import Chat from './Chat';
 import useRoom from '../Hooks/useRoom';
 import useConnect from '../Hooks/useConnect';
 import ChatUsers from './ChatUsers';
+import ChatRoom from './ChatRoom';
 import BuscadorUsuarios from './AdminView/BuscardorUsuarios';
 
 const DashboardEstudiante = () => {
@@ -23,8 +24,14 @@ const DashboardEstudiante = () => {
     const [notificationData, setNotificationData]=useState({})
     
 
+    const[isRoom, setIsRoom] = useState("");
+
+
     const handleLogout = async () => {
         try {
+            // Eliminamos el nombre de session del local storage
+            localStorage.removeItem('nombreDeSession')
+
             // Realiza una solicitud POST a la ruta /logout para cerrar sesión
             await axios.post('http://localhost:5000/logout');
             
@@ -74,19 +81,26 @@ const DashboardEstudiante = () => {
       }
   }, [isLoggedIn]);
 
+
+  const determineWhichComponentToDisplay = () => {  
+    if (isRoom) {
+        return <ChatRoom nameUser={name} nameRoom={isRoom} connected={connected} socket={socket} initialMessages={initialMessages} />
+    } else   {
+        return <ChatUsers nameSendUser={selectedUser} name={name} connected={connected} socket={socket} initialMessages={initialMessages} />
+    }
+};
     return (
         <>
 
         <BuscadorUsuarios setStatusListContact={setStatusListContact} name={name}/>
             <nav>
-
                 {isLoggedIn && (
-                    <>
+                    <>  
                         <div className="flex h-screen antialiased text-gray-800">
                             <div className="flex flex-row h-full w-full overflow-x-hidden">
                             <ListContact connected={connected} name={name} setSelectedUser={setSelectedUser} setInitialMessages={setInitialMessages} 
-                            setStatusListContact={setStatusListContact} statusListContact={statusListContact} socket={socket}/>
-                            <ChatUsers  nameSendUser={selectedUser} name={name} connected={connected} socket={socket} initialMessages={initialMessages}  />
+                            setStatusListContact={setStatusListContact} statusListContact={statusListContact} socket={socket} setIsRoom={setIsRoom}/>
+                            {determineWhichComponentToDisplay()}
                             </div>
                         </div>
                         <button onClick={handleLogout}>Cerrar sesión</button> 

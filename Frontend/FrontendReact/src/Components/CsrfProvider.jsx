@@ -45,7 +45,8 @@ const CsrfProvider = ({ children }) => {
    
     if (isLoggedIn && currentPath === '/') {
        if(whoUser === "estudiante"){
-        window.location.href = "/DashboardEstudiante";
+        let nombreSession = localStorage.getItem('nombreDeSession')
+        window.location.href = "/DashboardEstudiante/"+nombreSession;
        }else if (whoUser === "docente"){
         window.location.href = "/DashboardDocente";
        }else{
