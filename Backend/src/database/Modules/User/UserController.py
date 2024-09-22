@@ -10,7 +10,7 @@ class UserController:
      
     def start(self):
         # Cors para los Estudiantes
-        @self.app.route('/api/usuario', methods=['GET']) 
+        @self.app.route('/api/usuario', methods=['GET'])
         @jwt_required()
         def get_users():
             try:
@@ -25,18 +25,19 @@ class UserController:
                     'suspendedAccount': user.suspendedAccount, 
                     'dateEntry': user.dateEntry, 
                     'email': user.email, 
-                    'contacts': user.contacts,
+                    'contacts': [str(contact) for contact in user.contacts] if user.contacts else [],  # Conversión de contactos
                     'photo': {
                         'url': f'/api/get_photo/{str(user.id)}' if user.photo else None,
                         'filename': user.photo.filename if user.photo else None
                     }
                 } for user in users]
-                
+
                 return jsonify(users_list), 200
-            
+
             except Exception as e:
-                print(f"Error occurred: {str(e)}")  # Agregar esto para más detalles en el log
+                print(f"Error occurred: {str(e)}")
                 return jsonify({'error': str(e)}), 500
+
 
             
 
@@ -194,7 +195,7 @@ class UserController:
                     'suspendedAccount': user.suspendedAccount, 
                     'dateEntry': user.dateEntry, 
                     'email': user.email, 
-                    'contacts': [str(contact.id) for contact in user.contacts] if isinstance(user.contacts, list) else [],
+                    'contacts': [str(contact) for contact in user.contacts] if user.contacts else [],  # Conversión de contactos
                     'photo': {
                         'url': f'/api/get_photo/{str(user.id)}' if user.photo else None,
                         'filename': user.photo.filename if user.photo else None
