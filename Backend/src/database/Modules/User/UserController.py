@@ -339,6 +339,7 @@ class UserController:
         def messages_notificacion():
             user_one = request.args.get('user_one')
             user_two = request.args.get('user_two')
+            print("este es el segundo nombre: "+user_two)
 
             d = {"name": user_one}
             user_one = self.UserService.get_unique_user(d)
