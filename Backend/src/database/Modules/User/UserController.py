@@ -160,6 +160,7 @@ class UserController:
                         'name': user.rol.tipo
                     } if user.rol else None,
                     'suspendedAccount': user.suspendedAccount,
+                    "status":user.status,
                     'dateEntry': user.dateEntry,
                     'email': user.email,
                     'contacts': [],
@@ -367,3 +368,15 @@ class UserController:
             response = self.RoomBetweenUserService.updateMessageStatus(str(user_one['id']),str(user_second['id']))
             print(response)
             return jsonify(response), 200
+        
+           
+                
+        @jwt_required()
+        @self.app.route('/update/statusUser', methods = ['PUT'])
+        def update_statusUser():
+            name = request.json
+            statusUpdate = self.UserService.update_status_User(name)
+            if statusUpdate:
+                return jsonify(statusUpdate), 201
+            return jsonify(False)
+        

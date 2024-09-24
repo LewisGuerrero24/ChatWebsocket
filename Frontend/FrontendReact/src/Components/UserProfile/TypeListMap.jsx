@@ -3,7 +3,7 @@ import HandleSubmitListContact from '../../Helpers/HandleSubmitListContact';
 import axios from 'axios';
 import tokenUtils from '../../Hooks/utils';
 
-const TypeListMap = (data, typeList, name, setSelectedUser, socket, setStatusMessage, setInitialMessages, setNotificationStatus, setIsRoom) => {
+const TypeListMap = (selectedUser,data, typeList, name, setSelectedUser, socket, setStatusMessage, setInitialMessages, setNotificationStatus, setIsRoom) => {
         
     
   const handleUserClickRoom = (nameRoom) => {
@@ -52,11 +52,10 @@ const TypeListMap = (data, typeList, name, setSelectedUser, socket, setStatusMes
   };
 
 
-
-
     
     
     const handleUserClick = (userName) => {
+      console.log(data)
             if (setSelectedUser) { // Verifica que setSelectedUser es una función
                 setSelectedUser(userName);
                 HandleSubmitListContact(name, userName, socket, setStatusMessage, setInitialMessages, setNotificationStatus)
@@ -95,11 +94,13 @@ const TypeListMap = (data, typeList, name, setSelectedUser, socket, setStatusMes
                 >  
                     <div className="relative flex items-center justify-center h-10 w-10 bg-indigo-300 rounded-full text-white font-bold">
                         {item.name.charAt(0).toUpperCase()}
-                        {item.CountMessages > 0 && (
-                            <div className="absolute -top-2 -right-2 flex items-center justify-center h-5 w-5 bg-red-500 text-white text-xs rounded-full">
-                                {item.CountMessages}
-                            </div>
-                        )}
+                       
+                        {selectedUser !== item.name && item.CountMessages > 0 && (
+                        <div className="absolute -top-2 -right-2 flex items-center justify-center h-5 w-5 bg-red-500 text-white text-xs rounded-full">
+                          {item.CountMessages}
+                        </div>
+                      )}
+
                     </div>
 
                     <div className="ml-3 text-sm font-semibold text-gray-700">{item.name}</div>

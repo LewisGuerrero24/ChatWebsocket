@@ -66,7 +66,7 @@ class AuthManager:
                 if user.suspendedAccount == 0:
                     return jsonify({"cuenta_bloqueada": "Esta cuenta se encuentra Bloqueada"}), 401
 
-                if user and self.bcrypt.check_password_hash(user.password, password):
+                if user and self.bcrypt.check_password_hash(user.password, password) and user.status != 1:
 
                     if "estudiante" in user.rol.tipo or "admin" in user.rol.tipo or "docente" in user.rol.tipo:
                         
@@ -77,7 +77,7 @@ class AuthManager:
                     # Agrega la información del usuario a la sesión
                         session['id'] = str(user.id)
                         session['name'] = user.name
-                        
+                        user.status = 1
                         response = jsonify({
                             'message': 'Login successful',
                             'user_id': str(user.id), 
@@ -85,6 +85,7 @@ class AuthManager:
                             'rol': user.rol.tipo,
                             'token': access_token
                             })
+                        user.save()
                         return response
                     else:
                         flash('Login failed. You do not have the required role to log in.', 'danger')
@@ -127,9 +128,11 @@ class AuthManager:
 
             
             # Mirar si implemento una lista de revocacion
-            @self.app.route("/logout", methods=['POST'])
             @login_required
+            @self.app.route("/logout", methods=['POST'])
             def logout():
+             
+                
                 # Elimina la información del usuario de la sesión al hacer logout
                 session.pop('id', None)
                 session.pop('name', None)

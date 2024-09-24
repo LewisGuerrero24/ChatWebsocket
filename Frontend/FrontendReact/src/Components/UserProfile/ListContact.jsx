@@ -7,11 +7,12 @@ import addContact from '../../Helpers/addContact';
 import existContact from '../../Helpers/existContact'
 
 
-const ListContact = ({ name, connected, setSelectedUser,setInitialMessages, socket, setIsRoom, statusListContact, setStatusListContact }) => { 
+const ListContact = ({ handleLogout,selectedUser,name, connected, setSelectedUser,setInitialMessages, socket, setIsRoom, statusListContact, setStatusListContact }) => { 
   const [data, setData] = useState([]);
   const [statusMessage, setStatusMessage] = useState()
   const [typeList, setTypeList] = useState("estudiante")
   const [notificationStatus, setNotificationStatus] = useState(false)
+  const [statusUser, setStatusUser] = useState(false)
 
   const [user, setUser] = useState(null);
 
@@ -89,8 +90,10 @@ const ListContact = ({ name, connected, setSelectedUser,setInitialMessages, sock
   const searchUserForName = async () => {
     const response = await callApisUserEstudents.searchUser(name);
     setUser(response)
-  };
 
+    var res = response.status == 1 ? true : false;
+    setStatusUser(res)
+    };
 
 
   return (
@@ -112,7 +115,7 @@ const ListContact = ({ name, connected, setSelectedUser,setInitialMessages, sock
             <img src={user ? `http://localhost:5000${user.photo.url}` : "URL_de_imagen_por_defecto"} alt="Avatar" className="h-full w-full object-cover" />
         </div>
         <div className="text-sm font-semibold mt-2 text-gray-700">{name}</div>
-        <div className="text-xs text-gray-500">{connected ? 'Activo' : 'Inactivo'}</div>
+        <div className="text-xs text-gray-500">{statusUser ? 'Activo' : 'Inactivo'}</div>
     </div>
     
     <div className="flex flex-col mt-8">
@@ -134,8 +137,16 @@ const ListContact = ({ name, connected, setSelectedUser,setInitialMessages, sock
         </div>
 
         <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
-            {TypeListMap(data, typeList, name, setSelectedUser, socket, setStatusMessage, setInitialMessages, setNotificationStatus, setIsRoom)}
+            {TypeListMap(selectedUser,data, typeList, name, setSelectedUser, socket, setStatusMessage, setInitialMessages, setNotificationStatus, setIsRoom)}
         </div>
+    </div>
+    <div className="mt-auto">
+        <button 
+            onClick={handleLogout} 
+            className="w-full px-4 py-2 bg-red-500 text-white rounded-lg shadow-lg mt-6 hover:bg-red-600 transition-colors duration-300"
+        >
+            Salir
+        </button>
     </div>
 </div>
 

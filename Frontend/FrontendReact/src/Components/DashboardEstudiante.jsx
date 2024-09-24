@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import tokenUtils from "../Hooks/utils";
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios'; 
+import axios from 'axios';
 import ListContact from './UserProfile/ListContact';
 import './css/chat.css';
 import Chat from './Chat';
@@ -20,11 +20,11 @@ const DashboardEstudiante = () => {
     const { name } = useParams();
     const [selectedUser, setSelectedUser] = useState(null);
     const [initialMessages, setInitialMessages] = useState([]);
-    const[statusListContact, setStatusListContact]= useState(false);
-    const [notificationData, setNotificationData]=useState({})
-    
+    const [statusListContact, setStatusListContact] = useState(false);
 
-    const[isRoom, setIsRoom] = useState("");
+
+
+    const [isRoom, setIsRoom] = useState("");
 
 
     const handleLogout = async () => {
@@ -34,18 +34,33 @@ const DashboardEstudiante = () => {
 
             // Realiza una solicitud POST a la ruta /logout para cerrar sesión
             await axios.post('http://localhost:5000/logout');
-            
+
+
+            axios.put('http://localhost:5000/update/statusUser', 
+                { name }, 
+                {
+                  headers: {
+                    'Content-Type': 'application/json', // Cambia a application/json
+                    authorization: `Bearer ${tokenUtils.getToken()}`
+                  },
+                  withCredentials: true
+                }
+              ).then(response => {
+                console.log("respuesta: " + response.data);
+              });
+              
+
             // Elimina el token del almacenamiento local
             tokenUtils.removeToken();
             setLastActive(new Date());
             // Redirige al usuario a la página de inicio
             navigate('/');
 
-        // Reemplaza la entrada actual del historial con la página de inicio
-        window.history.pushState({}, '', '/');
-        
-        // Recarga la página para asegurarse de que se aplique el cambio en el historial
-        window.location.reload();
+            // Reemplaza la entrada actual del historial con la página de inicio
+            window.history.pushState({}, '', '/');
+
+            // Recarga la página para asegurarse de que se aplique el cambio en el historial
+            window.location.reload();
         } catch (error) {
             console.error('Error during logout:', error);
         }
@@ -76,34 +91,33 @@ const DashboardEstudiante = () => {
 
 
     useEffect(() => {
-      if (!isLoggedIn) {
-          navigate('/');
-      }
-  }, [isLoggedIn]);
+        if (!isLoggedIn) {
+            navigate('/');
+        }
+    }, [isLoggedIn]);
 
 
-  const determineWhichComponentToDisplay = () => {  
-    if (isRoom) {
-        return <ChatRoom nameUser={name} nameRoom={isRoom} connected={connected} socket={socket} initialMessages={initialMessages} />
-    } else   {
-        return <ChatUsers nameSendUser={selectedUser} name={name} connected={connected} socket={socket} initialMessages={initialMessages} />
-    }
-};
+    const determineWhichComponentToDisplay = () => {
+        if (isRoom) {
+            return <ChatRoom nameUser={name} nameRoom={isRoom} connected={connected} socket={socket} initialMessages={initialMessages} />
+        } else {
+            return <ChatUsers nameSendUser={selectedUser} name={name} connected={connected} socket={socket} initialMessages={initialMessages} />
+        }
+    };
     return (
         <>
 
-        <BuscadorUsuarios setStatusListContact={setStatusListContact} name={name}/>
+            <BuscadorUsuarios setStatusListContact={setStatusListContact} name={name} />
             <nav>
                 {isLoggedIn && (
-                    <>  
+                    <>
                         <div className="flex h-screen antialiased text-gray-800">
                             <div className="flex flex-row h-full w-full overflow-x-hidden">
-                            <ListContact connected={connected} name={name} setSelectedUser={setSelectedUser} setInitialMessages={setInitialMessages} 
-                            setStatusListContact={setStatusListContact} statusListContact={statusListContact} socket={socket} setIsRoom={setIsRoom}/>
-                            {determineWhichComponentToDisplay()}
+                                <ListContact selectedUser={selectedUser} handleLogout={handleLogout} connected={connected} name={name} setSelectedUser={setSelectedUser} setInitialMessages={setInitialMessages}
+                                    setStatusListContact={setStatusListContact} statusListContact={statusListContact} socket={socket} setIsRoom={setIsRoom} />
+                                {determineWhichComponentToDisplay()}
                             </div>
                         </div>
-                        <button onClick={handleLogout}>Cerrar sesión</button> 
                     </>
                 )}
             </nav>
