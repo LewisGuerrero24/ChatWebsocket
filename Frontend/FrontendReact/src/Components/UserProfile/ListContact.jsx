@@ -152,7 +152,6 @@ const ListContact = ({ name, connected, setSelectedUser,setInitialMessages, sock
 
           <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
 
-
             {TypeListMap(data, typeList, name, setSelectedUser, socket, setStatusMessage, setInitialMessages, setNotificationStatus,setIsRoom)}
           </div>
         </div>

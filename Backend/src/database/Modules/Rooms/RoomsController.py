@@ -1,8 +1,6 @@
 from Libraries import *
 from bson import ObjectId
 import json
-
-
 class RoomsController:
     def __init__(self, app, RoomService, User, RoomBetweenUserAndRoomService, UserService):
         self.app = app
@@ -10,8 +8,6 @@ class RoomsController:
         self.User = User
         self.RoomBetweenUserAndRoomService = RoomBetweenUserAndRoomService
         self.UserService = UserService
-
-
 
     def start(self):
 
@@ -40,17 +36,31 @@ class RoomsController:
                     'UsersAdmin': [str(admin.id) for admin in room.UsersAdmin],  # Serializa el objeto completo de admin
                     'AuthorizedUser': [str(user.id) for user in room.AuthoRizedUser]  # Serializa el objeto completo de user
                 } for room in rooms]
-                print(rooms_list)
                 return jsonify(rooms_list), 200
             except Exception as e:
                 return jsonify({'error': str(e)}), 500
         
-        @self.app.route('/api/room/forName', methods=['GET'])
+        @self.app.route('/api/room/groupParticipating', methods=['GET'])
         @jwt_required()
         def get_rooms_for_name():
+            nameUser = request.args.get('name')
             try:
-                rooms = self.RoomService.list_room_for_name()
-                return jsonify(rooms), 200
+                user = self.UserService.search_user_name(nameUser)
+                rooms = self.RoomService.list_room_for_user_participating(user)
+
+                rooms_list = [{
+                    'id': str(room.id),
+                    'name': room.Name,
+                    'photo': {
+                        'url': f'/api/get_photo_room/{str(room.id)}' if room.Photo else None,
+                        'filename': room.Photo.filename if room.Photo else None
+                    },
+                    'description': room.Description,
+                    'UsersAdmin': [str(admin.id) for admin in room.UsersAdmin],  # Serializa el objeto completo de admin
+                    'AuthorizedUser': [str(user.id) for user in room.AuthoRizedUser]  # Serializa el objeto completo de user
+                } for room in rooms]
+
+                return jsonify(rooms_list), 200
             except Exception as e:
                 return jsonify({'error': str(e)}), 500
 
@@ -134,6 +144,7 @@ class RoomsController:
                 if 'AuthoRizedUser' in data:
                     data['AuthoRizedUser'] = [ObjectId(user['id']) for user in json.loads(data['AuthoRizedUser'])]
 
+                print("nueva room ", data['AuthoRizedUser'])
 
                 updated_room = self.RoomService.update_room(room_id, data, photo)
                 if updated_room:
