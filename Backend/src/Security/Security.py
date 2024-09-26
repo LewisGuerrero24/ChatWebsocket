@@ -73,11 +73,13 @@ class AuthManager:
                         access_token = create_access_token(identity=name, additional_claims={"rol": user.rol.tipo})
                     
                         login_user(user, remember=True)
-
+                        if "estudiante" in user.rol.tipo or "docente" in user.rol.tipo:
+                            user.status = 1
+                            
                     # Agrega la información del usuario a la sesión
                         session['id'] = str(user.id)
                         session['name'] = user.name
-                        user.status = 1
+                        
                         response = jsonify({
                             'message': 'Login successful',
                             'user_id': str(user.id), 

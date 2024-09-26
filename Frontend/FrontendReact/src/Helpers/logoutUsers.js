@@ -4,6 +4,7 @@ import tokenUtils from "../Hooks/utils";
 const logoutUsers = async (setLastActive, navigate) =>{
     try {
     await axios.post("http://localhost:5000/logout");
+    
     tokenUtils.removeToken();
     setLastActive(new Date());
     navigate(`/`)
