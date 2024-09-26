@@ -149,6 +149,14 @@ class UserRepository():
             print(f"Error updating user: {str(e)}")
             raise
     
+    def update_user_by_id_status(self, user_id):
+            user = self.User.objects(id=user_id).first()
+            if user["status"] == 1:
+                user["status"] = 0
+            user.save()
+            userUpdate = self.User.objects(id=user_id).first()
+            return userUpdate["status"]
+    
     def search_user_name(self, name):
         user = self.User.objects(name=name).first()
         return user

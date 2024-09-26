@@ -10,8 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emoji-mart/react": "^1.1.1",
     "@types/jwt-decode": "^3.1.0",
     "axios": "^1.6.7",
+    "emoji-mart": "^5.6.0",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "localforage": "^1.10.0",

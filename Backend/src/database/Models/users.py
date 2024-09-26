@@ -12,7 +12,7 @@ class User(Document, UserMixin):
     fs_uniquifier = StringField()
     suspendedAccount = IntField(default=1) # 1 significa que no esta suspendido y 0 esta suspendido
     dateEntry = DateTimeField()
-    status = IntField()
+    status = IntField(default=0)
     contacts = ListField() 
     groupParticipating = ListField(ReferenceField('Rooms'))
     # Atributos de limite de intentos de session 

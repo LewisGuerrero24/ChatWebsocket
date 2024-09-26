@@ -93,6 +93,9 @@ class UserService(UserRepository):
     def update_user(self, user_id, data, photo=None):
         return self.update_user_by_id(user_id, data, photo)
     
+    def update_user_status(self, user_id):
+        return self.update_user_by_id_status(user_id)
+    
 
     # Para los Docentes
     def get_userss_teachers(self):
@@ -114,3 +117,9 @@ class UserService(UserRepository):
     
     def search_user_for_name(self, name):
         return self.search_user_name(name)
+    
+    def update_status_User(self,name):
+        user = self.verificationUser(name)
+        user.status = 0
+        user.save()
+        return True
