@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const MessageSocketIoRooms = ({ socket }, nameRoom, nameUser) => {
+const MessageSocketIoRooms = ({ socket }, nameRoom, nameUser, setErrorUsuarioExpulsado) => {
     const [message, setMessage] = useState('');
     const [showMessage, setShowMessage] = useState([]);
 
@@ -10,6 +10,12 @@ const MessageSocketIoRooms = ({ socket }, nameRoom, nameUser) => {
         // Escuchar mensajes desde el servidor
         socket.on('message', (m) => {
           setShowMessage((prevMessages) => [...prevMessages, m]);
+          console.log("aCA ESTA EL MENSAJE: ", m)
+        });
+
+          // Escuchar el evento de error desde el servidor
+          socket.on('error', (error) => {
+            setErrorUsuarioExpulsado(error.msg)
         });
 
         return () => {

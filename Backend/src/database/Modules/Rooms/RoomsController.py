@@ -155,50 +155,46 @@ class RoomsController:
 
 
         # Para las rooms
-        @self.app.route('/conversation/room/create', methods = ['POST'])
+        @self.app.route('/conversation/room/requestRoomId', methods = ['POST'])
         @jwt_required()
         def create_Conversation_room():
             data = request.json
             nameRoom = data['nameRoom']
-            nameUser = data['nameUserActually']
-
-            nombreUsuarioSala = {"name": nameUser}
-            usuario = self.UserService.get_unique_user(nombreUsuarioSala)
-
+            # nameUser = data['nameUserActually']
+            # nombreUsuarioSala = {"name": nameUser}
+            # usuario = self.UserService.get_unique_user(nombreUsuarioSala)
             room = self.RoomService.get_room_by_name(nameRoom)
-
-            if not room:
-                return jsonify({"success": False, "message": "Room not found"}), 404
-            if not usuario:
-                return jsonify({"success": False, "message": "User not found"}), 404
+            # if not room:
+            #     return jsonify({"success": False, "message": "Room not found"}), 404
+            # if not usuario:
+            #     return jsonify({"success": False, "message": "User not found"}), 404
             
         # Convertir IDs a str para comparación
-            user_id_str = str(usuario.id)
-            admin_ids = [str(u.id) for u in room.UsersAdmin]
-            authorized_ids = [str(u.id) for u in room.AuthoRizedUser]
+            # user_id_str = str(usuario.id)
+            # admin_ids = [str(u.id) for u in room.UsersAdmin]
+            # authorized_ids = [str(u.id) for u in room.AuthoRizedUser]
 
-            # Verificar si el usuario ya está en la sala
-            if user_id_str in admin_ids or user_id_str in authorized_ids:
-                return jsonify({"success": True, "room": str(room.id), "message": "User already in room"}), 200
+            # # Verificar si el usuario ya está en la sala
+            # if user_id_str in admin_ids or user_id_str in authorized_ids:
+            #     return jsonify({"success": True, "room": str(room.id), "message": "User already in room"}), 200
 
+            #     # Decidimos si agregarlo como administrador o usuario autorizado
+            # if usuario.rol == '6694027d0d8417fe863bdd09':
+            #     room.UsersAdmin.append(usuario)
+            #     room.save()
+            # else:
+            #     room.AuthoRizedUser.append(usuario)
+            #     room.save()
 
-                # Decidimos si agregarlo como administrador o usuario autorizado
-            if usuario.rol == '6694027d0d8417fe863bdd09':
-                room.UsersAdmin.append(usuario)
-                room.save()
-            else:
-                room.AuthoRizedUser.append(usuario)
-                room.save()
-
-
-            # Verificamos si la sala ya está en el atributo `groupParticipating` del usuario
-            if room not in usuario.groupParticipating:
-                usuario.groupParticipating.append(room)  # Agregamos la sala al campo groupParticipating
-                usuario.save()  # Guardamos los cambios en el usuario
-            
+            # # Verificamos si la sala ya está en el atributo `groupParticipating` del usuario
+            # if room not in usuario.groupParticipating:
+            #     usuario.groupParticipating.append(room)  # Agregamos la sala al campo groupParticipating
+            #     usuario.save()  # Guardamos los cambios en el usuario
 
             return jsonify({"success": True, "room": str(room.id)}), 201
         
+
+
 
         @self.app.route('/conversation/room/history', methods=['GET'])   
         @jwt_required()

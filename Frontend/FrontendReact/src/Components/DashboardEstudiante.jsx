@@ -17,26 +17,21 @@ const DashboardEstudiante = () => {
     const navigate = useNavigate();
     const [lastActive, setLastActive] = useState(new Date());
     const { connected, socket } = useConnect();
-    const { name } = useParams();
+    const name = tokenUtils.getLoggedInUserId();
     const [selectedUser, setSelectedUser] = useState(null);
     const [initialMessages, setInitialMessages] = useState([]);
     const [statusListContact, setStatusListContact] = useState(false);
 
-
-
     const [isRoom, setIsRoom] = useState("");
-
 
     const handleLogout = async () => {
         try {
-            // Eliminamos el nombre de session del local storage
-            localStorage.removeItem('nombreDeSession')
 
             // Realiza una solicitud POST a la ruta /logout para cerrar sesión
             await axios.post('http://localhost:5000/logout');
 
 
-            axios.put('http://localhost:5000/update/statusUser', 
+            await axios.put('http://localhost:5000/update/statusUser', 
                 { name }, 
                 {
                   headers: {
@@ -45,11 +40,13 @@ const DashboardEstudiante = () => {
                   },
                   withCredentials: true
                 }
+
+                
               ).then(response => {
                 console.log("respuesta: " + response.data);
               });
               
-
+              console.log("Entro por aca")
             // Elimina el token del almacenamiento local
             tokenUtils.removeToken();
             setLastActive(new Date());
@@ -67,7 +64,6 @@ const DashboardEstudiante = () => {
     }
 
     useEffect(() => {
-        console.log("Aca esta el rol del usuario: ", tokenUtils.getLoggedInUseRol())
         const interval = setInterval(() => {
             if (isLoggedIn && (new Date() - lastActive) >= 2 * 60 * 1000) {
                 handleLogout();

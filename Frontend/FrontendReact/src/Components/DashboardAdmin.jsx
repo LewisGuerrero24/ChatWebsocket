@@ -9,6 +9,7 @@ import ProfesoresContent from "./AdminView/ProfesoresContent ";
 import GruposContent from "./AdminView/GruposContent";
 import cantidadUsarios from "../Helpers/listadoUsers";
 import callApisRooms from "../Helpers/servicesRooms";
+import axios from 'axios';
 
 const DashboardAdmin = () => {
   const isLoggedIn = tokenUtils.checkIfIsLoggedIn();
@@ -78,8 +79,23 @@ const DashboardAdmin = () => {
     }
   }, [isLoggedIn, navigate]);
 
-  const handleLogout = () => {
-    logoutUsers(setLastActive, navigate);
+  const handleLogout = async () => {
+    let name = tokenUtils.getLoggedInUserId()
+   await axios.put('http://localhost:5000/update/statusUser', 
+      { name }, 
+      {
+        headers: {
+          'Content-Type': 'application/json', // Cambia a application/json
+          authorization: `Bearer ${tokenUtils.getToken()}`
+        },
+        withCredentials: true
+      }
+
+      
+    ).then(response => {
+      console.log("respuesta: " + response.data);
+    });
+    await logoutUsers(setLastActive, navigate);
   };
 
   const usersContext = () =>{
