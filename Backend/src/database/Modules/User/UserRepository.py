@@ -68,6 +68,16 @@ class UserRepository():
             listUser.append(userData)
         return listUser
     
+    def user_status_Online(self):
+        listUser = list()
+        for user in self.User.objects:
+            if user.status == 1:
+                userData = {
+                    "id": str(user.id),
+                }
+                listUser.append(userData)
+        return listUser
+    
     def userUniqueUser(self,id,rol):
         
          users = self.User.objects(id=id).first()

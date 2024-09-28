@@ -2,11 +2,12 @@ from Libraries import *
 from bson import ObjectId
 
 class UserController:
-    def __init__(self, app, UserService,RoomBetweenUserService):
+    def __init__(self, app, UserService,RoomBetweenUserService,socketio):
         self.app = app
         self.bcrypt = Bcrypt(app)
         self.UserService = UserService
         self.RoomBetweenUserService = RoomBetweenUserService
+        self.socketio = socketio
      
     def start(self):
         # Cors para los Estudiantes
@@ -25,7 +26,7 @@ class UserController:
                     'suspendedAccount': user.suspendedAccount, 
                     'dateEntry': user.dateEntry, 
                     'email': user.email, 
-                    'contacts': user.contacts,
+                    "status":user.status,
                     'photo': {
                         'url': f'/api/get_photo/{str(user.id)}' if user.photo else None,
                         'filename': user.photo.filename if user.photo else None
@@ -377,6 +378,15 @@ class UserController:
             name = request.json
             statusUpdate = self.UserService.update_status_User(name)
             if statusUpdate:
+                self.socketio.emit('user_status_update', {'status_new': True})
                 return jsonify(statusUpdate), 201
             return jsonify(False)
+        
+        
+        @jwt_required()
+        @self.app.route('/status/statusUser', methods = ['GET'])
+        def statusUser_Online():
+            statusUpdate = self.UserService.users_status_Online()
+            print(statusUpdate)
+            return jsonify(statusUpdate)
         

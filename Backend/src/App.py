@@ -26,8 +26,8 @@ def main():
    
    instances = [SocketServer(socketio, app, UserService(TemporalUsuario, User, Rol),
                 RoomBetweenUserService(ConversationUserAndUser,User),MessageUser, RoomService(User, Rol, Rooms)), 
-                AuthManager(app, User, Rol), SocketController(app, TemporalUsuario),  
-                UserController(app, UserService(TemporalUsuario, User, Rol), RoomBetweenUserService(ConversationUserAndUser, User)),
+                AuthManager(app, User, Rol, socketio), SocketController(app, TemporalUsuario),  
+                UserController(app, UserService(TemporalUsuario, User, Rol), RoomBetweenUserService(ConversationUserAndUser, User),socketio),
                 RoomsController(app, RoomService(User, Rol, Rooms), User, RoomBetweenUserAndRoomService(Rooms, User), UserService(TemporalUsuario, User, Rol)),
                 ResetPasswordCOntroller(app,ResetPasswordService(User,send_Email))
     ]

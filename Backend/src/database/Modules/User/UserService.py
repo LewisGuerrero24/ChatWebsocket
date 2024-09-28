@@ -123,3 +123,7 @@ class UserService(UserRepository):
         user.status = 0
         user.save()
         return True
+    
+    def users_status_Online(self):
+        list_User_Activate = self.user_status_Online()
+        return list_User_Activate

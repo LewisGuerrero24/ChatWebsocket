@@ -7,7 +7,7 @@ MAX_FAILED_ATTEMPTS = 5
 LOCKOUT_DURATION = 5
 
 class AuthManager:
-    def __init__(self, app, User, Rol):
+    def __init__(self, app, User, Rol, socketio):
 
         self.app = app  
         self.bcrypt = Bcrypt(app)
@@ -16,7 +16,8 @@ class AuthManager:
         self.db = con()
         self.user_datastore = MongoEngineUserDatastore(self.db,User, None)
         self.security = Security(self.app, self.user_datastore)
-
+        self.socketio = socketio
+        
     def start(self):
 
         with self.app.app_context():  # Aquí comienza el contexto de la aplicación Flask
@@ -75,6 +76,7 @@ class AuthManager:
                         login_user(user, remember=True)
                         if "estudiante" in user.rol.tipo or "docente" in user.rol.tipo:
                             user.status = 1
+                            self.socketio.emit('user_status_update', {'status_new': True})
                             
                     # Agrega la información del usuario a la sesión
                         session['id'] = str(user.id)
@@ -87,6 +89,7 @@ class AuthManager:
                             'rol': user.rol.tipo,
                             'token': access_token
                             })
+                        
                         user.save()
                         return response
                     else:
@@ -133,7 +136,6 @@ class AuthManager:
             @login_required
             @self.app.route("/logout", methods=['POST'])
             def logout():
-             
                 
                 # Elimina la información del usuario de la sesión al hacer logout
                 session.pop('id', None)
