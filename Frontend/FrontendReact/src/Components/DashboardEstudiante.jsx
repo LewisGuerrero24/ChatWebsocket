@@ -31,22 +31,22 @@ const DashboardEstudiante = () => {
         try {
             // Eliminamos el nombre de session del local storage
             localStorage.removeItem('nombreDeSession')
-            
-            await axios.put('http://localhost:5000/update/statusUser', 
-                { name }, 
+
+            await axios.put('http://localhost:5000/update/statusUser',
+                { name },
                 {
-                  headers: {
-                    'Content-Type': 'application/json', // Cambia a application/json
-                    authorization: `Bearer ${tokenUtils.getToken()}`
-                  },
-                  withCredentials: true
+                    headers: {
+                        'Content-Type': 'application/json', // Cambia a application/json
+                        authorization: `Bearer ${tokenUtils.getToken()}`
+                    },
+                    withCredentials: true
                 }
-              );
+            );
             // Realiza una solicitud POST a la ruta /logout para cerrar sesión
             await axios.post('http://localhost:5000/logout');
 
 
-            
+
 
             // Elimina el token del almacenamiento local
             tokenUtils.removeToken();
@@ -106,19 +106,30 @@ const DashboardEstudiante = () => {
         <>
 
             <BuscadorUsuarios setStatusListContact={setStatusListContact} name={name} />
-            <nav>
-                {isLoggedIn && (
-                    <>
-                        <div className="flex h-screen antialiased text-gray-800">
-                            <div className="flex flex-row h-full w-full overflow-x-hidden">
-                                <ListContact selectedUser={selectedUser} handleLogout={handleLogout} connected={connected} name={name} setSelectedUser={setSelectedUser} setInitialMessages={setInitialMessages}
-                                    setStatusListContact={setStatusListContact} statusListContact={statusListContact} socket={socket} setIsRoom={setIsRoom} />
-                                {determineWhichComponentToDisplay()}
-                            </div>
+
+            {isLoggedIn && (
+                <>
+                    <div className="flex h-screen antialiased text-gray-800">
+                        <div className="flex flex-row h-full w-full overflow-x-hidden overflow-y-hidden">
+                            <ListContact
+                                selectedUser={selectedUser}
+                                handleLogout={handleLogout}
+                                connected={connected}
+                                name={name}
+                                setSelectedUser={setSelectedUser}
+                                setInitialMessages={setInitialMessages}
+                                setStatusListContact={setStatusListContact}
+                                statusListContact={statusListContact}
+                                socket={socket}
+                                setIsRoom={setIsRoom}
+                            />
+                            {determineWhichComponentToDisplay()}
                         </div>
-                    </>
-                )}
-            </nav>
+                    </div>
+
+                </>
+            )}
+
         </>
     );
 }

@@ -76,6 +76,23 @@ class UserService(UserRepository):
             return {"user": user, "Dto": DtoUser, "status": True}
         return {"status": False}
     
+    def deleteChat(self, data):
+        # Verificamos al usuario a partir del nombre
+        user = self.verificationUser(data)
+        
+        # Creamos una lista de contactos que coincidan con el ID proporcionado
+        contacts_to_remove = [contact for contact in user["contacts"] if contact["id"] == data["id"]]
+        
+        # Eliminamos esos contactos de la lista original
+        for contact in contacts_to_remove:
+            user["contacts"].remove(contact)
+
+        
+        user.save()
+        # Opcionalmente retornamos el objeto actualizado
+        return True
+
+        
     
     def get_user_counts(self):
         return self.count_users_by_role()

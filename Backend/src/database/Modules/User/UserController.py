@@ -390,3 +390,15 @@ class UserController:
             print(statusUpdate)
             return jsonify(statusUpdate)
         
+        
+        @jwt_required()
+        @self.app.route('/delete/chat', methods = ['PUT'])
+        def delete_Chat():
+            data = request.json
+            status_Delete = self.UserService.deleteChat(data)
+            # user = self.UserService.verificationUser(data)
+            # self.RoomBetweenUserService.delete_conversation(str(user["id"]),data["id"])
+            print(data)
+            return jsonify(status_Delete)
+        
+            

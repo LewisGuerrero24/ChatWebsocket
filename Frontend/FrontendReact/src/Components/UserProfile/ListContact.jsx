@@ -146,7 +146,8 @@ const ListContact = ({ handleLogout,selectedUser,name, connected, setSelectedUse
 
     <>
       {/* Sidebar */}
-      <div className="flex flex-col py-8 pl-6 pr-2 w-64 bg-white shadow-lg rounded-lg">
+<div className="flex flex-col h-screen py-8 pl-6 pr-2 w-64 bg-white shadow-lg rounded-lg">
+    {/* Header */}
     <div className="flex flex-row items-center justify-center h-12 w-full mb-4">
         <div className="flex items-center justify-center rounded-full text-indigo-700 bg-indigo-100 h-10 w-10 shadow-sm">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -156,6 +157,7 @@ const ListContact = ({ handleLogout,selectedUser,name, connected, setSelectedUse
         <div className="ml-2 font-bold text-xl text-gray-800">Chat</div>
     </div>
     
+    {/* User info */}
     <div className="flex flex-col items-center bg-indigo-100 border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg shadow-sm">
         <div className="h-20 w-20 rounded-full border overflow-hidden">
             <img src={user ? `http://localhost:5000${user.photo.url}` : "URL_de_imagen_por_defecto"} alt="Avatar" className="h-full w-full object-cover" />
@@ -164,6 +166,7 @@ const ListContact = ({ handleLogout,selectedUser,name, connected, setSelectedUse
         <div className="text-xs text-gray-500">{statusUser ? 'Activo' : 'Inactivo'}</div>
     </div>
     
+    {/* Button group */}
     <div className="flex flex-col mt-8">
         <div className="flex flex-row items-center justify-between text-xs space-x-2 flex-wrap">
             <button onClick={() => HandelSubmitEndpointUsers(setData, setTypeList, "estudiante", name)} className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg shadow-lg transition-transform duration-300 hover:scale-105">
@@ -177,15 +180,19 @@ const ListContact = ({ handleLogout,selectedUser,name, connected, setSelectedUse
             </button>
         </div>
 
+        {/* Active conversations */}
         <div className="flex flex-row items-center justify-between text-xs mt-4">
             <span className="font-bold text-gray-700">Conversaciones Activas</span>
             <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">4</span>
         </div>
 
+        {/* User list - scrollable */}
         <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
-            {TypeListMap(userOnline,selectedUser,data, typeList, name, setSelectedUser, socket, setStatusMessage, setInitialMessages, setNotificationStatus, setIsRoom)}
+            {TypeListMap(userOnline, selectedUser, data, typeList, name, setSelectedUser, socket, setStatusMessage, setInitialMessages, setNotificationStatus, setIsRoom, setStatusListContact)}
         </div>
     </div>
+
+    {/* Logout button */}
     <div className="mt-auto">
         <button 
             onClick={handleLogout} 
@@ -195,7 +202,6 @@ const ListContact = ({ handleLogout,selectedUser,name, connected, setSelectedUse
         </button>
     </div>
 </div>
-
 
 </>
 ); }

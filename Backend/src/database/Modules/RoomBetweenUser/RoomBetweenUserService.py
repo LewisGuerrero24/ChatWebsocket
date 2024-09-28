@@ -90,3 +90,9 @@ class RoomBetweenUserService(RoomBetweenUsersRepository):
         else:
             return False
         
+    def delete_conversation(self, idUser_one, ideUser_second): 
+        dataMessage = self.ReadDataMessageUser(idUser_one, ideUser_second)
+        if dataMessage:
+            dataMessage.delete()
+            return True
+        
