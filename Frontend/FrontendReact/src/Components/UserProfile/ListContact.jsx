@@ -5,58 +5,102 @@ import TypeListMap from './TypeListMap';
 import Swal from 'sweetalert2'
 import addContact from '../../Helpers/addContact';
 import existContact from '../../Helpers/existContact'
+import axios from 'axios';
+import tokenUtils from '../../Hooks/utils';
 
 
 const ListContact = ({ handleLogout,selectedUser,name, connected, setSelectedUser,setInitialMessages, socket, setIsRoom, statusListContact, setStatusListContact }) => { 
-  const [data, setData] = useState([]);
+  
   const [statusMessage, setStatusMessage] = useState()
   const [typeList, setTypeList] = useState("estudiante")
   const [notificationStatus, setNotificationStatus] = useState(false)
   const [statusUser, setStatusUser] = useState(false)
-
-  const [user, setUser] = useState(null);
+  const[ user, setUser] = useState(null)
+  const [data, setData] = useState([]);
+  const [userOnline, setUserOnline] = useState([])
 
   useEffect(() => {
     if (typeList == "estudiante") {
       HandelSubmitEndpointUsers(setData, setTypeList, "estudiante", name)
-
+      User_Online()
     }
-    
+  
     if (typeList == "room") {
       HandelSubmitEndpointUsers(setData, setTypeList, "room", name)
-
     }
-
-
+  
     if (typeList == "docente") {
       HandelSubmitEndpointUsers(setData, setTypeList, "docente", name)
-
     }
+    
     if (notificationStatus == true) {
       HandelSubmitEndpointUsers(setData, setTypeList, "estudiante", name)
-
       setNotificationStatus(false)
+      
       if (typeList == "docente") {
         HandelSubmitEndpointUsers(setData, setTypeList, "docente", name)
-
       }
-
     }
-    if (statusListContact == true) {
-
-      return () => {
-        setStatusListContact(false)
-
-        // socket.off('new_message');
-
-      };
-    }
+  
+    socket.on('user_status_update', (data) => {
+      if(data.status_new == true){
+        User_Online()
+      }
+    })
+    
     setIsRoom("")
     searchUserForName()
     newMessage()
-
-
+    User_Online()
+    // Cleanup on unmount
+    // return () => {
+    //   socket.off('user_status_update');
+    // };
+  
+    if (statusListContact == true) {
+      return () => {
+        setStatusListContact(false);
+      };
+    }
+    
+   
+  
   }, [statusListContact, typeList, notificationStatus]);
+  
+
+
+
+  const User_Online = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/status/statusUser', {
+        headers: {
+          authorization: `Bearer ${tokenUtils.getToken()}`
+        },
+        withCredentials: true
+      });
+  
+      // Asumimos que response.data es un array de usuarios activos
+      const userACTIVE = response.data;
+      setUserOnline([])
+      // Usamos map para recorrer cada usuario activo
+      userACTIVE.map(user => (
+        setUserOnline(prev => [...prev, {"id":user.id}])
+      ));
+  
+      // Actualizamos el estado con los usuarios activos
+      
+  
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    console.log(userOnline);  // Muestra el valor actualizado cuando cambie
+  }, [userOnline]);  
+
+
 
   const newMessage = () => {
     socket.on('new_message', (m) => {
@@ -84,6 +128,8 @@ const ListContact = ({ handleLogout,selectedUser,name, connected, setSelectedUse
         })
     }
     });
+
+   
   }
 
 
@@ -137,7 +183,7 @@ const ListContact = ({ handleLogout,selectedUser,name, connected, setSelectedUse
         </div>
 
         <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
-            {TypeListMap(selectedUser,data, typeList, name, setSelectedUser, socket, setStatusMessage, setInitialMessages, setNotificationStatus, setIsRoom)}
+            {TypeListMap(userOnline,selectedUser,data, typeList, name, setSelectedUser, socket, setStatusMessage, setInitialMessages, setNotificationStatus, setIsRoom)}
         </div>
     </div>
     <div className="mt-auto">

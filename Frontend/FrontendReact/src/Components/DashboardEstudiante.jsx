@@ -31,12 +31,8 @@ const DashboardEstudiante = () => {
         try {
             // Eliminamos el nombre de session del local storage
             localStorage.removeItem('nombreDeSession')
-
-            // Realiza una solicitud POST a la ruta /logout para cerrar sesión
-            await axios.post('http://localhost:5000/logout');
-
-
-            axios.put('http://localhost:5000/update/statusUser', 
+            
+            await axios.put('http://localhost:5000/update/statusUser', 
                 { name }, 
                 {
                   headers: {
@@ -45,10 +41,12 @@ const DashboardEstudiante = () => {
                   },
                   withCredentials: true
                 }
-              ).then(response => {
-                console.log("respuesta: " + response.data);
-              });
-              
+              );
+            // Realiza una solicitud POST a la ruta /logout para cerrar sesión
+            await axios.post('http://localhost:5000/logout');
+
+
+            
 
             // Elimina el token del almacenamiento local
             tokenUtils.removeToken();
