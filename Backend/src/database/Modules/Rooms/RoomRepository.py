@@ -37,6 +37,38 @@ class RoomRepository():
         return False 
     
 
+    def update_data_room_and_user(self, idRoom, idUser, determinateAction):
+        room = self.Rooms.objects(id=idRoom).first()
+        user = self.User.objects(id=idUser).first()
+
+        if not room or not user:
+            return {'error': 'Room or User not found'}, 404
+
+        if determinateAction == "addGrupo":
+            if room not in user.groupParticipating:
+                user.groupParticipating.append(room)
+                user.save()
+                room.AuthoRizedUser.append(user)
+                room.save()
+                return {'message': 'User added to the group'}, 200
+            else:
+                return {'message': 'User already in the group'}, 200
+        else:  # para eliminar 
+            if room in user.groupParticipating:
+                print("Elimino a alguien de la sala")
+                user.groupParticipating.remove(room)
+                user.save()
+                room.AuthoRizedUser.remove(user)
+                room.save()
+                return {'message': 'User removed from the group'}, 200
+            else:
+                return {'error': 'User not in the group'}, 400
+
+
+
+
+
+
     def update_room_by_id(self, room_id, data, photo):
         try:
             room = self.Rooms.objects(id=room_id).first()

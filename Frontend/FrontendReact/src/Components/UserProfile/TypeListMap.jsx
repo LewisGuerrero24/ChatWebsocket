@@ -4,6 +4,7 @@ import axios from 'axios';
 import tokenUtils from '../../Hooks/utils';
 import ContextMenuClickRight from './ContextMenuClickRight';
 import CustomModalRoom from './CustomModalRoom';
+import ViewDetailRoom from './ViewDetailRoom';
 
 const TypeListMap = (selectedUser,data, typeList, name, setSelectedUser, socket, setStatusMessage, setInitialMessages, setNotificationStatus, setIsRoom) => {
         
@@ -12,6 +13,11 @@ const TypeListMap = (selectedUser,data, typeList, name, setSelectedUser, socket,
   const [selectedItem, setSelectedItem] = useState(null);
   const userRole = tokenUtils.getLoggedInUseRol();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+  const [isModalOpenViewDetailRoom, setIsModalOpenViewDetailRoom] = useState(false);
+
+
 
   // Opciones del Menu (Click derecho)
   const options = [
@@ -31,8 +37,7 @@ const TypeListMap = (selectedUser,data, typeList, name, setSelectedUser, socket,
   const handleMenuAction = (option) => {
     setMenuVisible(false);
     if (option.action === 'View') {
-      console.log('Ver detalles de la sala:', selectedItem);
-      //handleUserClickRoom(selectedItem.name);
+      setIsModalOpenViewDetailRoom(true);
     } else if (option.action === 'Custom') {
       setIsModalOpen(true);
     }
@@ -40,6 +45,10 @@ const TypeListMap = (selectedUser,data, typeList, name, setSelectedUser, socket,
 
   const closeModal = () => {
     setIsModalOpen(false); // Cierra el modal
+  };
+
+  const closeModalViewDetailRoom = () => {
+    setIsModalOpenViewDetailRoom(false); // Cierra el modal
   };
 
   useEffect(() =>{
@@ -95,10 +104,7 @@ const TypeListMap = (selectedUser,data, typeList, name, setSelectedUser, socket,
   };
 
 
-    
-    
     const handleUserClick = (userName) => {
-      console.log(data)
             if (setSelectedUser) { // Verifica que setSelectedUser es una función
                 setSelectedUser(userName);
                 HandleSubmitListContact(name, userName, socket, setStatusMessage, setInitialMessages, setNotificationStatus)
@@ -112,7 +118,6 @@ const TypeListMap = (selectedUser,data, typeList, name, setSelectedUser, socket,
         }
 
         if (typeList === "room") {
-            
             return data.map(item => (
               <div>
               {data.map(item => (
@@ -138,8 +143,10 @@ const TypeListMap = (selectedUser,data, typeList, name, setSelectedUser, socket,
                   handleMenuAction={handleMenuAction}
                 />
               )}
+              <CustomModalRoom isOpen={isModalOpen} onClose={closeModal} roomSelected={item.id}/>
+              <ViewDetailRoom isOpen={isModalOpenViewDetailRoom} onClose={closeModalViewDetailRoom} />
 
-              <CustomModalRoom isOpen={isModalOpen} onClose={closeModal} />
+
             </div>
             ))
         } 

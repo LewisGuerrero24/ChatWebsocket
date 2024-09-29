@@ -26,6 +26,7 @@ class UserController:
                     'dateEntry': user.dateEntry, 
                     'email': user.email, 
                     'contacts': [str(contact) for contact in user.contacts] if user.contacts else [],  # Conversión de contactos
+                    'groupParticipating': [str(room.id) for room in user.groupParticipating] if user.groupParticipating else [],  
                     'photo': {
                         'url': f'/api/get_photo/{str(user.id)}' if user.photo else None,
                         'filename': user.photo.filename if user.photo else None

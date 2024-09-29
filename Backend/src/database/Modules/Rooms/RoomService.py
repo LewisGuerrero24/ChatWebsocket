@@ -43,6 +43,9 @@ class RoomService(RoomRepository):
     def update_room(self, room_id, data, photo=None):
         return self.update_room_by_id(room_id, data, photo)
     
+    def update_room_and_user(self, idRoom, idUser, determinateAction):
+        return self.update_data_room_and_user(idRoom, idUser, determinateAction)
+    
     def get_room_by_name(self, nameRoom):
         roomData = self.verificarRoom(nameRoom)
         if roomData:

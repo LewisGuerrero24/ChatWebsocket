@@ -86,14 +86,13 @@ const ListContact = ({ handleLogout,selectedUser,name, connected, setSelectedUse
     });
   }
 
-
   const searchUserForName = async () => {
     const response = await callApisUserEstudents.searchUser(name);
     setUser(response)
 
     var res = response.status == 1 ? true : false;
     setStatusUser(res)
-    };
+  };
 
 
   return (

@@ -152,6 +152,39 @@ class RoomsController:
                 return jsonify({'error': 'room not found'}), 404
             except Exception as e:
                 return jsonify({'error': str(e)}), 500
+            
+
+            
+        @self.app.route('/api/updateUserRoom', methods=['PUT'])
+        @jwt_required()
+        def update_user_room():
+            data = request.get_json()  # Obtener el cuerpo de la solicitud
+            idRoom = data.get('idRoom')
+            idUser = data.get('idUser')
+            determinateAction = data.get('determinateAction')
+
+            try:
+                response = self.RoomService.update_room_and_user(idRoom, idUser, determinateAction)
+                if response:
+                    return jsonify({'message': 'room updated successfully'}), 200
+                return jsonify({'error': 'room not found'}), 404
+            except Exception as e:
+                return jsonify({'error': str(e)}), 500 
+            
+        # @self.app.route('/api/viewInformationRoom', methods=['POST'])
+        # @jwt_required()
+        # def viewInformationtheRoom():
+        #     data = request.get_json()
+        #     idRoom = data.get('idRoom')
+        #     try:
+        #         response = self.RoomService.viewInfoRoom(idRoom)
+        #         if response:
+        #             return jsonify(response), 200
+        #         return jsonify({'error': 'room not found'}), 404
+        #     except Exception as e:
+        #         return jsonify({'error': str(e)}), 500
+
+
 
 
         # Para las rooms
