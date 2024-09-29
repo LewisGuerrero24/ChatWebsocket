@@ -39,6 +39,26 @@ searchUser: async (name) => {
 }
 },
 
+editRoomAndUsers: async (idRoom, idUser, determinateAction) => {
+  try {
+    const response = await axios.put(`http://localhost:5000/api/updateUserRoom`, {
+      idRoom,             // Mueve idRoom a la data
+      idUser,            // Mueve idUser a la data
+      determinateAction, // Mueve determinateAction a la data
+    }, {
+      headers: {
+        authorization: `Bearer ${tokenUtils.getToken()}`,
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (e) {
+    console.error(e);
+    return false; 
+  }
+},
+
+
 
 
 eliminarUsuario: async (userId) => {

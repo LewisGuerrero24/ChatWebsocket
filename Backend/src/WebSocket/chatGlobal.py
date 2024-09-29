@@ -116,7 +116,7 @@ class SocketServer:
                         }
                         emit('message', res, room=str(room.id))
                     else:
-                        emit('error', {'msg': 'User not authorized to send messages in this room'})
+                        emit('error', {'msg': '¡Has sido Expulsado de este Grupo, No puedes participar mas!'})
                 else:
                     emit('error', {'msg': 'Sender not found'})
             else:

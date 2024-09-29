@@ -17,15 +17,12 @@ const DashboardEstudiante = () => {
     const navigate = useNavigate();
     const [lastActive, setLastActive] = useState(new Date());
     const { connected, socket } = useConnect();
-    const { name } = useParams();
+    const name = tokenUtils.getLoggedInUserId();
     const [selectedUser, setSelectedUser] = useState(null);
     const [initialMessages, setInitialMessages] = useState([]);
     const [statusListContact, setStatusListContact] = useState(false);
 
-
-
     const [isRoom, setIsRoom] = useState("");
-
 
     const handleLogout = async () => {
         try {

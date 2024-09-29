@@ -65,7 +65,6 @@ const tokenUtils = {
         if (!token){
             return "";
         }
-
         return jwtDecode(token).sub;
     },
 

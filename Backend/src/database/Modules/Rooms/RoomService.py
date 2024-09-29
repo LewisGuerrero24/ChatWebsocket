@@ -25,17 +25,34 @@ class RoomService(RoomRepository):
             new_room.Photo.put(photo, content_type=photo.content_type, filename=filename)
         self.save_rooms(new_room)
 
+            # Actualizar el campo groupParticipating en los usuarios administradores
+        for user in users_admin:
+            user.groupParticipating.append(new_room.id) 
+            user.save()  
+        
+        # Actualizar el campo groupParticipating en los usuarios autorizados
+        for user in authorized_users:
+            user.groupParticipating.append(new_room.id)  
+            user.save()  
+
+
+
     def delete_room(self, room_id):
         return self.detele_room_by_id(room_id) 
     
     def update_room(self, room_id, data, photo=None):
         return self.update_room_by_id(room_id, data, photo)
     
+    def update_room_and_user(self, idRoom, idUser, determinateAction):
+        return self.update_data_room_and_user(idRoom, idUser, determinateAction)
+    
     def get_room_by_name(self, nameRoom):
         roomData = self.verificarRoom(nameRoom)
         if roomData:
             return roomData
     
-    def list_room_for_name(self):
-        rooms = self.Rooms.objects().only('Name') 
-        return [room.Name for room in rooms]
+    def list_room_for_user_participating(self, user):
+        if user.groupParticipating:
+            return self.searchGroupTheUser(user.groupParticipating) 
+        else:
+            return []

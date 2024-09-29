@@ -20,9 +20,8 @@ const TokenJwtUpdate = {
       axios.interceptors.response.use(
         (response) => {
           // Verificar si la respuesta contiene un nuevo token JWT
-          
           const newToken = response.data.token;
-          if (newToken) {
+          if (response.data.token) {
             // Actualizar el token en la cookie
             tokenUtils.setToken(newToken);
           }

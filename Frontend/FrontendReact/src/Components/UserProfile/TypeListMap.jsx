@@ -1,17 +1,66 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import HandleSubmitListContact from '../../Helpers/HandleSubmitListContact';
 import axios from 'axios';
 import tokenUtils from '../../Hooks/utils';
-import { useState } from 'react';
+import ContextMenuClickRight from './ContextMenuClickRight';
+import CustomModalRoom from './CustomModalRoom';
+import ViewDetailRoom from './ViewDetailRoom';
+
 
 const TypeListMap = (userOnline, selectedUser, data, typeList, name, setSelectedUser, socket, setStatusMessage, setInitialMessages, setNotificationStatus, setIsRoom,setStatusListContact) => {
-
-
+        
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ xPos: 0, yPos: 0});
+  const [selectedItem, setSelectedItem] = useState(null);
+  const userRole = tokenUtils.getLoggedInUseRol();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [openSubMenuIndex, setOpenSubMenuIndex] = useState(null);
+  const [isModalOpenViewDetailRoom, setIsModalOpenViewDetailRoom] = useState(false);
 
   const toggleSubMenu = (index) => {
     setOpenSubMenuIndex(openSubMenuIndex === index ? null : index);
   };
+
+
+
+  // Opciones del Menu (Click derecho)
+  const options = [
+    {label: 'Informacion del Grupo', action: 'View'},
+    ...(userRole !== 'estudiante'
+      ? [{ label: 'Añadir o eliminar Estudiantes', action: 'Custom' }]
+      : [])
+  ];
+
+  const handleContextMenu = (e, item) => {
+    e.preventDefault();
+    setSelectedItem(item);
+    setMenuPosition({ xPos: e.pageX, yPos: e.pageY })
+    setMenuVisible(true);
+  }
+
+  const handleMenuAction = (option) => {
+    setMenuVisible(false);
+    if (option.action === 'View') {
+      setIsModalOpenViewDetailRoom(true);
+    } else if (option.action === 'Custom') {
+      setIsModalOpen(true);
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false); // Cierra el modal
+  };
+
+  const closeModalViewDetailRoom = () => {
+    setIsModalOpenViewDetailRoom(false); // Cierra el modal
+  };
+
+  useEffect(() =>{
+    const hadleClickOutside = () => setMenuVisible(false);
+    document.addEventListener('click', hadleClickOutside);
+    return () => document.removeEventListener('click', hadleClickOutside);
+  }, []);
+    
 
   const handleUserClickRoom = (nameRoom) => {
     if (setSelectedUser) {
@@ -24,9 +73,10 @@ const TypeListMap = (userOnline, selectedUser, data, typeList, name, setSelected
   }
 
 
+
+
   const handleSubmitRoom = async (nameUserActually, nameRoom) => {
-    await axios.post('http://localhost:5000/conversation/room/create', {
-      nameUserActually,
+    await axios.post('http://localhost:5000/conversation/room/requestRoomId', {
       nameRoom
     }, {
       withCredentials: true,
@@ -58,6 +108,7 @@ const TypeListMap = (userOnline, selectedUser, data, typeList, name, setSelected
       });
   };
 
+
   const handleDeleteChat = async(id, name) => {
     try {
       const response = await axios.put(`http://localhost:5000/delete/chat`,
@@ -79,8 +130,9 @@ const TypeListMap = (userOnline, selectedUser, data, typeList, name, setSelected
     } catch (error) {
       // Maneja el error si la petición falla
       console.error('Error deleting chat:', error);
-    }
-  }
+    }}
+
+   
   
 
   const handleUserClick = (userName) => {
@@ -100,17 +152,35 @@ const TypeListMap = (userOnline, selectedUser, data, typeList, name, setSelected
   if (typeList === "room") {
 
     return data.map(item => (
-      <button
-        key={item.id}
-        className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
-        onClick={() => handleUserClickRoom(item.name)}
-      >
-        <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
-          {item.name.charAt(0).toUpperCase()}
-        </div>
-        <div className="ml-2 text-sm font-semibold">{item.name}</div>
-        <div className="h-3 w-3 bg-green-500 rounded-full ml-2"></div>
-      </button>
+      <div>
+      {data.map(item => (
+        <button
+          key={item.id}
+          className="flex flex-row items-center hover:bg-gray-100 rounded-xl p-2"
+          onClick={() => handleUserClickRoom(item.name)}
+          onContextMenu={(e) => handleContextMenu(e, item)}
+        >
+          <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
+            {item.name.charAt(0).toUpperCase()}
+          </div>
+          <div className="ml-2 text-sm font-semibold">{item.name}</div>
+          <div className="h-3 w-3 bg-green-500 rounded-full ml-2"></div>
+        </button>
+      ))}
+
+      {menuVisible && (
+        <ContextMenuClickRight
+          options={options}
+          xPos={menuPosition.xPos}
+          yPos={menuPosition.yPos}
+          handleMenuAction={handleMenuAction}
+        />
+      )}
+      <CustomModalRoom isOpen={isModalOpen} onClose={closeModal} roomSelected={item.id}/>
+      <ViewDetailRoom isOpen={isModalOpenViewDetailRoom} onClose={closeModalViewDetailRoom} />
+
+
+    </div>
     ))
   }
   if (typeList === "estudiante" || typeList === "docente") {

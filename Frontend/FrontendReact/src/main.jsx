@@ -58,17 +58,13 @@ const router = createBrowserRouter([
     element: <DashboardAdmin/>
   },
   {
-    path: "/DashboardEstudiante/:name",
+    path: "/DashboardEstudiante",
     element: <DashboardEstudiante/>
   },
   {
-    path: "/DashboardDocente/:name",
+    path: "/DashboardDocente",
     element: <DashboardDocente/>
   },
-  // {
-  //   path: "/DashboardUser/:name",
-  //   element: <DashboardUser/>
-  // }
   
 ]);
 

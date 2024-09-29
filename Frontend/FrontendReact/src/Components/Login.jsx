@@ -36,10 +36,9 @@ const Login = () => {
         if(response.data.rol  === 'admin'){
           navigate('/DashboardAdmin');
         } else if(response.data.rol === 'estudiante'){
-          navigate('/DashboardEstudiante/'+name);
-          localStorage.setItem('nombreDeSession', name)
+          navigate('/DashboardEstudiante');
         }else{
-          navigate('/DashboardDocente/'+name);
+          navigate('/DashboardDocente');
         }
 
         toast.success('Login successful', {
