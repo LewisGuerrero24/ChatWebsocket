@@ -5,15 +5,24 @@ import tokenUtils from '../../Hooks/utils';
 import ContextMenuClickRight from './ContextMenuClickRight';
 import CustomModalRoom from './CustomModalRoom';
 import ViewDetailRoom from './ViewDetailRoom';
+import ContextMenuClickRightVieUser from './ContextMenuClickRightVieUser';
+import ModalDetailUser from './ModalDetailUser';
 
 
 const TypeListMap = (userOnline, selectedUser, data, typeList, name, setSelectedUser, socket, setStatusMessage, setInitialMessages, setNotificationStatus, setIsRoom,setStatusListContact) => {
         
   const [menuVisible, setMenuVisible] = useState(false);
+
+  const [menuVisibleView, setMenuVisibleView] = useState(false);
+
   const [menuPosition, setMenuPosition] = useState({ xPos: 0, yPos: 0});
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState({});
   const userRole = tokenUtils.getLoggedInUseRol();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [isModalOpenViewUser, setIsModalOpenViewUser] = useState(false);
+
+
   const [openSubMenuIndex, setOpenSubMenuIndex] = useState(null);
   const [isModalOpenViewDetailRoom, setIsModalOpenViewDetailRoom] = useState(false);
 
@@ -22,20 +31,29 @@ const TypeListMap = (userOnline, selectedUser, data, typeList, name, setSelected
   };
 
 
-
   // Opciones del Menu (Click derecho)
   const options = [
     {label: 'Informacion del Grupo', action: 'View'},
     ...(userRole !== 'estudiante'
-      ? [{ label: 'Añadir o eliminar Estudiantes', action: 'Custom' }]
+      ? [{ label: 'Gestionar Usuarios', action: 'Custom' }]
       : [])
   ];
+
+  const opcionsClickAllUsers = [{label: 'Información Usuario'}]
 
   const handleContextMenu = (e, item) => {
     e.preventDefault();
     setSelectedItem(item);
     setMenuPosition({ xPos: e.pageX, yPos: e.pageY })
     setMenuVisible(true);
+  }
+
+
+  const handleContextMenuClickViewUser = (e, item) => {
+    e.preventDefault();
+    setSelectedItem(item);
+    setMenuPosition({ xPos: e.pageX, yPos: e.pageY });
+    setMenuVisibleView(true);
   }
 
   const handleMenuAction = (option) => {
@@ -47,6 +65,12 @@ const TypeListMap = (userOnline, selectedUser, data, typeList, name, setSelected
     }
   };
 
+  const handleMenuActionViewUserDetail = () =>{
+    setMenuVisibleView(false);
+    setIsModalOpenViewUser(true);
+  };
+
+
   const closeModal = () => {
     setIsModalOpen(false); // Cierra el modal
   };
@@ -55,12 +79,24 @@ const TypeListMap = (userOnline, selectedUser, data, typeList, name, setSelected
     setIsModalOpenViewDetailRoom(false); // Cierra el modal
   };
 
-  useEffect(() =>{
-    const hadleClickOutside = () => setMenuVisible(false);
-    document.addEventListener('click', hadleClickOutside);
-    return () => document.removeEventListener('click', hadleClickOutside);
+
+  const closeModalViewDetailUser = () => {
+    setIsModalOpenViewUser(false); // Cierra el modal
+  };
+
+  // Ocultar el menú contextual al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setMenuVisible(false);
+      setMenuVisibleView(false);
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
   }, []);
-    
+
+
 
   const handleUserClickRoom = (nameRoom) => {
     if (setSelectedUser) {
@@ -124,19 +160,18 @@ const TypeListMap = (userOnline, selectedUser, data, typeList, name, setSelected
         }
       );
       // Maneja la respuesta si es necesario
-      console.log(response.data);
       window.location.reload();
       
     } catch (error) {
       // Maneja el error si la petición falla
       console.error('Error deleting chat:', error);
-    }}
+    }
+  }
 
    
   
 
   const handleUserClick = (userName) => {
-    console.log(data)
     if (setSelectedUser) { // Verifica que setSelectedUser es una función
       setSelectedUser(userName);
       HandleSubmitListContact(name, userName, socket, setStatusMessage, setInitialMessages, setNotificationStatus)
@@ -144,6 +179,8 @@ const TypeListMap = (userOnline, selectedUser, data, typeList, name, setSelected
       console.error('setSelectedUser is not a function');
     }
   }
+
+
   if (!Array.isArray(data)) {
     console.error("El dato no es un array", data);
     return null;
@@ -177,7 +214,7 @@ const TypeListMap = (userOnline, selectedUser, data, typeList, name, setSelected
         />
       )}
       <CustomModalRoom isOpen={isModalOpen} onClose={closeModal} roomSelected={item.id}/>
-      <ViewDetailRoom isOpen={isModalOpenViewDetailRoom} onClose={closeModalViewDetailRoom} />
+      <ViewDetailRoom isOpen={isModalOpenViewDetailRoom} onClose={closeModalViewDetailRoom} thisRoom={item}/>
 
 
     </div>
@@ -185,12 +222,13 @@ const TypeListMap = (userOnline, selectedUser, data, typeList, name, setSelected
   }
   if (typeList === "estudiante" || typeList === "docente") {
     return data.map((item, index)=> (
-
+<div>
       <div className="relative mb-2" key={item.id}>
         <div className="flex items-center w-full hover:bg-gray-100 rounded-xl p-2 cursor-pointer">
           <div
             className="flex flex-row items-center w-full"
             onClick={() => handleUserClick(item.name)}
+            onContextMenu={(e) => handleContextMenuClickViewUser(e, item)}
           >
             <div className="relative flex items-center justify-center h-10 w-10 bg-indigo-300 rounded-full text-white font-bold">
               {item.name.charAt(0).toUpperCase()}
@@ -222,6 +260,9 @@ const TypeListMap = (userOnline, selectedUser, data, typeList, name, setSelected
           </button>
         </div>
 
+        
+
+
         {openSubMenuIndex === index && (
           <div onClick ={()=>handleDeleteChat(item.id, name)} className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg z-10">
             <ul>
@@ -229,6 +270,16 @@ const TypeListMap = (userOnline, selectedUser, data, typeList, name, setSelected
             </ul>
           </div>
         )}
+      </div>
+      {menuVisibleView && (
+            <ContextMenuClickRightVieUser
+              options={opcionsClickAllUsers}
+              xPos={menuPosition.xPos}
+              yPos={menuPosition.yPos}
+              handleMenuAction={handleMenuActionViewUserDetail}
+            />
+        )}
+          <ModalDetailUser isOpen={isModalOpenViewUser} onClose={closeModalViewDetailUser} user={selectedItem}/>
       </div>
     ))
   }

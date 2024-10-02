@@ -33,8 +33,6 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
         setAdminUsers(usersAdminParsed); 
         setAuthorizedUsers(authorizedUsersParsed);
 
-         console.log("Data: ", usersAdminParsed)
-
         setFormData({
           nombre: room.name,
           descripcion: room.description,

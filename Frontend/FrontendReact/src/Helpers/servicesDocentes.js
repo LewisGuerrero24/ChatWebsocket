@@ -28,7 +28,6 @@ const callApisUserTeachers = {
               },
               withCredentials: true
           });
-          console.log(response.data.message); // Mensaje de éxito
           return true;
       } catch (e) {
           console.error(e);
@@ -82,8 +81,6 @@ const callApisUserTeachers = {
               withCredentials: true
             }
           );
-    
-          console.log(response.data);
           toast.success('Actualizacion Realizada', {
             position: "bottom-right",
             style: {

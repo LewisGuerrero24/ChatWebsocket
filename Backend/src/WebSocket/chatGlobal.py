@@ -109,7 +109,7 @@ class SocketServer:
                         message_user = self.MessageUser(Sender=user.to_simple_dict(), Content=data['message'], TimeStap=datetime.utcnow())
                         room.Messages.append(message_user)
                         room.save()
-                        res = {
+                        res = { 
                         'sender': message_user.Sender,
                         'content': message_user.Content,
                         'timestamp': message_user.TimeStap.strftime('%H:%M:%S')
@@ -125,16 +125,15 @@ class SocketServer:
 
         @self.socketio.on('search')
         def handle_search(data):
-            if isinstance(data, str):
-                query = data
-            else:
-                query = ''
+            query = data.get('query', '')  # Obtén el query del objeto
+            name = data.get('name', '')  # Obtén el name del objeto
 
             if query:
-                results = self.UserService.find_user(query)
+                results = self.UserService.find_user(query, name)
                 self.socketio.emit('search_results', results)
             else:
                 self.socketio.emit('search_results', [])
+
 
             
           

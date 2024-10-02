@@ -4,7 +4,7 @@ import notificationService from './notificationService';
 import notificationCount from './notificationCount';
 
 const HandelSubmitEndpointUsers = (setData, setTypeList, typeList, name) => {
-
+  setData([])
   setTypeList(typeList)
   if (typeList == "docente" || typeList == "estudiante") {
     const apiUrl = 'http://localhost:5000/user/list'
@@ -17,7 +17,7 @@ const HandelSubmitEndpointUsers = (setData, setTypeList, typeList, name) => {
     }).then(response => {
       const data = notificationCount(response.data, name)
       data.then(res => {
-        setData([])
+       
         setData([...res]);
 
       })
@@ -31,9 +31,8 @@ const HandelSubmitEndpointUsers = (setData, setTypeList, typeList, name) => {
             name
           }
         }).then(response => {
-          setData([])
+
           setData([...response.data]);
-          console.log("Aca esta la data de las roomssss: ", response.data)
         });
       }
     }

@@ -4,34 +4,30 @@ import useConnect from "../../Hooks/useConnect";
 import axios from "axios";
 import addContact from "../../Helpers/addContact";
 
-const BuscadorUsuarios = ({name,setStatusListContact}) => {
-  const {socket} = useConnect()
+const BuscadorUsuarios = ({ name, setStatusListContact }) => {
+  const { socket } = useConnect();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
 
   useEffect(() => {
     socket.on('search_results', (data) => {
-      setResults(data); 
-
-      if(results == []){
-        setQuery('')
-      }
-      
+      setResults(data);
     });
-    queryChart()
+
+    if (query) {
+      queryChart(); 
+    } else {
+      setResults([]); 
+    }
 
     return () => {
       socket.off('search_results');
-      
     };
-  }, [query]);
+  }, [query]); 
 
-
-  function queryChart(){
-     if (query) {
-      socket.emit('search', query); 
-    } else {
-      setResults([]);
+  function queryChart() {
+    if (query && name) {
+      socket.emit('search', { query: query, name: name });
     }
   }
 
@@ -47,26 +43,24 @@ const BuscadorUsuarios = ({name,setStatusListContact}) => {
           aria-label="Buscar usuarios"
           type="text"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => setQuery(e.target.value)} 
         />
       </div>
 
-      {/* Mostrar resultados debajo del input */}
-      {results.length > 0 && (
+
+      {query && results.length > 0 && (
         <ul className="absolute z-10 w-full max-w-full bg-white shadow-lg rounded-lg mt-2 max-h-60 overflow-y-auto">
           {results.map((user, index) => (
-            
-            (user.name != name && user.suspendedAccount != 0) && (
-              
-              <li 
+            (user.name !== name && user.suspendedAccount !== 0) && (
+              <li
                 onClick={() => addContact(name, user.id, setStatusListContact)}
-                key={index} 
+                key={index}
                 className="px-4 py-2 hover:bg-gray-100 cursor-pointer truncate"
                 style={{
-                  whiteSpace: 'nowrap', 
-                  overflow: 'hidden', 
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
                   textOverflow: 'ellipsis',
-                  maxWidth: '100%' 
+                  maxWidth: '100%'
                 }}
               >
                 {user.name}

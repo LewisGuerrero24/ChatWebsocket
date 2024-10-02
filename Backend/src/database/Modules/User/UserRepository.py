@@ -34,14 +34,31 @@ class UserRepository():
             return usuario_data
         return usuario_data
         
-    
 
-    #Data Repository
 
-    def find_user(self, query):
+    def find_user(self, query, name):
+        # Usar regex para buscar por el nombre
         regex = f'^{query}'
-        results = self.User.objects(Q(name__iregex=regex)).only('name', 'id','suspendedAccount')
-        return [{'id': str(user.id), 'name': user.name,"suspendedAccount":user.suspendedAccount} for user in results]
+        results = self.User.objects(Q(name__iregex=regex)).only('name', 'id', 'suspendedAccount')
+
+        # Obtener el usuario actual
+        user = self.User.objects(name=name).first()
+
+        if not user:
+            return []  # Si no se encuentra el usuario, devuelve una lista vacía
+
+        # Obtener los IDs de los contactos del usuario actual
+        contact_ids = [contact['id'] for contact in user.contacts]  # Usamos 'id' en lugar de contact.id
+
+        # Filtrar los resultados que no están en la lista de contactos
+        filtered_results = [
+            res for res in results if str(res.id) not in contact_ids
+        ]
+
+        # Devolver los resultados filtrados con la estructura que necesitas
+        return [{'id': str(user.id), 'name': user.name, "suspendedAccount": user.suspendedAccount} for user in filtered_results]
+
+
 
     
     def createUser(self, data):

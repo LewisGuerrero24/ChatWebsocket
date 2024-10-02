@@ -2,6 +2,7 @@ from mongoengine import get_db
 from gridfs import GridFS
 from bson import ObjectId
 from werkzeug.utils import secure_filename
+import json
 
 class RoomRepository():
     def __init__(self, User, Rol, Rooms):
@@ -63,10 +64,6 @@ class RoomRepository():
                 return {'message': 'User removed from the group'}, 200
             else:
                 return {'error': 'User not in the group'}, 400
-
-
-
-
 
 
     def update_room_by_id(self, room_id, data, photo):

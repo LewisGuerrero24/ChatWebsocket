@@ -147,7 +147,6 @@ class UserController:
         def buscar_usuario_por_nombre():
             try:
                 name = request.args.get('name')
-                print("ESTE ES MI NOMBRE",name)
                 
                 if not name:
                     return jsonify({'error': 'Name parameter is required'}), 400
@@ -201,6 +200,7 @@ class UserController:
                     'dateEntry': user.dateEntry, 
                     'email': user.email, 
                     'contacts': [str(contact) for contact in user.contacts] if user.contacts else [],  # Conversión de contactos
+                    'groupParticipating': [str(user.id) for user in user.groupParticipating] if user.groupParticipating else [],
                     'photo': {
                         'url': f'/api/get_photo/{str(user.id)}' if user.photo else None,
                         'filename': user.photo.filename if user.photo else None

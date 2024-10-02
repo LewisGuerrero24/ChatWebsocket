@@ -96,8 +96,7 @@ const ListContact = ({ handleLogout,selectedUser,name, connected, setSelectedUse
     }
   };
 
-  useEffect(() => {
-    console.log(userOnline);  // Muestra el valor actualizado cuando cambie
+  useEffect(() => { // Muestra el valor actualizado cuando cambie
   }, [userOnline]);  
 
 

@@ -128,8 +128,8 @@ class UserService(UserRepository):
     
 
     
-    def search_users(self, query):
-        resultado = self.find_user(query) 
+    def search_users(self, query, name):
+        resultado = self.find_user(query, name) 
         return resultado
     
     def search_user_for_name(self, name):

@@ -12,7 +12,6 @@ const callApisUserEstudents = {
                 authorization: `Bearer ${tokenUtils.getToken()}`
             }
         })
-        console.log(response.data)
         return response.data;
     } catch (e) {
         console.error(e);
@@ -69,7 +68,6 @@ eliminarUsuario: async (userId) => {
           },
           withCredentials: true
       });
-      console.log(response.data.message); // Mensaje de éxito
       return true;
   } catch (e) {
       console.error(e);
@@ -123,8 +121,6 @@ editarEstudiante: async (sendData, userId) => {
           withCredentials: true
         }
       );
-
-      console.log(response.data);
       toast.success('Actualizacion Realizada', {
         position: "bottom-right",
         style: {

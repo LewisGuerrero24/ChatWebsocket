@@ -56,3 +56,4 @@ class RoomService(RoomRepository):
             return self.searchGroupTheUser(user.groupParticipating) 
         else:
             return []
+    
