@@ -4,11 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import image from '../Static/img/Carga.gif';
 import handleGoOut from '../Helpers/handleGoOut';
 
-const Chat = ({ name, connected, socket, nameRoom }) => {
+const ChatPublic = ({ name, connected, socket, nameRoom }) => {
   const { message, setMessage, showMessage, sendMessage } = MessageSocketIo({ socket }, name, nameRoom);
   const navigate = useNavigate();
-
-
 
   const handleGoOutCallback = () => {
     handleGoOut(name, navigate);
@@ -88,4 +86,4 @@ const Chat = ({ name, connected, socket, nameRoom }) => {
   );
 };
 
-export default Chat;
+export default ChatPublic;

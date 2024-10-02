@@ -1,13 +1,14 @@
 from Libraries import *
+from flask import Response
 from bson import ObjectId
 
 class UserController:
-    def __init__(self, app, UserService,RoomBetweenUserService,socketio):
+    def __init__(self, app, UserService,socketio):
         self.app = app
         self.bcrypt = Bcrypt(app)
         self.UserService = UserService
-        self.RoomBetweenUserService = RoomBetweenUserService
         self.socketio = socketio
+     
      
     def start(self):
         # Cors para los Estudiantes
@@ -268,55 +269,10 @@ class UserController:
             name = request.args.get('name')
             response = self.UserService.getAllUsers(typeUser, name)
             return jsonify(response),200
+    
         
-
-        @jwt_required()
-        @self.app.route('/conversation/create', methods = ['POST'])
-        def create_Conversation():
-            dataUsers = request.json
-            print(dataUsers['user_one'])
-            d = {"name": dataUsers['user_one']}
-            user_one = self.UserService.get_unique_user(d)  
-
-                # Consulto al segundo usuario
-            l = {"name": dataUsers['user_two']}
-            user_second = self.UserService.get_unique_user(l)
-            
-             # Genero la sala de chat usando los IDs de los usuarios
-            room = f"chat_{min(user_one['id'], user_second['id'])}_{max(user_one['id'], user_second['id'])}"
-                
-            existConversation = self.RoomBetweenUserService.existConversation(str(user_one['id']), str(user_second['id']))
-            if existConversation:
-                  return jsonify({"success": True, "room": room}), 201
-            self.RoomBetweenUserService.CreateRoom(dataUsers['user_one'],dataUsers['user_two'])
-            return jsonify({"success": False, "room": room}), 201
-            
-
-
-
-        @jwt_required()
-        @self.app.route('/conversation/message', methods = ['GET'])
-        def messages_Conversation():
-            user_one = request.args.get('user_one')
-            user_two = request.args.get('user_two')
-            
-            d = {"name": user_one}
-            user_one = self.UserService.get_unique_user(d)
-                
-                # Consulto al segundo usuario
-            l = {"name": user_two}
-            user_second = self.UserService.get_unique_user(l)
-            
-            listMessages = list()
-            existConversation = self.RoomBetweenUserService.existConversation(str(user_one["id"]),str(user_second["id"]))
-            if existConversation is not None:
-                 for messages  in existConversation["Messages"]:
-                     dataMessages = {"sender":messages["Sender"],"content":messages["Content"],'timestamp': messages["TimeStap"].strftime('%H:%M:%S')}
-                     listMessages.append(dataMessages)
-                 return jsonify(listMessages), 201
-            else:
-                return jsonify("No hay Mensajes aun"), 201
-            
+        
+        #CONTACTOS
         @jwt_required()
         @self.app.route('/insert/contact', methods = ['PUT'])
         def insert_Contact():
@@ -337,42 +293,6 @@ class UserController:
             if statusContact:
                 return jsonify(statusContact["status"]), 201
             return jsonify(statusContact["status"])
-        
-        
-        
-        @jwt_required()
-        @self.app.route('/notification/newmessage', methods = ['GET'])
-        def messages_notificacion():
-            user_one = request.args.get('user_one')
-            user_two = request.args.get('user_two')
-            print("este es el segundo nombre: "+user_two)
-
-            d = {"name": user_one}
-            user_one = self.UserService.get_unique_user(d)
-                
-                # Consulto al segundo usuario
-            l = {"name": user_two}
-            user_second = self.UserService.get_unique_user(l)
-                
-            response = self.RoomBetweenUserService.MessagesIsNotRead(str(user_one['id']),str(user_second['id']))
-            print(response)
-            return jsonify(response), 200
-        
-        @jwt_required()
-        @self.app.route('/update/statusMessage', methods = ['PUT'])
-        def messages_notificacion_status():
-            dataUsers = request.json
-        
-            d = {"name": dataUsers['user_one']}
-            user_one = self.UserService.get_unique_user(d)
-                
-                # Consulto al segundo usuario
-            l = {"name": dataUsers['user_two']}
-            user_second = self.UserService.get_unique_user(l)
-                
-            response = self.RoomBetweenUserService.updateMessageStatus(str(user_one['id']),str(user_second['id']))
-            print(response)
-            return jsonify(response), 200
         
            
                 
@@ -404,5 +324,8 @@ class UserController:
             # self.RoomBetweenUserService.delete_conversation(str(user["id"]),data["id"])
             print(data)
             return jsonify(status_Delete)
+        
+        
+        
         
             

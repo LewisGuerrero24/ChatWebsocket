@@ -83,8 +83,7 @@ class UserRepository():
          users = self.User.objects(id=id).first()
          print(users["name"])
          if users:
-            print(users["contacts"])
-            dataContacts = [{"id":contact["id"],"name":contact["name"],"CountMessages":0} for contact in users["contacts"] if contact["rol"] == ObjectId(rol)]
+            dataContacts = [{"id":str(contact["id"]),"name":contact["name"],"CountMessages":0} for contact in users["contacts"] if contact["rol"] == ObjectId(rol)]
             return dataContacts
          else:
             return None, None

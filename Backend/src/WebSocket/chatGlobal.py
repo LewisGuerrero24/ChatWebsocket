@@ -1,14 +1,16 @@
 from Libraries import *
 from datetime import datetime
+from bson import ObjectId
 
 class SocketServer:
-    def __init__(self, socketio , app, UserService, ConversationBetweenUsers, MessageUser, RoomService):
+    def __init__(self, socketio , app, UserService, ConversationBetweenUsers, MessageUser, RoomService,GridDf):
         self.socketio = socketio
         self.app = app 
         self.UserService = UserService
         self.ConversationBetweenUsers = ConversationBetweenUsers
         self.MessageUser = MessageUser
         self.RoomService = RoomService
+        self.GridDf = GridDf
      
     def start(self):           
         @self.app.route('/')
@@ -62,6 +64,7 @@ class SocketServer:
         @self.socketio.on('message_user')
         def handle_message_UserAndUser(data):
             if data is not None:
+                file_id = ""
                 # Consulto al primer usuario
                 d = {"name": data['user_primary']}
                 user_one = self.UserService.get_unique_user(d)
@@ -73,14 +76,23 @@ class SocketServer:
                 # Genero la sala de chat usando los IDs de los usuarios
                 room = f"chat_{min(user_one['id'], user_second['id'])}_{max(user_one['id'], user_second['id'])}"
                 
+                
+                if data["FileData"]["file"]:
+                    file_id =self.GridDf.put(data["FileData"]["file"], filename=data["FileData"]["name"])   
+                if data['message'] == "":
+                    print("Mensaje VACIO")
                 # Crear el objeto mensaje
-                message_user = self.MessageUser(Sender=user_one.to_simple_dict(), Content=data['message'], TimeStap=datetime.utcnow())
+                message_user = self.MessageUser(Sender=user_one.to_simple_dict(), Content=data['message'], FileId=str(file_id),TimeStap=datetime.utcnow())
                 
                 # Crear la conversación y agregar mensajes
                 response_message = self.ConversationBetweenUsers.ConversationAndMessages(str(user_one['id']), str(user_second['id']), message_user)
-                
+                file_data = {
+                "file_id": str(file_id),
+                "filename": data["FileData"]["name"]
+                }
+        
                 # Enviar mensaje a la sala
-                res = {'sender': message_user.Sender, 'content': message_user.Content, 'timestamp': message_user.TimeStap.strftime('%H:%M:%S')}
+                res = {'sender': message_user.Sender, 'content': message_user.Content, 'timestamp': message_user.TimeStap.strftime('%H:%M:%S'),"file":file_data}
                 emit('message', res, room=room)
                 
                 # hay un mensaje nuevo en el sistema
@@ -105,14 +117,23 @@ class SocketServer:
                     authorized_ids = [str(u.id) for u in room.AuthoRizedUser]
 
                     if user_id_str in authorized_ids or user_id_str in admin_ids:
-                        
-                        message_user = self.MessageUser(Sender=user.to_simple_dict(), Content=data['message'], TimeStap=datetime.utcnow())
+                        file_id = ""
+                        if data["FileData"]["file"]:
+                            file_id =self.GridDf.put(data["FileData"]["file"], filename=data["FileData"]["name"])   
+                        if data['message'] == "":
+                            print("Mensaje VACIO")
+                        message_user = self.MessageUser(Sender=user.to_simple_dict(), Content=data['message'], FileId=str(file_id),TimeStap=datetime.utcnow())
                         room.Messages.append(message_user)
                         room.save()
+                        file_data = {
+                            "file_id": str(file_id),
+                            "filename": data["FileData"]["name"]
+                            }
                         res = {
                         'sender': message_user.Sender,
                         'content': message_user.Content,
-                        'timestamp': message_user.TimeStap.strftime('%H:%M:%S')
+                        'timestamp': message_user.TimeStap.strftime('%H:%M:%S'),
+                        "file":file_data
                         }
                         emit('message', res, room=str(room.id))
                     else:

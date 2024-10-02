@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 const MessageSocketIoRooms = ({ socket }, nameRoom, nameUser, setErrorUsuarioExpulsado) => {
     const [message, setMessage] = useState('');
     const [showMessage, setShowMessage] = useState([]);
+    const [files, setFiles] = useState([]);
+    const [fileName, setFileName] = useState(''); 
 
     useEffect(() => {
         // Unirse a la sala
@@ -23,14 +25,22 @@ const MessageSocketIoRooms = ({ socket }, nameRoom, nameUser, setErrorUsuarioExp
         };
       }, [nameRoom, socket]);
 
-      const sendMessage = (e) => {
-        e.preventDefault();
-        if (message.trim()) {
-          // Emitir el mensaje al servidor en la sala
-          socket.emit('message_room', { room: nameRoom, user: nameUser, message });
-          socket.off('message_room');
-          setMessage(''); // Limpiar el campo de mensaje
+      const sendMessage = () => {
+        if(message == "" && fileName == ""){
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "No puedes enviar mensajes vacios!"
+          });
+        }else{
+            message.trim()
+              // Emitir el mensaje al servidor
+              socket.emit('message_room', { room: nameRoom, user: nameUser, message, FileData: {name:fileName ,file: files }});
+              socket.off('message_room');
+              setMessage(''); // Limpiar el campo de mensaje
+              setFileName('');
         }
+
       };
 
       return {
@@ -38,7 +48,10 @@ const MessageSocketIoRooms = ({ socket }, nameRoom, nameUser, setErrorUsuarioExp
         setMessage,
         showMessage,
         sendMessage,
-        setShowMessage
+        setShowMessage,
+        setFiles,
+        setFileName,
+        fileName
       };
 
 };

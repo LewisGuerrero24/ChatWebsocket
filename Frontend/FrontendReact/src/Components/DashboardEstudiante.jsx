@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import ListContact from './UserProfile/ListContact';
 import './css/chat.css';
-import Chat from './Chat';
+import Chat from './ChatPublic';
 import useRoom from '../Hooks/useRoom';
 import useConnect from '../Hooks/useConnect';
 import ChatUsers from './ChatUsers';
