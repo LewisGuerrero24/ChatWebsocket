@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams , Link, BrowserRouter} from "react-router-dom";
 import './css/chat.css';
-import Chat from './Chat';
+import Chat from './ChatPublic';
 import useRoom from '../Hooks/useRoom';
 import useConnect from '../Hooks/useConnect';
+import ChatPublic from './ChatPublic';
 
 const PublicChat = () => {
   const { connected, socket } = useConnect();
@@ -15,7 +16,7 @@ const PublicChat = () => {
     <div className="flex h-screen antialiased text-gray-800">
     <div className="flex flex-row h-full w-full overflow-x-hidden">
       {/* Aquí se utiliza la key prop para forzar la recarga del componente Chat */}
-      <Chat key={urlRoom} name={name} connected={connected} socket={socket} nameRoom={urlRoom}></Chat>
+      <ChatPublic key={urlRoom} name={name} connected={connected} socket={socket} nameRoom={urlRoom}></ChatPublic>
     </div>
     </div>
       

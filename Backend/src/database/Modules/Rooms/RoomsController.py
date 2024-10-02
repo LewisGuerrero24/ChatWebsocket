@@ -2,12 +2,13 @@ from Libraries import *
 from bson import ObjectId
 import json
 class RoomsController:
-    def __init__(self, app, RoomService, User, RoomBetweenUserAndRoomService, UserService):
+    def __init__(self, app, RoomService, User, RoomBetweenUserAndRoomService, UserService,GridDf):
         self.app = app
         self.RoomService = RoomService
         self.User = User
         self.RoomBetweenUserAndRoomService = RoomBetweenUserAndRoomService
         self.UserService = UserService
+        self.GridDf = GridDf
 
     def start(self):
 
@@ -229,10 +230,22 @@ class RoomsController:
                 listMessages = []
                 if room.Messages:
                     for message in room.Messages:
+                        file_data = {
+                                "file_id": "",
+                                "filename": ""
+                            }
+                        if message["FileId"] != "":
+                            file = self.GridDf.get(ObjectId(message["FileId"]))
+                            file_data = {
+                                "file_id": message["FileId"],
+                                "filename": file.filename
+                                
+                                }
                         dataMessages = {
                             "sender": message.Sender,  # Puedes cambiar esto según la estructura de 'Sender'
                             "content": message.Content,
-                            "timestamp": message.TimeStap.strftime('%H:%M:%S')
+                            "timestamp": message.TimeStap.strftime('%H:%M:%S'),
+                            "file":file_data
                         }
                         listMessages.append(dataMessages)
                 return jsonify(listMessages), 200

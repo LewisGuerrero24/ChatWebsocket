@@ -17,7 +17,7 @@ const HandelSubmitEndpointUsers = (setData, setTypeList, typeList, name) => {
     }).then(response => {
       const data = notificationCount(response.data, name)
       data.then(res => {
-       
+ 
         setData([...res]);
 
       })
@@ -31,7 +31,6 @@ const HandelSubmitEndpointUsers = (setData, setTypeList, typeList, name) => {
             name
           }
         }).then(response => {
-
           setData([...response.data]);
         });
       }

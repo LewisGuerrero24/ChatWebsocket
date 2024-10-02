@@ -6,8 +6,9 @@ import os
 
 
 def main():
-   
-   con()
+   con() 
+   mongo_db = get_db()  # Obtiene la instancia de la base de datos
+   fs = gridfs.GridFS(mongo_db)  
    app = Flask(__name__) 
    CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
    socketio = SocketIO(app,cors_allowed_origins="http://localhost:5173" )
@@ -25,11 +26,12 @@ def main():
    jwt = JWTManager(app)
    
    instances = [SocketServer(socketio, app, UserService(TemporalUsuario, User, Rol),
-                RoomBetweenUserService(ConversationUserAndUser,User),MessageUser, RoomService(User, Rol, Rooms)), 
+                RoomBetweenUserService(ConversationUserAndUser,User),MessageUser, RoomService(User, Rol, Rooms),fs), 
                 AuthManager(app, User, Rol, socketio), SocketController(app, TemporalUsuario),  
-                UserController(app, UserService(TemporalUsuario, User, Rol), RoomBetweenUserService(ConversationUserAndUser, User),socketio),
-                RoomsController(app, RoomService(User, Rol, Rooms), User, RoomBetweenUserAndRoomService(Rooms, User), UserService(TemporalUsuario, User, Rol)),
-                ResetPasswordCOntroller(app,ResetPasswordService(User,send_Email))
+                UserController(app, UserService(TemporalUsuario, User, Rol),socketio),
+                RoomsController(app, RoomService(User, Rol, Rooms), User, RoomBetweenUserAndRoomService(Rooms, User), UserService(TemporalUsuario, User, Rol),fs),
+                ResetPasswordCOntroller(app,ResetPasswordService(User,send_Email)),
+                RoomBetweenUserController(app, UserService(TemporalUsuario, User, Rol),RoomBetweenUserService(ConversationUserAndUser, User),socketio, fs)
     ]
    
    if __name__ == '__main__':
