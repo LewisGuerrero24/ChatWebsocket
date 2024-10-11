@@ -94,9 +94,11 @@ const DashboardEstudiante = () => {
 
     const determineWhichComponentToDisplay = () => {
         if (isRoom) {
-            return <ChatRoom nameUser={name} nameRoom={isRoom} connected={connected} socket={socket} initialMessages={initialMessages} />
+            return <ChatRoom nameUser={name} nameRoom={isRoom} connected={connected} socket={socket} 
+            initialMessages={initialMessages} />
         } else {
-            return <ChatUsers nameSendUser={selectedUser} name={name} connected={connected} socket={socket} initialMessages={initialMessages} />
+            return <ChatUsers nameSendUser={selectedUser} name={name} connected={connected} 
+            socket={socket} initialMessages={initialMessages} />
         }
     };
     return (

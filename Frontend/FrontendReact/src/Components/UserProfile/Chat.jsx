@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import HandleDowloadFile from '../../Helpers/HandleDowloadFile';
 
-const Chat = ({setFiles, setFileName, fileName, sendMessage, allMessages, connected, setMessage, message,name, nameNew}) => {
+const Chat = ({setFiles, setFileName, fileName, sendMessage, allMessages, connected, 
+  setMessage, message,name, nameNew}) => {
     
 
     const [showModal, setShowModal] = useState(false);
@@ -61,7 +62,9 @@ const Chat = ({setFiles, setFileName, fileName, sendMessage, allMessages, connec
                           <div>
                             {msg.content != "" ? msg.content : ""}
                             {msg.file.file_id !== "" && (
-                              <button onClick={()=>HandleDowloadFile(msg.file.file_id,msg.file.filename)} className="mt-2 p-2 bg-blue-50 text-blue-700 font-semibold border border-blue-300 rounded-md shadow-sm">{msg.file.filename}</button>
+                              <button onClick={()=>HandleDowloadFile(msg.file.file_id,msg.file.filename)} 
+                              className="mt-2 p-2 bg-blue-50 text-blue-700 font-semibold 
+                              border border-blue-300 rounded-md shadow-sm">{msg.file.filename}</button>
                               )}
                           </div>
                           <div className="text-xs text-gray-500 text-right">{msg.timestamp}</div>
@@ -100,7 +103,8 @@ const Chat = ({setFiles, setFileName, fileName, sendMessage, allMessages, connec
             <div className="ml-4">
               <button
                 onClick={() => setShowModal(true)} // Abre el modal
-                className="flex items-center justify-center bg-gray-400 hover:bg-gray-500 rounded-xl text-white px-4 py-1 flex-shrink-0"
+                className="flex items-center justify-center bg-gray-400 hover:bg-gray-500 rounded-xl 
+                text-white px-4 py-1 flex-shrink-0"
               >
                 <span>Adjuntar</span>
               </button>
@@ -109,7 +113,8 @@ const Chat = ({setFiles, setFileName, fileName, sendMessage, allMessages, connec
             <div className="ml-4">
               <button
                 onClick={handleSendMessage} // Cambiar a la función de envío de mensajes
-                className="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0"
+                className="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl 
+                text-white px-4 py-1 flex-shrink-0"
               >
                 <span>Send</span>
                 <span className="ml-2">
