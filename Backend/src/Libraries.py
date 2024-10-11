@@ -30,3 +30,11 @@ import threading
 
 from mongoengine import connect,Document, get_db,  DictField, ListField, StringField, FileField, IntField, DateTimeField, ReferenceField, EmbeddedDocument, EmbeddedDocumentField,EmbeddedDocumentListField, BooleanField, URLField
 import gridfs
+
+# Librerias para el cifrado
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.serialization import NoEncryption
+from cryptography.fernet import Fernet
+import os

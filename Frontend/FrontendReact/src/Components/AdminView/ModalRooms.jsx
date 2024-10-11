@@ -142,8 +142,14 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
       onAnimationEnd={handleAnimationEnd}
     >
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <div className="fixed inset-0 transition-opacity" aria-hidden="true"></div>
-        <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
+        <div
+          className="fixed inset-0 transition-opacity"
+          aria-hidden="true"
+        ></div>
+        <span
+          className="hidden sm:inline-block sm:align-middle sm:h-screen"
+          aria-hidden="true"
+        >
           &#8203;
         </span>
 
@@ -236,19 +242,31 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
                     Seleccionar Administradores
                   </label>
                   <div className="mt-2 space-y-2">
-                    {usuariosDocentes.filter(u => u.rol['name'] === "docente").map((usuario) => (
-                      <div key={usuario.id}>
-                        <label className="inline-flex items-center">
-                          <input
-                            type="checkbox"
-                            className="form-checkbox text-blue-600"
-                            checked={adminUsers.some((u) => u.id === usuario.id)}
-                            onChange={() => handleUserSelection("admin", usuario)}
-                          />
-                          <span className="ml-2 text-gray-300">{usuario.name}</span>
-                        </label>
-                      </div>
-                    ))}
+                    {usuariosDocentes
+                      .filter((u) => u.rol["name"] === "docente")
+                      .map((usuario) => (
+                        <div
+                          key={usuario.id}
+                          className="flex justify-between items-center"
+                        >
+                          <span className="text-gray-300">{usuario.name}</span>
+                          <button
+                            type="button" // Cambiado a tipo "button" para evitar el envío del formulario
+                            onClick={() =>
+                              handleUserSelection("admin", usuario)
+                            }
+                            className={`border rounded-md px-4 py-2 text-sm text-white transition ${
+                              adminUsers.some((u) => u.id === usuario.id)
+                                ? "bg-red-500 hover:bg-red-700"
+                                : "bg-green-500 hover:bg-green-700"
+                            }`}
+                          >
+                            {adminUsers.some((u) => u.id === usuario.id)
+                              ? "Remover"
+                              : "Añadir"}
+                          </button>
+                        </div>
+                      ))}
                   </div>
                 </div>
 
@@ -257,22 +275,29 @@ const ModalRooms = ({ isOpen, onClose, title, onSubmit, room, usuariosEstudiante
                     Seleccionar Estudiantes Autorizados
                   </label>
                   <div className="mt-2 space-y-2">
-                    {usuariosEstudiantes.filter(u => u.rol['name'] === "estudiante").map((usuario) => (
-                      <div key={usuario.id}>
-                        <label className="inline-flex items-center">
-                          <input
-                            type="checkbox"
-                            className="form-checkbox text-blue-600"
-                            checked={authorizedUsers.some((u) => u.id === usuario.id)}
-                            onChange={() => handleUserSelection("estudiante", usuario)}
-                          />
-                          <span className="ml-2 text-gray-300">{usuario.name}</span>
-                        </label>
-                      </div>
-                    ))}
+                    {usuariosEstudiantes.filter((u) => u.rol["name"] === "estudiante").map((usuario) => (
+                        <div
+                          key={usuario.id}
+                          className="flex justify-between items-center"
+                        >
+                          <span className="text-gray-300">{usuario.name}</span>
+                          <button
+                            type="button" // Cambiado a tipo "button" para evitar el envío del formulario
+                            onClick={() =>handleUserSelection("estudiante", usuario)}
+                            className={`border rounded-md px-4 py-2 text-sm text-white transition ${
+                              authorizedUsers.some((u) => u.id === usuario.id)
+                                ? "bg-red-500 hover:bg-red-700"
+                                : "bg-green-500 hover:bg-green-700"
+                            }`}
+                          >
+                            {authorizedUsers.some((u) => u.id === usuario.id)
+                              ? "Remover"
+                              : "Añadir"}
+                          </button>
+                        </div>
+                      ))}
                   </div>
                 </div>
-
               </div>
             </div>
             <div className="bg-gray-800 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">

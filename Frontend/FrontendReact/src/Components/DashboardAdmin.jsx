@@ -52,7 +52,7 @@ const DashboardAdmin = () => {
   useEffect(() => {
 
     const interval = setInterval(() => {
-      if (isLoggedIn && new Date() - lastActive >= 2 * 60 * 1000) {
+      if (isLoggedIn && new Date() - lastActive >= 10 * 60 * 1000) {
         logoutUsers(setLastActive, navigate);
       }
     }, 1000);

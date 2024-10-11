@@ -3,8 +3,12 @@ from database.conexion import con
 
 
 
+
 MAX_FAILED_ATTEMPTS = 5
 LOCKOUT_DURATION = 5
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Esto obtiene el directorio base del archivo actual
+SECRET_KEY_DIR = os.path.join(BASE_DIR, "secret_keys")
 
 class AuthManager:
     def __init__(self, app, User, Rol, socketio):
@@ -144,6 +148,32 @@ class AuthManager:
                 #response.delete_cookie('token')
                 unset_jwt_cookies(response)
                 return response
+            
+            # Creacion de las llaves publicas y privadas
+            # def generate_keys():
+            #     #Generamos una llave privada
+            #     private_key = rsa.generate_private_key(
+            #         public_exponent=65537,
+            #         key_size=2048,
+            #         backend=default_backend()
+            #     )
+            #     #A base de la llave privada creamos la publica
+            #     public_key = private_key.public_key()
+
+            #     #serializamos la llave privada a PEM (formato legible)
+            #     private_key_pem = private_key.private_bytes(
+            #         encoding=serialization.Encoding.PEM,
+            #         format=serialization.PrivateFormat.TraditionalOpenSSL,
+            #         encryption_algorithm=NoEncryption()
+            #     ).decode('utf-8') # Convertimos a string
+
+            #     # Serializar la llave pública a PEM
+            #     public_key_pem = public_key.public_bytes(
+            #         encoding=serialization.Encoding.PEM,
+            #         format=serialization.PublicFormat.SubjectPublicKeyInfo
+            #     ).decode('utf-8')  # Convertir a string
+
+            #     return private_key_pem, public_key_pem
 
 
 
@@ -164,14 +194,34 @@ class AuthManager:
                     return jsonify({"error": "No selected file"}), 400
 
                 user_exists = self.Usuario.objects(name=name).first() is not None
-                type_rol = self.Rol.objects(tipo="estudiante").first()
+                type_rol = self.Rol.objects(tipo="admin").first()
 
                 if user_exists:
                     return jsonify({"error": "User already exists"}), 409
 
                 hashed_password = self.bcrypt.generate_password_hash(password).decode('utf-8')
-                
-                new_user = self.Usuario(name=name, email=email,password=hashed_password, rol=type_rol)
+
+
+                # Generamos las llaves publicas y privadas 
+                # private_key, public_key = generate_keys()
+                # secret_key = Fernet.generate_key() # Generamos una nueva clave secreta
+                # fernet = Fernet(secret_key)
+                # encrypted_private_key = fernet.encrypt(private_key.encode())
+
+                new_user = self.Usuario(
+                    name=name,
+                    email=email,
+                    password=hashed_password,
+                    rol=type_rol, 
+                    # private_key_encrypted=encrypted_private_key,
+                    # public_key=public_key
+                )
+
+                # # Guardamos la clave secreta en un archivo del proyecto
+                # user_secret_file = os.path.join(SECRET_KEY_DIR, f"{name}_secret.key")
+                # with open(user_secret_file, "wb") as secret_file:
+                #     secret_file.write(secret_key)    
+
                 
                 if file:
                     filename = secure_filename(file.filename)

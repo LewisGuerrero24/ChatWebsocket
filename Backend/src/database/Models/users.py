@@ -15,6 +15,11 @@ class User(Document, UserMixin):
     status = IntField(default=0)
     contacts = ListField() 
     groupParticipating = ListField(ReferenceField('Rooms'))
+
+    # Atributos para las llaves publicas y privadas
+    # private_key_encrypted = StringField(required=True)
+    # public_key = StringField(required=True)
+
     # Atributos de limite de intentos de session 
     failed_login_attempts = IntField(default=0)
     locked_until = DateTimeField()
@@ -36,7 +41,7 @@ class User(Document, UserMixin):
         return simple_dict
     
     def to_contact_DTO(self):
-        contact_user= dict(id= str(self.id), name = self.name, rol = self.rol.id)
+        contact_user= dict(id= str(self.id), name = self.name, rol = self.rol.id) # Manaña continuamos con agregar en el DTO la llave publica
         return contact_user
     
     def set_reset_password_token(self):

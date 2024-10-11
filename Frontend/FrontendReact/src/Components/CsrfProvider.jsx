@@ -54,9 +54,6 @@ const CsrfProvider = ({ children }) => {
     }
   }, [isLoggedIn]);
   
-
-  
-
   const fetchCsrfToken = async () => {
     try {
       const response = await axios.get('http://localhost:5000/csrf_token', { withCredentials: true });
