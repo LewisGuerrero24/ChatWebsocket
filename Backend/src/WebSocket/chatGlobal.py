@@ -3,8 +3,7 @@ from datetime import datetime
 from bson import ObjectId
 
 class SocketServer:
-    def __init__(self, socketio , app, UserService, 
-                 ConversationBetweenUsers, MessageUser, RoomService,GridDf):
+    def __init__(self, socketio , app, UserService, ConversationBetweenUsers, MessageUser, RoomService,GridDf):
         self.socketio = socketio
         self.app = app 
         self.UserService = UserService
@@ -25,9 +24,9 @@ class SocketServer:
 
         @self.socketio.on('join')
         def on_join(data):
-            room = data["room"]
+            room = data
             join_room(room)
-            self.socketio.emit('join_room', True, room=room)
+            self.socketio.emit('join_room',True, room=room)
 
             
         @self.socketio.on('join_room_event')
@@ -57,7 +56,7 @@ class SocketServer:
         @self.socketio.on('message')
         def handle_message(data): 
             print(data)
-            usuario = self.UserService.handle_messageDb(data)
+            usuario = self.UserService.handle_messageDb(data)   
             res = {'name': usuario['nombre'], 'message': usuario.mensajes.get(data['room'], [])}
             send(res, broadcast=True, room=data['room'])
             
@@ -75,19 +74,15 @@ class SocketServer:
                 user_second = self.UserService.get_unique_user(l)
                 
                 # Genero la sala de chat usando los IDs de los usuarios
-                room = f"chat_{min(user_one['id'], user_second['id'])}_{max(user_one['id'], 
-                user_second['id'])}"
+                room = f"chat_{min(user_one['id'], user_second['id'])}_{max(user_one['id'], user_second['id'])}"
                 
                 
                 if data["FileData"]["file"]:
-                    file_id =self.GridDf.put(data["FileData"]["file"], 
-                                             filename=data["FileData"]["name"])   
+                    file_id =self.GridDf.put(data["FileData"]["file"], filename=data["FileData"]["name"])   
                 if data['message'] == "":
                     print("Mensaje VACIO")
                 # Crear el objeto mensaje
-                message_user = self.MessageUser(Sender=user_one.to_simple_dict(), 
-                                                Content=data['message'], FileId=str(file_id),
-                                                TimeStap=datetime.utcnow())
+                message_user = self.MessageUser(Sender=user_one.to_simple_dict(), Content=data['message'], FileId=str(file_id),TimeStap=datetime.utcnow())
                 
                 # Crear la conversación y agregar mensajes
                 response_message = self.ConversationBetweenUsers.ConversationAndMessages(str(user_one['id']), str(user_second['id']), message_user)
@@ -97,14 +92,11 @@ class SocketServer:
                 }
         
                 # Enviar mensaje a la sala
-                res = {'sender': message_user.Sender, 'content': message_user.Content, 
-                       'timestamp': message_user.TimeStap.strftime('%H:%M:%S'),"file":file_data}
+                res = {'sender': message_user.Sender, 'content': message_user.Content, 'timestamp': message_user.TimeStap.strftime('%H:%M:%S'),"file":file_data}
                 emit('message', res, room=room)
                 
                 # hay un mensaje nuevo en el sistema
-                self.socketio.emit('new_message',{"SenderId":str(user_one['id']),
-                                                  "Sender":data['user_primary'],
-                                                  "Received":data['user_second'],"newMessage": True})
+                self.socketio.emit('new_message',{"SenderId":str(user_one['id']),"Sender":data['user_primary'],"Received":data['user_second'],"newMessage": True})
 
 
 
