@@ -34,9 +34,7 @@ const ChatUsers = ({ name, nameSendUser, connected, socket, initialMessages }) =
         <div className="flex justify-center items-center w-full h-full">
           <div className="flex justify-center items-center w-full">
             <div className="relative flex flex-col mt-6 text-gray-700 bg-white shadow-md bg-clip-border rounded-xl w-full max-w-[720px]">
-              <div className="p-6">
-                {/* Contenido de bienvenida o presentación */}
-              </div>
+            
             </div>
           </div>
         </div>
